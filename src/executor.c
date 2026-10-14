@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <signal.h>
 
 int executor_run(const ParsedCommand *cmd)
 {
@@ -20,6 +21,15 @@ int executor_run(const ParsedCommand *cmd)
     } 
     else if (pid == 0) {
         // --- CHILD PROCESS ---
+        
+        // FR-PE-07: Restore default signal behavior for the foreground/background child 
+        // so it can respond to signals like SIGINT (Ctrl+C) normally.
+        struct sigaction sa_default;
+        sa_default.sa_handler = SIG_DFL;
+        sigemptyset(&sa_default.sa_mask);
+        sa_default.sa_flags = 0;
+        sigaction(SIGINT, &sa_default, NULL);
+
         // FR-PE-02: Execute external programs using an exec-family function
         execvp(cmd->argv[0], cmd->argv);
         
@@ -46,10 +56,30 @@ int executor_run(const ParsedCommand *cmd)
                 return 128 + WTERMSIG(status);
             }
         } else {
-            // For background jobs, you can optionally print the PID or handle job tracking here
+            // FR-PE-04: Background execution - print background PID and return immediately
             printf("[Background PID: %d]\n", pid);
+            return 0;
         }
     }
     
     return 0;
+}
+
+// FR-PE-06 / SEC-04: Non-blocking background child reaping function
+// Call this function periodically in your main shell prompt loop to clean up finished background jobs.
+void reap_background_jobs(void) {
+    int status;
+    // WNOHANG ensures waitpid doesn't block if no background children have exited yet.
+    while (waitpid(-1, &status, WNOHANG) > 0) {
+        // Successfully reaped a completed background process, preventing zombie states.
+    }
+}
+
+// FR-PE-07 / SEC-04: Initialize shell-level signal handling to prevent Ctrl+C from killing the shell itself.
+void init_shell_signals(void) {
+    struct sigaction sa;
+    sa.sa_handler = SIG_IGN; // Ignore SIGINT (Ctrl+C) in the parent shell loop
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
 }
