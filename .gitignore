@@ -1,0 +1,20 @@
+# Compiled files
+*.o
+simple-shell
+*.out
+
+# Test binaries and coverage
+tests/test_*
+*.gcda
+*.gcno
+*.gcov
+
+# Debugging and analysis
+core
+core.*
+*.log
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
