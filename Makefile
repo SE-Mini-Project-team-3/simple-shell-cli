@@ -11,7 +11,7 @@ SRC = src/main.c \
 
 OBJ = $(SRC:.c=.o)
 
-.PHONY: all clean test
+.PHONY: all clean test test-parser-spec
 
 all: $(TARGET)
 
@@ -22,7 +22,22 @@ src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET) tests/test_*
+	rm -f $(OBJ) $(TARGET) tests/test_history tests/test_env_manager tests/test_parser_spec
 
-test: all
-	@echo "Test harness will be added in a later step."
+tests/test_history: tests/test_history.c src/history.c
+	$(CC) $(CFLAGS) -o $@ tests/test_history.c src/history.c
+
+tests/test_env_manager: tests/test_env_manager.c src/env_manager.c
+	$(CC) $(CFLAGS) -o $@ tests/test_env_manager.c src/env_manager.c
+
+test: tests/test_history tests/test_env_manager
+	./tests/test_history
+	./tests/test_env_manager
+
+# US-01 (parser) acceptance spec. Not wired into `test`: parser.c is still a
+# placeholder, so these cases are expected to fail until it's implemented.
+tests/test_parser_spec: tests/test_parser_spec.c src/parser.c
+	$(CC) $(CFLAGS) -o $@ tests/test_parser_spec.c src/parser.c
+
+test-parser-spec: tests/test_parser_spec
+	-./tests/test_parser_spec
