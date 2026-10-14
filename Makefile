@@ -22,7 +22,10 @@ src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET) tests/test_*
+	rm -f $(OBJ) $(TARGET) tests/test_history
 
-test: all
-	@echo "Test harness will be added in a later step."
+tests/test_history: tests/test_history.c src/history.c
+	$(CC) $(CFLAGS) -o $@ tests/test_history.c src/history.c
+
+test: tests/test_history
+	./tests/test_history
