@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
 #include "shell.h"
 #include "parser.h"
 #include "executor.h"
@@ -64,7 +65,11 @@ static int run_builtin(const ParsedCommand *cmd)
 
 int main(void)
 {
-    char input[SHELL_MAX_INPUT];
+    /*
+     * Allow 1024 input characters, an optional newline,
+     * and the terminating null character.
+     */
+    char input[SHELL_MAX_INPUT + 2];
 
     puts("Simple Shell CLI");
     puts("Type 'help' for available commands.");
@@ -78,11 +83,17 @@ int main(void)
             break;
         }
 
-        if (strchr(input, '\n') == NULL && !feof(stdin)) {
+        size_t input_len = strlen(input);
+
+        if (input_len > 0 && input[input_len - 1] == '\n') {
+            input[--input_len] = '\0';
+        } else if (input_len > SHELL_MAX_INPUT) {
             int ch;
+
             while ((ch = getchar()) != '\n' && ch != EOF) {
-                /* Discard the remainder of an overlong input line. */
+                /* Discard the rest of the overlong input line. */
             }
+
             fprintf(stderr, "shell: input line too long\n");
             continue;
         }
