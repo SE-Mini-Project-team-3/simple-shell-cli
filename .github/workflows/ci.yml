@@ -23,3 +23,6 @@ jobs:
 
       - name: Clean build
         run: make clean && make
+
+      - name: Run parser tests
+        run: make test
