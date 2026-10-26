@@ -5,6 +5,7 @@ simple-shell
 
 # Test binaries and coverage
 tests/test_*
+!tests/test_*.c
 *.gcda
 *.gcno
 *.gcov
