@@ -46,4 +46,4 @@ tests/test_parser_spec: tests/test_parser_spec.c src/parser.c
 	$(CC) $(CFLAGS) -o $@ tests/test_parser_spec.c src/parser.c
 
 test-parser-spec: tests/test_parser_spec
-	-./tests/test_parser_spec
+	./tests/test_parser_spec
