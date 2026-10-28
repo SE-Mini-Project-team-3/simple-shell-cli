@@ -52,10 +52,10 @@ void test_executor_background() {
 int main() {
     printf("=== STARTING EXECUTOR UNIT TESTS ===\n");
     
-    init_shell_signals();
-    test_executor_foreground_valid();
-    test_executor_invalid_command();
-    test_executor_background();
+    init_shell_signals(void);
+    test_executor_foreground_valid(void);
+    test_executor_invalid_command(void);
+    test_executor_background(void);
     
     printf("=== ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===\n");
     return 0;
