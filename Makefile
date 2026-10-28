@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Iinclude
+CFLAGS = -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude
 TARGET = simple-shell
 TEST_TARGET = tests/test_parser
 
