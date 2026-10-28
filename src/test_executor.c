@@ -14,7 +14,8 @@ void test_executor_invalid_command() {
     cmd.is_background = false;
 
     int result = executor_run(&cmd);
-    assert(result != 999); // Ensure it doesn't crash or hang
+    // Stricter assertion checking for proper failure code/status
+    assert(result < 0 || result == 127 || result == 1); 
     printf("PASSED: test_executor_invalid_command\n");
 }
 
@@ -41,7 +42,7 @@ void test_executor_background() {
     cmd.is_background = true;
 
     int result = executor_run(&cmd);
-    assert(result == 0); // Background dispatch returns 0 immediately
+    assert(result == 0); 
     
     reap_background_jobs();
     

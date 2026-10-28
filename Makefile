@@ -22,7 +22,9 @@ src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET) tests/test_*
+	rm -f $(OBJ) $(TARGET) test_executor
 
-test: all
-	@echo "Test harness will be added in a later step."
+test: src/test_executor.c src/executor.c
+	$(CC) $(CFLAGS) src/test_executor.c src/executor.c -o test_executor
+	./test_executor
+	rm -f test_executor
