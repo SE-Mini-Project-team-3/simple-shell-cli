@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Iinclude
 TARGET = simple-shell
+TEST_TARGET = tests/test_parser
 
 SRC = src/main.c \
       src/parser.c \
@@ -21,10 +22,18 @@ $(TARGET): $(OBJ)
 src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -f $(OBJ) $(TARGET) test_executor
+# Parser test target
+$(TEST_TARGET): tests/test_parser.c src/parser.c
+	$(CC) $(CFLAGS) -o $@ tests/test_parser.c src/parser.c
 
-test: src/test_executor.c src/executor.c
+# Combined test target: runs both parser tests and your executor tests!
+test: all $(TEST_TARGET)
+	@echo "=== Running Parser Tests ==="
+	./$(TEST_TARGET)
+	@echo "=== Running Executor Tests ==="
 	$(CC) $(CFLAGS) src/test_executor.c src/executor.c -o test_executor
 	./test_executor
 	rm -f test_executor
+
+clean:
+	rm -f $(OBJ) $(TARGET) $(TEST_TARGET) test_executor
