@@ -5,7 +5,7 @@
 #include "executor.h"
 #include "shell.h"
 
-void test_executor_invalid_command() {
+void test_executor_invalid_command(void) {
     printf("Running test: test_executor_invalid_command...\n");
     
     ParsedCommand cmd;
@@ -19,7 +19,7 @@ void test_executor_invalid_command() {
     printf("PASSED: test_executor_invalid_command\n");
 }
 
-void test_executor_foreground_valid() {
+void test_executor_foreground_valid(void) {
     printf("Running test: test_executor_foreground_valid...\n");
     
     ParsedCommand cmd;
@@ -32,7 +32,7 @@ void test_executor_foreground_valid() {
     printf("PASSED: test_executor_foreground_valid\n");
 }
 
-void test_executor_background() {
+void test_executor_background(void) {
     printf("Running test: test_executor_background...\n");
     
     ParsedCommand cmd;
@@ -49,13 +49,13 @@ void test_executor_background() {
     printf("PASSED: test_executor_background\n");
 }
 
-int main() {
+int main(void) {
     printf("=== STARTING EXECUTOR UNIT TESTS ===\n");
     
-    init_shell_signals(void);
-    test_executor_foreground_valid(void);
-    test_executor_invalid_command(void);
-    test_executor_background(void);
+    init_shell_signals();
+    test_executor_foreground_valid();
+    test_executor_invalid_command();
+    test_executor_background();
     
     printf("=== ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===\n");
     return 0;
