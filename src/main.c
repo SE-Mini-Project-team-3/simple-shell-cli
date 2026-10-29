@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "shell.h"
 #include "parser.h"
@@ -66,7 +67,7 @@ static int run_builtin(const ParsedCommand *cmd)
 int main(void)
 {
     /*
-     * Allow 1024 input characters, an optional newline,
+     * Allow 1024 input characters, a newline,
      * and the terminating null character.
      */
     char input[SHELL_MAX_INPUT + 2];
@@ -84,16 +85,30 @@ int main(void)
         }
 
         size_t input_len = strlen(input);
+        bool has_newline =
+            input_len > 0 && input[input_len - 1] == '\n';
 
-        if (input_len > 0 && input[input_len - 1] == '\n') {
+        if (has_newline) {
             input[--input_len] = '\0';
-        } else if (input_len > SHELL_MAX_INPUT) {
-            int ch;
+        } else if (input_len == sizeof(input) - 1) {
+            /*
+             * The buffer is full without a newline.
+             * Read one more character to determine whether
+             * the input line exceeds the permitted limit.
+             */
+            int ch = getchar();
 
-            while ((ch = getchar()) != '\n' && ch != EOF) {
-                /* Discard the rest of the overlong input line. */
+            if (ch != '\n' && ch != EOF) {
+                while (ch != '\n' && ch != EOF) {
+                    ch = getchar();
+                }
+
+                fprintf(stderr, "shell: input line too long\n");
+                continue;
             }
+        }
 
+        if (input_len > SHELL_MAX_INPUT) {
             fprintf(stderr, "shell: input line too long\n");
             continue;
         }
