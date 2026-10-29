@@ -1,7 +1,7 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 
 #include "shell.h"
@@ -71,10 +71,16 @@ int main(void)
      */
     char input[SHELL_MAX_INPUT + 2];
 
+    // Initialize shell signal handlers (e.g., ignoring SIGINT in parent)
+    init_shell_signals();
+
     puts("Simple Shell CLI");
     puts("Type 'help' for available commands.");
 
     while (1) {
+        // Reap any finished background jobs before showing the prompt
+        reap_background_jobs();
+
         printf("simple-shell> ");
         fflush(stdout);
 
