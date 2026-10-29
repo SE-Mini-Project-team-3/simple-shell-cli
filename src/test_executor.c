@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -16,7 +17,6 @@ void test_executor_invalid_command(void) {
     cmd.is_background = false;
 
     int result = executor_run(&cmd);
-    // Assert the exact expected failure result (EXIT_FAILURE / 1 from exec failure)
     assert(result == 1); 
     printf("PASSED: test_executor_invalid_command\n");
 }
@@ -38,14 +38,13 @@ void test_executor_background(void) {
     printf("Running test: test_executor_background...\n");
     
     ParsedCommand cmd;
-    cmd.argv[0] = "true"; // Use a fast-completing command for reliable testing
+    cmd.argv[0] = "true";
     cmd.argv[1] = NULL;
     cmd.is_background = true;
 
     int result = executor_run(&cmd);
     assert(result == 0); 
     
-    // Give the background process a moment to finish, then reap it
     usleep(100000); // 100ms
     reap_background_jobs();
     
