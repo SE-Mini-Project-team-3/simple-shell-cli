@@ -42,13 +42,22 @@ void test_executor_background(void) {
     cmd.argv[1] = NULL;
     cmd.is_background = true;
 
+    // Run a background job and capture its execution or verify reaping behavior
     int result = executor_run(&cmd);
     assert(result == 0); 
     
+    // Give a short pause for the background task to complete
     usleep(100000); // 100ms
+    
+    // Reap background jobs
     reap_background_jobs();
     
-    printf("PASSED: test_executor_background (verified reaping)\n");
+    // Verify reaping: trying to wait on any child should now yield no more active background children (ECHILD)
+    errno = 0;
+    pid_t res = waitpid(-1, NULL, WNOHANG);
+    assert(res <= 0);
+    
+    printf("PASSED: test_executor_background (verified child reaping)\n");
 }
 
 int main(void) {
