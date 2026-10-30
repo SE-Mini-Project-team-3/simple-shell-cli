@@ -4,31 +4,70 @@
 #include <stdio.h>
 #include <string.h>
 
-static char entries[SHELL_MAX_HISTORY][SHELL_MAX_INPUT];
-static int entry_count;
-static int next_entry;
+typedef struct {
+    char command[SHELL_MAX_INPUT];
+    unsigned long number;
+} HistoryEntry;
+
+static HistoryEntry entries[SHELL_MAX_HISTORY];
+static int count = 0;
+static unsigned long next_number = 1;
 
 void history_add(const char *command_line)
 {
-    if (!command_line || !*command_line)
+    if (command_line == NULL || command_line[0] == '\0')
+    {
         return;
+    }
 
-    snprintf(entries[next_entry], sizeof(entries[next_entry]), "%s",
-             command_line);
+    if (count == SHELL_MAX_HISTORY)
+    {
+        memmove(&entries[0], &entries[1], (size_t)(SHELL_MAX_HISTORY - 1) * sizeof(HistoryEntry));
+        count--;
+    }
 
-    next_entry = (next_entry + 1) % SHELL_MAX_HISTORY;
-
-    if (entry_count < SHELL_MAX_HISTORY)
-        entry_count++;
+    HistoryEntry *slot = &entries[count];
+    strncpy(slot->command, command_line, SHELL_MAX_INPUT - 1);
+    slot->command[SHELL_MAX_INPUT - 1] = '\0';
+    slot->number = next_number++;
+    count++;
 }
 
 void history_print(void)
 {
-    int first = (next_entry - entry_count + SHELL_MAX_HISTORY)
-                % SHELL_MAX_HISTORY;
-
-    for (int i = 0; i < entry_count; i++) {
-        int index = (first + i) % SHELL_MAX_HISTORY;
-        printf("%d  %s\n", i + 1, entries[index]);
+    for (int i = 0; i < count; i++)
+    {
+        printf("%5lu  %s\n", entries[i].number, entries[i].command);
     }
+}
+
+int history_count(void)
+{
+    return count;
+}
+
+const char *history_get(int position)
+{
+    if (position < 0 || position >= count)
+    {
+        return NULL;
+    }
+
+    return entries[position].command;
+}
+
+unsigned long history_get_number(int position)
+{
+    if (position < 0 || position >= count)
+    {
+        return 0;
+    }
+
+    return entries[position].number;
+}
+
+void history_clear(void)
+{
+    count = 0;
+    next_number = 1;
 }
