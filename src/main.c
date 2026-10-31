@@ -199,6 +199,8 @@ int main(void)
      */
     char line[SHELL_MAX_INPUT + 2];
 
+    int last_status = 0;
+
     init_shell_signals();
 
     puts("Simple Shell CLI");
@@ -216,6 +218,7 @@ int main(void)
         }
 
         size_t input_len = strlen(line);
+
         int complete_line =
             (input_len > 0 && line[input_len - 1] == '\n');
 
@@ -233,6 +236,7 @@ int main(void)
                     ch = getchar();
 
                 fprintf(stderr, "shell: input line too long\n");
+                last_status = 2;
                 continue;
             }
         }
@@ -244,6 +248,7 @@ int main(void)
         /* Enforce the maximum input length. */
         if (input_len > SHELL_MAX_INPUT) {
             fprintf(stderr, "shell: input line too long\n");
+            last_status = 2;
             continue;
         }
 
@@ -255,16 +260,19 @@ int main(void)
         history_add(command_line);
 
         char *parts[SHELL_MAX_PIPELINE_STAGES];
+
         int count = split_pipeline(command_line, parts);
 
         if (count < 1) {
             fprintf(stderr,
                     "shell: invalid pipeline or too many stages\n");
+            last_status = 2;
             continue;
         }
 
         ParsedCommand commands[SHELL_MAX_PIPELINE_STAGES] = {0};
         ParsedCommand *stages[SHELL_MAX_PIPELINE_STAGES];
+
         int parsed = 0;
         int failed = 0;
 
@@ -273,7 +281,10 @@ int main(void)
 
             if (*parts[i] == '\0' ||
                 parse_command(parts[i], &commands[i]) != 0) {
+
                 fprintf(stderr, "shell: invalid command syntax\n");
+
+                last_status = 2;
                 failed = 1;
                 break;
             }
@@ -290,6 +301,7 @@ int main(void)
 
                 if (strcmp(cmd->argv[0], "cd") == 0 ||
                     strcmp(cmd->argv[0], "exit") == 0) {
+
                     result = run_builtin(cmd);
                 } else {
                     result = run_builtin_with_redirection(cmd);
@@ -301,16 +313,22 @@ int main(void)
 
                     break;
                 }
+
+                last_status = result;
+
             } else {
-                executor_run(cmd);
+                /* Preserve the external command's exit status. */
+                last_status = executor_run(cmd);
             }
+
         } else if (!failed) {
-            pipeline_execute(stages, count);
+            /* Preserve the pipeline's exit status. */
+            last_status = pipeline_execute(stages, count);
         }
 
         for (int i = 0; i < parsed; i++)
             free_parsed_command(&commands[i]);
     }
 
-    return 0;
+    return last_status;
 }
