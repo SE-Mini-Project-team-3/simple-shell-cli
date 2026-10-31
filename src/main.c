@@ -1,3 +1,4 @@
+
 #include "shell.h"
 #include "parser.h"
 #include "executor.h"
@@ -27,13 +28,16 @@ static int split_pipeline(char *line, char *parts[])
         if ((*p == '|' && quote == '\0') || *p == '\0') {
             if (*p == '|') {
                 *p = '\0';
+
                 if (count >= SHELL_MAX_PIPELINE_STAGES - 1)
                     return -1;
+
                 parts[count++] = start;
                 start = p + 1;
             } else {
                 if (quote != '\0')
                     return -1;
+
                 parts[count++] = start;
                 break;
             }
@@ -49,9 +53,11 @@ static char *trim(char *s)
         s++;
 
     size_t n = strlen(s);
-    while (n > 0 && (s[n - 1] == ' ' || s[n - 1] == '\t' ||
-                     s[n - 1] == '\n'))
+
+    while (n > 0 &&
+           (s[n - 1] == ' ' || s[n - 1] == '\t' || s[n - 1] == '\n')) {
         s[--n] = '\0';
+    }
 
     return s;
 }
@@ -95,6 +101,7 @@ static int run_builtin(const ParsedCommand *cmd)
         for (int i = 1; cmd->argv[i] != NULL; i++) {
             if (i > 1)
                 putchar(' ');
+
             fputs(cmd->argv[i], stdout);
         }
 
@@ -113,7 +120,6 @@ static int run_builtin(const ParsedCommand *cmd)
     return 1;
 }
 
-
 static int run_builtin_with_redirection(const ParsedCommand *cmd)
 {
     int saved_stdin = dup(STDIN_FILENO);
@@ -121,8 +127,13 @@ static int run_builtin_with_redirection(const ParsedCommand *cmd)
 
     if (saved_stdin < 0 || saved_stdout < 0) {
         perror("shell: dup");
-        if (saved_stdin >= 0) close(saved_stdin);
-        if (saved_stdout >= 0) close(saved_stdout);
+
+        if (saved_stdin >= 0)
+            close(saved_stdin);
+
+        if (saved_stdout >= 0)
+            close(saved_stdout);
+
         return 1;
     }
 
@@ -131,12 +142,17 @@ static int run_builtin_with_redirection(const ParsedCommand *cmd)
 
     if (cmd->input_file != NULL) {
         fd = open(cmd->input_file, O_RDONLY);
+
         if (fd < 0 || dup2(fd, STDIN_FILENO) < 0) {
             perror(cmd->input_file);
-            if (fd >= 0) close(fd);
+
+            if (fd >= 0)
+                close(fd);
+
             result = 1;
             goto restore;
         }
+
         close(fd);
     }
 
@@ -145,12 +161,17 @@ static int run_builtin_with_redirection(const ParsedCommand *cmd)
                     (cmd->append_mode ? O_APPEND : O_TRUNC);
 
         fd = open(cmd->output_file, flags, 0644);
+
         if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0) {
             perror(cmd->output_file);
-            if (fd >= 0) close(fd);
+
+            if (fd >= 0)
+                close(fd);
+
             result = 1;
             goto restore;
         }
+
         close(fd);
     }
 
@@ -195,16 +216,33 @@ int main(void)
         }
 
         size_t input_len = strlen(line);
+        int complete_line =
+            (input_len > 0 && line[input_len - 1] == '\n');
 
-        if (input_len > 0 && line[input_len - 1] == '\n') {
-            line[--input_len] = '\0';
-        } else if (input_len > SHELL_MAX_INPUT) {
-            int ch;
+        /*
+         * If no newline was read, check whether more input remains.
+         * This distinguishes a complete final line from an
+         * oversized line that has not been fully read.
+         */
+        if (!complete_line && !feof(stdin)) {
+            int ch = getchar();
 
-            while ((ch = getchar()) != '\n' && ch != EOF) {
-                /* Discard the rest of the oversized input line. */
+            if (ch != '\n' && ch != EOF) {
+                /* Discard the remainder of the oversized line. */
+                while (ch != '\n' && ch != EOF)
+                    ch = getchar();
+
+                fprintf(stderr, "shell: input line too long\n");
+                continue;
             }
+        }
 
+        /* Remove the newline if one was read. */
+        if (complete_line)
+            line[--input_len] = '\0';
+
+        /* Enforce the maximum input length. */
+        if (input_len > SHELL_MAX_INPUT) {
             fprintf(stderr, "shell: input line too long\n");
             continue;
         }
@@ -220,7 +258,8 @@ int main(void)
         int count = split_pipeline(command_line, parts);
 
         if (count < 1) {
-            fprintf(stderr, "shell: invalid pipeline or too many stages\n");
+            fprintf(stderr,
+                    "shell: invalid pipeline or too many stages\n");
             continue;
         }
 
@@ -259,6 +298,7 @@ int main(void)
                 if (result == -1) {
                     for (int i = 0; i < parsed; i++)
                         free_parsed_command(&commands[i]);
+
                     break;
                 }
             } else {
