@@ -1,27 +1,19 @@
 /*
- * Acceptance-test spec for US-01 (command prompt & input parsing, issue #3).
+ * Acceptance tests for US-01 (command prompt and input parsing, issue #3).
  *
- * parser.c is still a placeholder (owned by the parsing module's implementer),
- * so these cases are expected to FAIL until that work lands. They exist to
- * pin down the parse_command() contract ahead of time, per the team's
- * coordination rule: agree on shared signatures/behavior before implementing.
+  * The parser has been implemented. These tests cover selected input-validation
+ * and tokenization requirements of the parse_command() contract.
  *
- * Assumed contract for `int parse_command(char *input, ParsedCommand *cmd)`:
- *   - Returns 0 on success, -1 on any error.
- *   - On success: cmd->argv is NULL-terminated, argv[0] is the command name,
- *     cmd->is_builtin is true iff argv[0] is one of cd/pwd/echo/exit/help
- *     (FR-CI-03, FR-CI-04).
- *   - Errors (FR-CI-05, FR-CI-06, SEC-02):
- *       * NULL input, empty input, or input that is only whitespace
- *       * input of length >= SHELL_MAX_INPUT (oversized input rejected)
- *       * more than SHELL_MAX_ARGS tokens
- *       * malformed redirection (">"/"<" with no following filename)
- *       * unterminated quotes
- *   - free_parsed_command() releases anything parse_command() allocated and
- *     is safe to call on a ParsedCommand that failed to parse.
+ * Contract for int parse_command(char *input, ParsedCommand *cmd):
+ *   - Returns 0 on success and -1 on invalid input.
+ *   - On success, argv is NULL-terminated and is_builtin correctly identifies
+ *     cd, pwd, echo, exit, and help.
+ *   - Rejects NULL, empty, whitespace-only, and oversized input.
+ *   - Rejects more than SHELL_MAX_ARGS arguments.
+ *   - Rejects malformed redirection and unterminated quotes.
+ *   - free_parsed_command() safely clears the parsed command.
  *
- * Run explicitly with `make test-parser-spec`; not part of the default
- * `make test` target while parsing is unimplemented.
+ * Run with: make test-parser-spec
  */
 
 #include "parser.h"
@@ -99,14 +91,35 @@ static void test_rejects_null_input(void)
     CHECK(parse_command(NULL, &cmd) == -1, "NULL input is rejected (FR-CI-05)");
 }
 
-static void test_rejects_empty_and_whitespace_input(void)
+static void test_accepts_empty_and_whitespace_input(void)
 {
     char empty[] = "";
     char whitespace[] = "   \t  ";
     ParsedCommand cmd;
 
-    CHECK(parse(empty, &cmd) == -1, "empty input is rejected (FR-CI-05)");
-    CHECK(parse(whitespace, &cmd) == -1, "whitespace-only input is rejected (FR-CI-05)");
+    CHECK(parse(empty, &cmd) == 0, "empty input is accepted as an empty command");
+    CHECK(cmd.argv[0] == NULL, "empty input has no command token");
+    CHECK(!cmd.is_builtin, "empty input is not a builtin");
+
+    CHECK(parse(whitespace, &cmd) == 0,
+          "whitespace-only input is accepted as an empty command");
+    CHECK(cmd.argv[0] == NULL, "whitespace-only input has no command token");
+    CHECK(!cmd.is_builtin, "whitespace-only input is not a builtin");
+
+    free_parsed_command(&cmd);
+}
+
+static void test_accepts_maximum_length_input(void)
+{
+    static char input[SHELL_MAX_INPUT + 1];
+    memset(input, 'a', SHELL_MAX_INPUT);
+    input[SHELL_MAX_INPUT] = '\0';
+
+    ParsedCommand cmd;
+    CHECK(parse(input, &cmd) == 0,
+          "input of exactly SHELL_MAX_INPUT characters is accepted");
+
+    free_parsed_command(&cmd);
 }
 
 static void test_rejects_oversized_input(void)
@@ -116,7 +129,7 @@ static void test_rejects_oversized_input(void)
     oversized[sizeof(oversized) - 1] = '\0';
 
     ParsedCommand cmd;
-    CHECK(parse(oversized, &cmd) == -1, "input at/over SHELL_MAX_INPUT is rejected (FR-CI-01/FR-CI-06/SEC-02)");
+    CHECK(parse(oversized, &cmd) == -1, "input longer than SHELL_MAX_INPUT is rejected (FR-CI-01/FR-CI-06/SEC-02)");
 }
 
 static void test_rejects_too_many_arguments(void)
@@ -153,7 +166,8 @@ int main(void)
     test_command_with_arguments();
     test_external_command_is_not_builtin();
     test_rejects_null_input();
-    test_rejects_empty_and_whitespace_input();
+    test_accepts_empty_and_whitespace_input();
+    test_accepts_maximum_length_input();
     test_rejects_oversized_input();
     test_rejects_too_many_arguments();
     test_rejects_malformed_redirection();
