@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include <stdbool.h>
 
 #include "shell.h"
 #include "parser.h"
