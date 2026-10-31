@@ -2,6 +2,51 @@
 #include <string.h>
 #include "parser.h"
 
+static bool has_valid_syntax(const char *input)
+{
+    char quote = '\0';
+
+    for (size_t i = 0; input[i] != '\0'; i++) {
+        if ((input[i] == '"' || input[i] == '\'') &&
+            (quote == '\0' || quote == input[i])) {
+            quote = (quote == '\0') ? input[i] : '\0';
+            continue;
+        }
+
+        if (input[i] == '>' && quote == '\0') {
+            if (input[i + 1] == '>') {
+                i++;
+            }
+
+            size_t j = i + 1;
+            while (input[j] != '\0' &&
+                   isspace((unsigned char)input[j])) {
+                j++;
+            }
+
+            if (input[j] == '\0' ||
+                input[j] == '<' || input[j] == '>') {
+                return false;
+            }
+        }
+
+        if (input[i] == '<' && quote == '\0') {
+            size_t j = i + 1;
+            while (input[j] != '\0' &&
+                   isspace((unsigned char)input[j])) {
+                j++;
+            }
+
+            if (input[j] == '\0' ||
+                input[j] == '<' || input[j] == '>') {
+                return false;
+            }
+        }
+    }
+
+    return quote == '\0';
+}
+
 static bool is_builtin_command(const char *name)
 {
     return strcmp(name, "cd") == 0 ||
@@ -14,6 +59,14 @@ static bool is_builtin_command(const char *name)
 int parse_command(char *input, ParsedCommand *cmd)
 {
     if (input == NULL || cmd == NULL) {
+        return -1;
+    }
+
+    if (strlen(input) > SHELL_MAX_INPUT) {
+        return -1;
+    }
+
+    if (!has_valid_syntax(input)) {
         return -1;
     }
 
@@ -46,6 +99,12 @@ int parse_command(char *input, ParsedCommand *cmd)
             *p = '\0';
             p++;
         }
+    }
+
+    if (argc == 0) {
+        cmd->argv[0] = NULL;
+        cmd->is_builtin = false;
+        return 0;
     }
 
     cmd->argv[argc] = NULL;

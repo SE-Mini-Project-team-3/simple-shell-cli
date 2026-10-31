@@ -1,3 +1,13 @@
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include <signal.h>
+
 #include "executor.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,61 +20,66 @@
 int executor_run(const ParsedCommand *cmd)
 {
     if (cmd == NULL || cmd->argv[0] == NULL) {
-        return -1;
+        fprintf(stderr, "shell: invalid command\n");
+        return 1;
     }
 
     // FR-PE-01: Create a child process using fork()
     pid_t pid = fork();
-    
+
     if (pid < 0) {
-        perror("shell: fork failed");
-        return -1;
-    } 
-    else if (pid == 0) {
-        // --- CHILD PROCESS ---
-        
-        // FR-PE-07: Restore default signal behavior for the foreground/background child 
-        // so it can respond to signals like SIGINT (Ctrl+C) normally.
+        perror("shell: fork");
+        return 1;
+    }
+
+    if (pid == 0) {
+        // Restore default SIGINT behavior in the child.
         struct sigaction sa_default;
         sa_default.sa_handler = SIG_DFL;
         sigemptyset(&sa_default.sa_mask);
         sa_default.sa_flags = 0;
         sigaction(SIGINT, &sa_default, NULL);
 
-        // FR-PE-02: Execute external programs using an exec-family function
+        // FR-PE-02: Execute the external program.
         execvp(cmd->argv[0], cmd->argv);
-        
-        // If execvp returns, an error occurred (e.g., command not found)
-        // Complies with SAD §4.4 standard error format: "shell: <command>: <reason>"
-        fprintf(stderr, "shell: %s: %s\n", cmd->argv[0], strerror(errno));
-        exit(EXIT_FAILURE);
-    } 
-    else {
-        // --- PARENT PROCESS ---
-        if (!cmd->is_background) {
-            int status;
-            
-            // FR-PE-03: Wait for foreground processes to complete
-            if (waitpid(pid, &status, 0) < 0) {
-                perror("shell: waitpid failed");
-                return -1;
-            }
-            
-            // FR-PE-05: Report abnormal process termination
-            if (WIFEXITED(status)) {
-                return WEXITSTATUS(status);
-            } else if (WIFSIGNALED(status)) {
-                fprintf(stderr, "shell: process terminated abnormally by signal %d\n", WTERMSIG(status));
-                return 128 + WTERMSIG(status);
-            }
-        } else {
-            // FR-PE-04: Background execution - print background PID and return immediately
-            printf("[Background PID: %d]\n", pid);
-            return 0;
-        }
+
+        // execvp returns only if execution fails.
+        fprintf(stderr, "shell: %s: %s\n",
+                cmd->argv[0], strerror(errno));
+        _exit(127);
     }
-    
-    return 0;
+
+    // FR-PE-04: Background execution.
+    if (cmd->is_background) {
+        printf("[Background PID: %d]\n", (int)pid);
+        return 0;
+    }
+
+    // FR-PE-03: Wait for foreground processes.
+    int status;
+
+    while (waitpid(pid, &status, 0) < 0) {
+        if (errno == EINTR) {
+            continue;
+        }
+
+        perror("shell: waitpid");
+        return 1;
+    }
+
+    // FR-PE-05: Return the child's exit status.
+    if (WIFEXITED(status)) {
+        return WEXITSTATUS(status);
+    }
+
+    if (WIFSIGNALED(status)) {
+        fprintf(stderr,
+                "shell: process terminated abnormally by signal %d\n",
+                WTERMSIG(status));
+        return 128 + WTERMSIG(status);
+    }
+
+    return 1;
 }
 
 // FR-PE-06 / SEC-04: Non-blocking background child reaping function
