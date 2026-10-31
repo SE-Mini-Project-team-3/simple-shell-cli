@@ -17,7 +17,7 @@ void test_executor_invalid_command(void) {
     cmd.is_background = false;
 
     int result = executor_run(&cmd);
-    assert(result == 1); 
+    assert(result == 127); 
     printf("PASSED: test_executor_invalid_command\n");
 }
 
