@@ -15,7 +15,7 @@ void test_executor_invalid_command(void)
 {
     printf("Running test: test_executor_invalid_command...\n");
 
-    ParsedCommand cmd;
+    ParsedCommand cmd = {0};
     cmd.argv[0] = "nonexistent_command_xyz_12345";
     cmd.argv[1] = NULL;
     cmd.is_background = false;
@@ -30,7 +30,7 @@ void test_executor_foreground_valid(void)
 {
     printf("Running test: test_executor_foreground_valid...\n");
 
-    ParsedCommand cmd;
+    ParsedCommand cmd = {0};
     cmd.argv[0] = "true";
     cmd.argv[1] = NULL;
     cmd.is_background = false;
@@ -45,7 +45,7 @@ void test_executor_background(void)
 {
     printf("Running test: test_executor_background...\n");
 
-    ParsedCommand cmd;
+    ParsedCommand cmd = {0};
     cmd.argv[0] = "true";
     cmd.argv[1] = NULL;
     cmd.is_background = true;
