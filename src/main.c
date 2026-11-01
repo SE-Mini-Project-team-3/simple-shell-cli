@@ -31,9 +31,26 @@ static int run_builtin(const ParsedCommand *cmd)
 
     if (strcmp(cmd->argv[0], "cd") == 0) {
         const char *path = cmd->argv[1];
+        const char *home = getenv("HOME");
+        char expanded_path[SHELL_MAX_INPUT + 1];
 
-        if (path == NULL) {
-            path = getenv("HOME");
+        if (path == NULL || strcmp(path, "~") == 0) {
+            path = home;
+        } else if (path[0] == '~' && path[1] == '/') {
+            if (home == NULL) {
+                fprintf(stderr, "shell: cd: HOME is not set\n");
+                return 1;
+            }
+
+            int written = snprintf(expanded_path, sizeof(expanded_path),
+                                    "%s%s", home, path + 1);
+
+            if (written < 0 || (size_t)written >= sizeof(expanded_path)) {
+                fprintf(stderr, "shell: cd: path too long\n");
+                return 1;
+            }
+
+            path = expanded_path;
         }
 
         if (path == NULL || chdir(path) != 0) {

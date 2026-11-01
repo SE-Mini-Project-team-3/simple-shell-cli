@@ -9,13 +9,6 @@
 #include <signal.h>
 
 #include "executor.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <string.h>
-#include <signal.h>
 
 int executor_run(const ParsedCommand *cmd)
 {

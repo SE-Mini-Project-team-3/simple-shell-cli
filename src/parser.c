@@ -56,65 +56,83 @@ static bool is_builtin_command(const char *name)
            strcmp(name, "help") == 0;
 }
 
+
 int parse_command(char *input, ParsedCommand *cmd)
 {
     if (input == NULL || cmd == NULL) {
         return -1;
     }
 
-    if (strlen(input) > SHELL_MAX_INPUT) {
-        return -1;
-    }
-
-    if (!has_valid_syntax(input)) {
+    if (strlen(input) > SHELL_MAX_INPUT ||
+        !has_valid_syntax(input)) {
         return -1;
     }
 
     memset(cmd, 0, sizeof(*cmd));
 
-    char *p = input;
+    char *read = input;
+    char *write = input;
     int argc = 0;
+    char quote = '\0';
+    bool in_token = false;
 
-    while (*p != '\0') {
-        while (*p != '\0' && isspace((unsigned char)*p)) {
-            p++;
+    while (*read != '\0') {
+        if (quote == '\0' &&
+            (*read == '"' || *read == '\'')) {
+            if (!in_token) {
+                if (argc >= SHELL_MAX_ARGS) {
+                    memset(cmd, 0, sizeof(*cmd));
+                    return -1;
+                }
+
+                cmd->argv[argc++] = write;
+                in_token = true;
+            }
+
+            quote = *read++;
+            continue;
         }
 
-        if (*p == '\0') {
-            break;
+        if (quote != '\0' && *read == quote) {
+            quote = '\0';
+            read++;
+            continue;
         }
 
-        if (argc >= SHELL_MAX_ARGS) {
-            memset(cmd, 0, sizeof(*cmd));
-            return -1;
+        if (quote == '\0' &&
+            isspace((unsigned char)*read)) {
+            if (in_token) {
+                *write++ = '\0';
+                in_token = false;
+            }
+            read++;
+            continue;
         }
 
-        cmd->argv[argc++] = p;
+        if (!in_token) {
+            if (argc >= SHELL_MAX_ARGS) {
+                memset(cmd, 0, sizeof(*cmd));
+                return -1;
+            }
 
-        while (*p != '\0' && !isspace((unsigned char)*p)) {
-            p++;
+            cmd->argv[argc++] = write;
+            in_token = true;
         }
 
-        if (*p != '\0') {
-            *p = '\0';
-            p++;
-        }
+        *write++ = *read++;
     }
 
-    if (argc == 0) {
-        cmd->argv[0] = NULL;
-        cmd->is_builtin = false;
-        return 0;
+    if (in_token) {
+        *write = '\0';
     }
 
     cmd->argv[argc] = NULL;
-
-    if (argc > 0) {
-        cmd->is_builtin = is_builtin_command(cmd->argv[0]);
-    }
+    cmd->is_builtin =
+        argc > 0 && is_builtin_command(cmd->argv[0]);
 
     return 0;
 }
+
 
 void free_parsed_command(ParsedCommand *cmd)
 {
