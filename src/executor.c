@@ -1,69 +1,107 @@
 
+#include "executor.h"
+
+#include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
-#include <signal.h>
-
-#include "executor.h"
+#include <unistd.h>
 
 int executor_run(const ParsedCommand *cmd)
 {
     if (cmd == NULL || cmd->argv[0] == NULL) {
-        fprintf(stderr, "shell: invalid command\n");
-        return 1;
+        fprintf(stderr, "shell: empty command\n");
+        return 2;
     }
 
-    // FR-PE-01: Create a child process using fork()
     pid_t pid = fork();
 
     if (pid < 0) {
-        perror("shell: fork");
+        perror("shell: fork failed");
         return 1;
     }
 
     if (pid == 0) {
-        // Restore default SIGINT behavior in the child.
+        /* Restore normal Ctrl+C behavior in the child process. */
         struct sigaction sa_default;
+        memset(&sa_default, 0, sizeof(sa_default));
         sa_default.sa_handler = SIG_DFL;
         sigemptyset(&sa_default.sa_mask);
-        sa_default.sa_flags = 0;
         sigaction(SIGINT, &sa_default, NULL);
 
-        // FR-PE-02: Execute the external program.
+        /* Input redirection. */
+        if (cmd->input_file != NULL) {
+            int fd = open(cmd->input_file, O_RDONLY);
+
+            if (fd < 0) {
+                perror(cmd->input_file);
+                _exit(1);
+            }
+
+            if (dup2(fd, STDIN_FILENO) < 0) {
+                perror("dup2");
+                close(fd);
+                _exit(1);
+            }
+
+            close(fd);
+        }
+
+        /* Output redirection. */
+        if (cmd->output_file != NULL) {
+            int flags = O_WRONLY | O_CREAT |
+                        (cmd->append_mode ? O_APPEND : O_TRUNC);
+
+            int fd = open(cmd->output_file, flags, 0644);
+
+            if (fd < 0) {
+                perror(cmd->output_file);
+                _exit(1);
+            }
+
+            if (dup2(fd, STDOUT_FILENO) < 0) {
+                perror("dup2");
+                close(fd);
+                _exit(1);
+            }
+
+            close(fd);
+        }
+
         execvp(cmd->argv[0], cmd->argv);
 
-        // execvp returns only if execution fails.
+        int saved_errno = errno;
         fprintf(stderr, "shell: %s: %s\n",
-                cmd->argv[0], strerror(errno));
-        _exit(127);
+                cmd->argv[0], strerror(saved_errno));
+
+        /* Conventional shell status when a command cannot be found. */
+        _exit(saved_errno == ENOENT ? 127 : 126);
     }
 
-    // FR-PE-04: Background execution.
+    /* Parent process. */
     if (cmd->is_background) {
         printf("[Background PID: %d]\n", (int)pid);
         return 0;
     }
 
-    // FR-PE-03: Wait for foreground processes.
     int status;
+    pid_t result;
 
-    while (waitpid(pid, &status, 0) < 0) {
-        if (errno == EINTR) {
-            continue;
-        }
+    do {
+        result = waitpid(pid, &status, 0);
+    } while (result < 0 && errno == EINTR);
 
-        perror("shell: waitpid");
+    if (result < 0) {
+        perror("shell: waitpid failed");
         return 1;
     }
 
-    // FR-PE-05: Return the child's exit status.
-    if (WIFEXITED(status)) {
+    if (WIFEXITED(status))
         return WEXITSTATUS(status);
-    }
 
     if (WIFSIGNALED(status)) {
         fprintf(stderr,
@@ -75,20 +113,24 @@ int executor_run(const ParsedCommand *cmd)
     return 1;
 }
 
-// FR-PE-06 / SEC-04: Non-blocking background child reaping function
-void reap_background_jobs(void) {
+/* Reap completed background processes without blocking. */
+void reap_background_jobs(void)
+{
     int status;
-    // WNOHANG ensures waitpid doesn't block if no background children have exited yet.
+
     while (waitpid(-1, &status, WNOHANG) > 0) {
-        // Successfully reaped a completed background process, preventing zombie states.
+        /* Completed background process reaped. */
     }
 }
 
-// FR-PE-07 / SEC-04: Initialize shell-level signal handling to prevent Ctrl+C from killing the shell itself
-void init_shell_signals(void) {
+/* Prevent Ctrl+C from terminating the shell itself. */
+void init_shell_signals(void)
+{
     struct sigaction sa;
-    sa.sa_handler = SIG_IGN; // Ignore SIGINT (Ctrl+C) in the parent shell loop
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = SIG_IGN;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
+
     sigaction(SIGINT, &sa, NULL);
 }
