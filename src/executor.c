@@ -1,3 +1,4 @@
+
 #include "executor.h"
 
 #include <errno.h>
@@ -25,7 +26,7 @@ int executor_run(const ParsedCommand *cmd)
     }
 
     if (pid == 0) {
-        /* Child process: restore normal Ctrl+C behavior. */
+        /* Restore normal Ctrl+C behavior in the child process. */
         struct sigaction sa_default;
         memset(&sa_default, 0, sizeof(sa_default));
         sa_default.sa_handler = SIG_DFL;
@@ -35,6 +36,7 @@ int executor_run(const ParsedCommand *cmd)
         /* Input redirection. */
         if (cmd->input_file != NULL) {
             int fd = open(cmd->input_file, O_RDONLY);
+
             if (fd < 0) {
                 perror(cmd->input_file);
                 _exit(1);
@@ -45,6 +47,7 @@ int executor_run(const ParsedCommand *cmd)
                 close(fd);
                 _exit(1);
             }
+
             close(fd);
         }
 
@@ -54,6 +57,7 @@ int executor_run(const ParsedCommand *cmd)
                         (cmd->append_mode ? O_APPEND : O_TRUNC);
 
             int fd = open(cmd->output_file, flags, 0644);
+
             if (fd < 0) {
                 perror(cmd->output_file);
                 _exit(1);
@@ -64,19 +68,23 @@ int executor_run(const ParsedCommand *cmd)
                 close(fd);
                 _exit(1);
             }
+
             close(fd);
         }
 
         execvp(cmd->argv[0], cmd->argv);
 
+        int saved_errno = errno;
         fprintf(stderr, "shell: %s: %s\n",
-                cmd->argv[0], strerror(errno));
-        _exit(127);
+                cmd->argv[0], strerror(saved_errno));
+
+        /* Conventional shell status when a command cannot be found. */
+        _exit(saved_errno == ENOENT ? 127 : 126);
     }
 
     /* Parent process. */
     if (cmd->is_background) {
-        printf("[Background PID: %d]\n", pid);
+        printf("[Background PID: %d]\n", (int)pid);
         return 0;
     }
 
@@ -92,15 +100,8 @@ int executor_run(const ParsedCommand *cmd)
         return 1;
     }
 
-    if (WIFEXITED(status)) {
-        int exit_code = WEXITSTATUS(status);
-
-        /* Preserve the Sprint 1 executor test convention. */
-        if (exit_code == 127)
-            return 1;
-
-        return exit_code;
-    }
+    if (WIFEXITED(status))
+        return WEXITSTATUS(status);
 
     if (WIFSIGNALED(status)) {
         fprintf(stderr,
