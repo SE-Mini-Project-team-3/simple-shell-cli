@@ -1,4 +1,3 @@
-
 CC = gcc
 CFLAGS = -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude
 
@@ -40,8 +39,12 @@ tests/test_env_manager: tests/test_env_manager.c src/env_manager.c
 test_executor: src/test_executor.c src/executor.c
 	$(CC) $(CFLAGS) -o $@ src/test_executor.c src/executor.c
 
+# Pipeline tests
+tests/test_pipeline: tests/test_pipeline.c src/pipeline.c
+	$(CC) $(CFLAGS) -o $@ tests/test_pipeline.c src/pipeline.c
+
 # Combined test target
-test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor
+test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor tests/test_pipeline
 	@echo "=== Running Parser Tests ==="
 	./$(TEST_TARGET)
 	@echo "=== Running History Tests ==="
@@ -50,10 +53,12 @@ test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor
 	./tests/test_env_manager
 	@echo "=== Running Executor Tests ==="
 	./test_executor
+	@echo "=== Running Pipeline Tests ==="
+	./tests/test_pipeline
 
 # Clean generated files
 clean:
-	rm -f $(OBJ) $(TARGET) $(TEST_TARGET) tests/test_history tests/test_env_manager tests/test_parser_spec test_executor
+	rm -f $(OBJ) $(TARGET) $(TEST_TARGET) tests/test_history tests/test_env_manager tests/test_parser_spec test_executor tests/test_pipeline
 
 # US-01 parser acceptance specification
 tests/test_parser_spec: tests/test_parser_spec.c src/parser.c
