@@ -6,9 +6,9 @@ echo "Date: $(date)"
 echo "Environment: macOS / Linux (GCC $(gcc --version | head -n1))"
 echo "--------------------------------------------------"
 
-# 1. Build the shell automatically before running benchmarks
+# 1. Build the shell automatically before running benchmarks (fixed with ||)
 echo "Building simple-shell..."
-if ! make clean && ! make; then
+if ! make clean || ! make; then
     echo "Error: Build failed!" >&2
     exit 1
 fi
@@ -30,7 +30,7 @@ EOF
 done
 end_time=$(python3 -c 'import time; print(time.time())')
 
-total_startup=$(python3 -c "print(f'{(($end_time - $start_time) / 100) * 1000:.2f}')")
+total_startup=$(python3 -c "print(f'{(($end_time - $start_time) / 100) * 1000:.2f}' )")
 echo "Average Startup Latency: ${total_startup} ms per invocation"
 echo ""
 
