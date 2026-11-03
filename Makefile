@@ -40,8 +40,12 @@ tests/test_env_manager: tests/test_env_manager.c src/env_manager.c
 test_executor: src/test_executor.c src/executor.c
 	$(CC) $(CFLAGS) -o $@ src/test_executor.c src/executor.c
 
+# Env builtin integration tests (drive the real shell binary)
+tests/test_env_integration: tests/test_env_integration.c
+	$(CC) $(CFLAGS) -o $@ tests/test_env_integration.c
+
 # Combined test target
-test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor
+test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor tests/test_env_integration
 	@echo "=== Running Parser Tests ==="
 	./$(TEST_TARGET)
 	@echo "=== Running History Tests ==="
@@ -50,10 +54,12 @@ test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor
 	./tests/test_env_manager
 	@echo "=== Running Executor Tests ==="
 	./test_executor
+	@echo "=== Running Env Builtin Integration Tests ==="
+	./tests/test_env_integration
 
 # Clean generated files
 clean:
-	rm -f $(OBJ) $(TARGET) $(TEST_TARGET) tests/test_history tests/test_env_manager tests/test_parser_spec test_executor
+	rm -f $(OBJ) $(TARGET) $(TEST_TARGET) tests/test_history tests/test_env_manager tests/test_parser_spec test_executor tests/test_env_integration tests/.tmp_env_integration_input tests/.tmp_env_integration_output
 
 # US-01 parser acceptance specification
 tests/test_parser_spec: tests/test_parser_spec.c src/parser.c
