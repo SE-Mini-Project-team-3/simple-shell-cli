@@ -86,9 +86,28 @@ static int run_builtin(const ParsedCommand *cmd)
 
     if (strcmp(cmd->argv[0], "cd") == 0) {
         const char *path = cmd->argv[1];
+        const char *home = getenv("HOME");
+        char expanded_path[SHELL_MAX_INPUT + 1];
 
-        if (path == NULL)
-            path = getenv("HOME");
+        if (path == NULL || strcmp(path, "~") == 0) {
+            path = home;
+        } else if (path[0] == '~' && path[1] == '/') {
+            if (home == NULL) {
+                fprintf(stderr, "shell: cd: HOME is not set\n");
+                return 1;
+            }
+
+            int written = snprintf(expanded_path, sizeof(expanded_path),
+                                   "%s%s", home, path + 1);
+
+            if (written < 0 ||
+                (size_t)written >= sizeof(expanded_path)) {
+                fprintf(stderr, "shell: cd: path too long\n");
+                return 1;
+            }
+
+            path = expanded_path;
+        }
 
         if (path == NULL || chdir(path) != 0) {
             perror("shell: cd");
@@ -258,7 +277,6 @@ int main(void)
      * and the terminating null character.
      */
     char line[SHELL_MAX_INPUT + 2];
-
     int last_status = 0;
 
     init_shell_signals();
@@ -278,7 +296,6 @@ int main(void)
         }
 
         size_t input_len = strlen(line);
-
         int complete_line =
             (input_len > 0 && line[input_len - 1] == '\n');
 
@@ -291,7 +308,6 @@ int main(void)
             int ch = getchar();
 
             if (ch != '\n' && ch != EOF) {
-                /* Discard the remainder of the oversized line. */
                 while (ch != '\n' && ch != EOF)
                     ch = getchar();
 
@@ -301,11 +317,9 @@ int main(void)
             }
         }
 
-        /* Remove the newline if one was read. */
         if (complete_line)
             line[--input_len] = '\0';
 
-        /* Enforce the maximum input length. */
         if (input_len > SHELL_MAX_INPUT) {
             fprintf(stderr, "shell: input line too long\n");
             last_status = 2;
@@ -320,7 +334,6 @@ int main(void)
         history_add(command_line);
 
         char *parts[SHELL_MAX_PIPELINE_STAGES];
-
         int count = split_pipeline(command_line, parts);
 
         if (count < 1) {
@@ -341,9 +354,7 @@ int main(void)
 
             if (*parts[i] == '\0' ||
                 parse_command(parts[i], &commands[i]) != 0) {
-
                 fprintf(stderr, "shell: invalid command syntax\n");
-
                 last_status = 2;
                 failed = 1;
                 break;
@@ -361,7 +372,6 @@ int main(void)
 
                 if (strcmp(cmd->argv[0], "cd") == 0 ||
                     strcmp(cmd->argv[0], "exit") == 0) {
-
                     result = run_builtin(cmd);
                 } else {
                     result = run_builtin_with_redirection(cmd);
@@ -375,14 +385,10 @@ int main(void)
                 }
 
                 last_status = result;
-
             } else {
-                /* Preserve the external command's exit status. */
                 last_status = executor_run(cmd);
             }
-
         } else if (!failed) {
-            /* Preserve the pipeline's exit status. */
             last_status = pipeline_execute(stages, count);
         }
 
