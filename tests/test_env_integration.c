@@ -118,11 +118,21 @@ static void test_export_visible_to_external_child(void)
 
 static void test_export_requires_name_value_pair(void)
 {
-    char *output = run_shell_script("export NOVALUE\nexit\n");
+    char *output = run_shell_script("export NOVALUE\nenv\nexit\n");
 
     CHECK(output != NULL, "shell script for malformed export ran");
-    CHECK(output != NULL && strstr(output, "export") != NULL,
-          "export without NAME=VALUE reports an error instead of crashing");
+
+    /* Assert the exact diagnostic, not just a loose substring match
+     * (a bare "export" could coincidentally appear in the prompt or
+     * help text even if the real error path never ran). */
+    CHECK(output != NULL &&
+              strstr(output,
+                     "shell: export: invalid argument 'NOVALUE'") != NULL,
+          "export without NAME=VALUE reports the exact expected error");
+
+    /* And confirm the malformed argument was never actually set. */
+    CHECK(output != NULL && strstr(output, "NOVALUE=") == NULL,
+          "the malformed export argument is not set as an environment variable");
 
     free(output);
 }

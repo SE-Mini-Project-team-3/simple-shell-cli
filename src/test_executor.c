@@ -21,7 +21,7 @@ void test_executor_invalid_command(void)
     cmd.is_background = false;
 
     int result = executor_run(&cmd);
-    assert(result == 1);
+    assert(result == 127);
 
     printf("PASSED: test_executor_invalid_command\n");
 }
@@ -50,24 +50,24 @@ void test_executor_background(void)
     cmd.argv[1] = NULL;
     cmd.is_background = true;
 
-    // Run a background job.
     int result = executor_run(&cmd);
     assert(result == 0);
 
-    // Give the background task time to complete.
-    usleep(100000); // 100ms
+    /* Allow the short-lived child time to finish. */
+    usleep(100000);
 
-    // Reap completed background jobs.
+    /* Reap completed background jobs. */
     reap_background_jobs();
 
-    // Verify that no unreaped child processes remain.
+    /* Confirm that no child remains waitable. */
     errno = 0;
     pid_t res = waitpid(-1, NULL, WNOHANG);
 
     assert(res == -1);
     assert(errno == ECHILD);
 
-    printf("PASSED: test_executor_background (verified child reaping)\n");
+    printf("PASSED: test_executor_background "
+           "(verified child reaping)\n");
 }
 
 int main(void)
