@@ -4,6 +4,7 @@
 #include "executor.h"
 #include "pipeline.h"
 #include "history.h"
+#include "env_manager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,7 +67,7 @@ static int run_builtin(const ParsedCommand *cmd)
 {
     if (strcmp(cmd->argv[0], "help") == 0) {
         puts("Simple Shell CLI");
-        puts("Built-ins: cd, pwd, echo, exit, help, history");
+        puts("Built-ins: cd, pwd, echo, exit, help, history, export, unset, env");
         puts("External commands are executed through the process executor.");
         return 0;
     }
@@ -130,6 +131,65 @@ static int run_builtin(const ParsedCommand *cmd)
 
     if (strcmp(cmd->argv[0], "history") == 0) {
         history_print();
+        return 0;
+    }
+
+    if (strcmp(cmd->argv[0], "export") == 0) {
+        if (cmd->argv[1] == NULL) {
+            fprintf(stderr, "shell: export: usage: export NAME=VALUE\n");
+            return 1;
+        }
+
+        int status = 0;
+
+        for (int i = 1; cmd->argv[i] != NULL; i++) {
+            char *eq = strchr(cmd->argv[i], '=');
+
+            if (eq == NULL) {
+                fprintf(stderr,
+                        "shell: export: invalid argument '%s'\n",
+                        cmd->argv[i]);
+                status = 1;
+                continue;
+            }
+
+            *eq = '\0';
+
+            if (env_set(cmd->argv[i], eq + 1) != 0) {
+                fprintf(stderr,
+                        "shell: export: failed to set '%s'\n",
+                        cmd->argv[i]);
+                status = 1;
+            }
+
+            *eq = '=';
+        }
+
+        return status;
+    }
+
+    if (strcmp(cmd->argv[0], "unset") == 0) {
+        if (cmd->argv[1] == NULL) {
+            fprintf(stderr, "shell: unset: usage: unset NAME\n");
+            return 1;
+        }
+
+        int status = 0;
+
+        for (int i = 1; cmd->argv[i] != NULL; i++) {
+            if (env_unset(cmd->argv[i]) != 0) {
+                fprintf(stderr,
+                        "shell: unset: failed to unset '%s'\n",
+                        cmd->argv[i]);
+                status = 1;
+            }
+        }
+
+        return status;
+    }
+
+    if (strcmp(cmd->argv[0], "env") == 0) {
+        env_print();
         return 0;
     }
 

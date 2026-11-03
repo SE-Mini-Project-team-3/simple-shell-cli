@@ -24,7 +24,10 @@ static bool is_builtin_command(const char *name)
            strcmp(name, "echo") == 0 ||
            strcmp(name, "exit") == 0 ||
            strcmp(name, "help") == 0 ||
-           strcmp(name, "history") == 0;
+           strcmp(name, "history") == 0 ||
+           strcmp(name, "export") == 0 ||
+           strcmp(name, "unset") == 0 ||
+           strcmp(name, "env") == 0;
 }
 
 int parse_command(char *input, ParsedCommand *cmd)
