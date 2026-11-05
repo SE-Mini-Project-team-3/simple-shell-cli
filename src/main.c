@@ -13,6 +13,8 @@
 #include <errno.h>
 #include <signal.h>
 #include <poll.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 static void handle_prompt_sigint(int signo)
 {
@@ -294,6 +296,74 @@ restore:
     return result;
 }
 
+/*
+ * Run a background built-in in a separate process group.
+ * The child process ensures that shell state remains unchanged.
+ */
+static int run_background_builtin(const ParsedCommand *cmd)
+{
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("shell: fork failed");
+        return 1;
+    }
+
+    if (pid == 0) {
+        /*
+         * Make this child the leader of its own process group.
+         * This keeps terminal-generated Ctrl+C away from it.
+         */
+        if (setpgid(0, 0) < 0) {
+            perror("shell: setpgid");
+            _exit(1);
+        }
+
+        struct sigaction sa;
+        memset(&sa, 0, sizeof(sa));
+        sa.sa_handler = SIG_DFL;
+        sigemptyset(&sa.sa_mask);
+
+        if (sigaction(SIGINT, &sa, NULL) < 0) {
+            perror("shell: sigaction");
+            _exit(1);
+        }
+
+        int result;
+
+        if (strcmp(cmd->argv[0], "cd") == 0 ||
+            strcmp(cmd->argv[0], "exit") == 0) {
+            result = run_builtin(cmd);
+        } else {
+            result = run_builtin_with_redirection(cmd);
+        }
+
+        fflush(NULL);
+
+        /* exit in a background child must never exit the parent shell. */
+        _exit(result < 0 ? 0 : result);
+    }
+
+    /*
+     * Also set the process group from the parent to avoid the race
+     * between fork() and the child beginning execution.
+     *
+     * EACCES means the child has already executed a new program.
+     * ESRCH means the child has already exited.
+     */
+    if (setpgid(pid, pid) < 0 && errno != EACCES && errno != ESRCH) {
+        perror("shell: setpgid");
+        kill(pid, SIGTERM);
+        waitpid(pid, NULL, 0);
+        return 1;
+    }
+
+    printf("[Background PID: %d]\n", (int)pid);
+    fflush(stdout);
+
+    return 0;
+}
+
 int main(void)
 {
     /*
@@ -441,30 +511,6 @@ int main(void)
         }
 
         /*
-         * Background execution currently supports standalone
-         * external commands only.
-         */
-        if (!failed) {
-            if (count > 1) {
-                for (int i = 0; i < count; i++) {
-                    if (commands[i].is_background) {
-                        fprintf(stderr,
-                                "shell: background pipelines are not supported\n");
-                        last_status = 2;
-                        failed = 1;
-                        break;
-                    }
-                }
-            } else if (commands[0].is_background &&
-                       commands[0].is_builtin) {
-                fprintf(stderr,
-                        "shell: background execution of built-ins is not supported\n");
-                last_status = 2;
-                failed = 1;
-            }
-        }
-
-        /*
          * Add only successfully parsed and supported commands
          * to history. Store the original, complete command.
          */
@@ -475,27 +521,30 @@ int main(void)
             ParsedCommand *cmd = &commands[0];
 
             if (cmd->is_builtin) {
-                int result;
-
-                if (strcmp(cmd->argv[0], "cd") == 0 ||
-                    strcmp(cmd->argv[0], "exit") == 0) {
-                    result = run_builtin(cmd);
+                if (cmd->is_background) {
+                    last_status = run_background_builtin(cmd);
                 } else {
-                    result = run_builtin_with_redirection(cmd);
+                    int result;
+
+                    if (strcmp(cmd->argv[0], "cd") == 0 ||
+                        strcmp(cmd->argv[0], "exit") == 0) {
+                        result = run_builtin(cmd);
+                    } else {
+                        result = run_builtin_with_redirection(cmd);
+                    }
+
+                    if (result == -1) {
+                        for (int i = 0; i < parsed; i++)
+                            free_parsed_command(&commands[i]);
+
+                        break;
+                    }
+
+                    last_status = result;
                 }
-
-                if (result == -1) {
-                    for (int i = 0; i < parsed; i++)
-                        free_parsed_command(&commands[i]);
-
-                    break;
-                }
-
-                last_status = result;
             } else {
                 last_status = executor_run(cmd);
             }
-
         } else if (!failed) {
             last_status = pipeline_execute(stages, count);
         }

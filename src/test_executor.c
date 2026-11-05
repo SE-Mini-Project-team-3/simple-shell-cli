@@ -1,4 +1,3 @@
-
 #define _DEFAULT_SOURCE
 
 #include <stdio.h>
@@ -6,11 +5,47 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "executor.h"
 #include "shell.h"
+
+#define BACKGROUND_TEST_FILE "/tmp/simple_shell_executor_bg_test.txt"
+
+static pid_t read_background_pid(void)
+{
+    FILE *file = fopen(BACKGROUND_TEST_FILE, "r");
+
+    if (file == NULL)
+        return -1;
+
+    long value = -1;
+    int result = fscanf(file, "%ld", &value);
+    fclose(file);
+
+    if (result != 1 || value <= 0)
+        return -1;
+
+    return (pid_t)value;
+}
+
+static pid_t wait_for_background_pid_file(void)
+{
+    for (int i = 0; i < 100; i++) {
+        pid_t pid = read_background_pid();
+
+        if (pid > 0)
+            return pid;
+
+        usleep(10000);
+    }
+
+    return -1;
+}
 
 void test_executor_invalid_command(void)
 {
@@ -46,15 +81,37 @@ void test_executor_background(void)
 {
     printf("Running test: test_executor_background...\n");
 
+    unlink(BACKGROUND_TEST_FILE);
+
+    char command[256];
+    snprintf(command, sizeof(command),
+             "echo $$ > %s; sleep 0.2",
+             BACKGROUND_TEST_FILE);
+
     ParsedCommand cmd = {0};
-    cmd.argv[0] = "true";
-    cmd.argv[1] = NULL;
+    cmd.argv[0] = "sh";
+    cmd.argv[1] = "-c";
+    cmd.argv[2] = command;
+    cmd.argv[3] = NULL;
     cmd.is_background = true;
 
     int result = executor_run(&cmd);
     assert(result == 0);
 
-    usleep(100000);
+    pid_t background_pid = wait_for_background_pid_file();
+
+    assert(background_pid > 0);
+
+    /*
+     * A background external command must be the leader of its own
+     * process group, separate from the test process group.
+     */
+    pid_t background_pgid = getpgid(background_pid);
+
+    assert(background_pgid == background_pid);
+    assert(background_pgid != getpgrp());
+
+    usleep(300000);
     reap_background_jobs();
 
     errno = 0;
@@ -62,6 +119,8 @@ void test_executor_background(void)
 
     assert(res == -1);
     assert(errno == ECHILD);
+
+    unlink(BACKGROUND_TEST_FILE);
 
     printf("PASSED: test_executor_background\n");
 }

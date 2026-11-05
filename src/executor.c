@@ -1,4 +1,3 @@
-
 #include "executor.h"
 
 #include <errno.h>
@@ -26,12 +25,26 @@ int executor_run(const ParsedCommand *cmd)
     }
 
     if (pid == 0) {
+        /*
+         * Background children get their own process group.
+         * Foreground children remain in the shell's process group
+         * so terminal-generated Ctrl+C reaches them normally.
+         */
+        if (cmd->is_background && setpgid(0, 0) < 0) {
+            perror("shell: setpgid");
+            _exit(1);
+        }
+
         /* Restore normal Ctrl+C behavior in the child process. */
         struct sigaction sa_default;
         memset(&sa_default, 0, sizeof(sa_default));
         sa_default.sa_handler = SIG_DFL;
         sigemptyset(&sa_default.sa_mask);
-        sigaction(SIGINT, &sa_default, NULL);
+
+        if (sigaction(SIGINT, &sa_default, NULL) < 0) {
+            perror("shell: sigaction");
+            _exit(1);
+        }
 
         /* Input redirection. */
         if (cmd->input_file != NULL) {
@@ -84,7 +97,21 @@ int executor_run(const ParsedCommand *cmd)
 
     /* Parent process. */
     if (cmd->is_background) {
+        /*
+         * Set the process group from the parent too.
+         * EACCES means the child has already executed a new program.
+         * ESRCH means the child has already exited.
+         */
+        if (setpgid(pid, pid) < 0 &&
+            errno != EACCES && errno != ESRCH) {
+            perror("shell: setpgid");
+            kill(pid, SIGTERM);
+            waitpid(pid, NULL, 0);
+            return 1;
+        }
+
         printf("[Background PID: %d]\n", (int)pid);
+        fflush(stdout);
         return 0;
     }
 

@@ -10,6 +10,34 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+static void close_pipeline_pipes(
+    int pipes[SHELL_MAX_PIPELINE_STAGES - 1][2],
+    int pipe_count)
+{
+    for (int i = 0; i < pipe_count; i++) {
+        close(pipes[i][0]);
+        close(pipes[i][1]);
+    }
+}
+
+static void terminate_pipeline(
+    pid_t pids[SHELL_MAX_PIPELINE_STAGES],
+    int started,
+    pid_t process_group)
+{
+    if (process_group > 0)
+        kill(-process_group, SIGTERM);
+
+    for (int i = 0; i < started; i++)
+        kill(pids[i], SIGTERM);
+
+    for (int i = 0; i < started; i++) {
+        while (waitpid(pids[i], NULL, 0) < 0 && errno == EINTR) {
+            /* Retry interrupted wait. */
+        }
+    }
+}
+
 int pipeline_execute(ParsedCommand *stages[], int stage_count)
 {
     if (stages == NULL || stage_count < 1 ||
@@ -19,7 +47,14 @@ int pipeline_execute(ParsedCommand *stages[], int stage_count)
     }
 
     int pipes[SHELL_MAX_PIPELINE_STAGES - 1][2];
+    int gate[2] = {-1, -1};
     pid_t pids[SHELL_MAX_PIPELINE_STAGES];
+
+    /*
+     * A trailing '&' is stored on the final parsed pipeline stage.
+     */
+    int is_background = stages[stage_count - 1] != NULL &&
+                        stages[stage_count - 1]->is_background;
 
     /* Validate all pipeline stages before creating processes. */
     for (int i = 0; i < stage_count; i++) {
@@ -29,21 +64,27 @@ int pipeline_execute(ParsedCommand *stages[], int stage_count)
         }
     }
 
-    /* Create the required pipes. */
+    /* Create the required data pipes. */
     for (int i = 0; i < stage_count - 1; i++) {
         if (pipe(pipes[i]) < 0) {
             perror("pipe");
-
-            for (int j = 0; j < i; j++) {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-            }
-
+            close_pipeline_pipes(pipes, i);
             return 1;
         }
     }
 
+    /*
+     * Background children wait on this gate until every stage
+     * has joined the shared process group.
+     */
+    if (is_background && pipe(gate) < 0) {
+        perror("background pipeline gate");
+        close_pipeline_pipes(pipes, stage_count - 1);
+        return 1;
+    }
+
     int started = 0;
+    pid_t background_pgid = 0;
 
     /* Fork one child process for each pipeline stage. */
     for (int i = 0; i < stage_count; i++) {
@@ -52,19 +93,14 @@ int pipeline_execute(ParsedCommand *stages[], int stage_count)
         if (pid < 0) {
             perror("fork");
 
-            /* Close all pipe descriptors. */
-            for (int j = 0; j < stage_count - 1; j++) {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-            }
+            close_pipeline_pipes(pipes, stage_count - 1);
 
-            /* Reap children that were already created. */
-            for (int j = 0; j < started; j++) {
-                pid_t result;
-
-                do {
-                    result = waitpid(pids[j], NULL, 0);
-                } while (result < 0 && errno == EINTR);
+            if (is_background) {
+                terminate_pipeline(pids, started, background_pgid);
+                close(gate[0]);
+                close(gate[1]);
+            } else {
+                terminate_pipeline(pids, started, 0);
             }
 
             return 1;
@@ -72,9 +108,42 @@ int pipeline_execute(ParsedCommand *stages[], int stage_count)
 
         if (pid == 0) {
             /*
+             * All background stages belong to one process group.
+             * The first child becomes the process-group leader.
+             */
+            if (is_background) {
+                pid_t target_pgid =
+                    (i == 0) ? 0 : background_pgid;
+
+                if (setpgid(0, target_pgid) < 0) {
+                    perror("shell: setpgid");
+                    _exit(1);
+                }
+
+                /* The child must not keep the gate write end open. */
+                close(gate[1]);
+
+                /*
+                 * Wait until the parent closes its gate write end.
+                 * EOF means all pipeline stages have been created.
+                 */
+                char buffer;
+                ssize_t result;
+
+                do {
+                    result = read(gate[0], &buffer, 1);
+                } while (result < 0 && errno == EINTR);
+
+                close(gate[0]);
+
+                if (result < 0) {
+                    perror("background pipeline gate read");
+                    _exit(1);
+                }
+            }
+
+            /*
              * Restore default SIGINT handling in pipeline children.
-             * The parent shell may ignore SIGINT, but child processes
-             * must respond to Ctrl+C normally.
              */
             struct sigaction sa = {0};
             sa.sa_handler = SIG_DFL;
@@ -147,18 +216,51 @@ int pipeline_execute(ParsedCommand *stages[], int stage_count)
             _exit(127);
         }
 
+        /*
+         * Parent process: establish the process group as well.
+         */
+        if (is_background) {
+            if (i == 0)
+                background_pgid = pid;
+
+            if (setpgid(pid, background_pgid) < 0 &&
+                errno != EACCES && errno != ESRCH) {
+                perror("shell: setpgid");
+
+                pids[started++] = pid;
+
+                close_pipeline_pipes(pipes, stage_count - 1);
+                terminate_pipeline(pids, started, background_pgid);
+
+                close(gate[0]);
+                close(gate[1]);
+
+                return 1;
+            }
+        }
+
         pids[started++] = pid;
     }
 
-    /* Close all pipe descriptors in the parent. */
-    for (int i = 0; i < stage_count - 1; i++) {
-        close(pipes[i][0]);
-        close(pipes[i][1]);
+    /* Close all data-pipe descriptors in the parent. */
+    close_pipeline_pipes(pipes, stage_count - 1);
+
+    if (is_background) {
+        /*
+         * Release every child simultaneously by closing the gate.
+         * Children see EOF because they already closed gate[1].
+         */
+        close(gate[0]);
+        close(gate[1]);
+
+        printf("[Background PID: %d]\n", (int)pids[0]);
+        fflush(stdout);
+        return 0;
     }
 
     /*
-     * Wait for every child and return the exit status
-     * of the final pipeline stage.
+     * Foreground pipelines wait for every child and return the exit
+     * status of the final pipeline stage.
      */
     int last_status = 0;
 
