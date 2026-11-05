@@ -11,6 +11,30 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <signal.h>
+
+static void handle_prompt_sigint(int signo)
+{
+    int saved_errno = errno;
+    (void)signo;
+
+    write(STDOUT_FILENO, "\n", 1);
+
+    errno = saved_errno;
+}
+
+static void install_prompt_signal_handler(void)
+{
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = handle_prompt_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    sigaction(SIGINT, &sa, NULL);
+}
 
 static int split_pipeline(char *line, char *parts[])
 {
@@ -280,6 +304,7 @@ int main(void)
     int last_status = 0;
 
     init_shell_signals();
+    install_prompt_signal_handler();
 
     puts("Simple Shell CLI");
     puts("Type 'help' for available commands.");
@@ -291,6 +316,11 @@ int main(void)
         fflush(stdout);
 
         if (fgets(line, sizeof(line), stdin) == NULL) {
+            if (errno == EINTR) {
+                clearerr(stdin);
+                continue;
+            }
+
             putchar('\n');
             break;
         }
