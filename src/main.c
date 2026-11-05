@@ -1,4 +1,3 @@
-
 #include "shell.h"
 #include "parser.h"
 #include "executor.h"
@@ -13,6 +12,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
+#include <poll.h>
 
 static void handle_prompt_sigint(int signo)
 {
@@ -314,6 +314,41 @@ int main(void)
 
         printf("simple-shell> ");
         fflush(stdout);
+
+        /*
+         * Periodically check for completed background processes
+         * while waiting for user input.
+         */
+        struct pollfd input_fd = {
+            .fd = STDIN_FILENO,
+            .events = POLLIN
+        };
+
+        int poll_result;
+
+        while (1) {
+            poll_result = poll(&input_fd, 1, 250);
+
+            if (poll_result == 0) {
+                reap_background_jobs();
+                continue;
+            }
+
+            if (poll_result < 0 && errno == EINTR) {
+                clearerr(stdin);
+                break;
+            }
+
+            if (poll_result < 0) {
+                perror("shell: poll");
+                return 1;
+            }
+
+            break;
+        }
+
+        if (poll_result < 0)
+            continue;
 
         if (fgets(line, sizeof(line), stdin) == NULL) {
             if (errno == EINTR) {
