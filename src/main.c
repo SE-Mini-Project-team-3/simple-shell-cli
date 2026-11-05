@@ -1,4 +1,3 @@
-
 #include "shell.h"
 #include "parser.h"
 #include "executor.h"
@@ -331,7 +330,12 @@ int main(void)
         if (*command_line == '\0')
             continue;
 
-        history_add(command_line);
+        /*
+         * Preserve the complete command before split_pipeline()
+         * modifies the original command line.
+         */
+        char history_line[SHELL_MAX_INPUT + 1];
+        snprintf(history_line, sizeof(history_line), "%s", command_line);
 
         char *parts[SHELL_MAX_PIPELINE_STAGES];
         int count = split_pipeline(command_line, parts);
@@ -363,6 +367,37 @@ int main(void)
             parsed++;
             stages[i] = &commands[i];
         }
+
+        /*
+         * Background execution currently supports standalone
+         * external commands only.
+         */
+        if (!failed) {
+            if (count > 1) {
+                for (int i = 0; i < count; i++) {
+                    if (commands[i].is_background) {
+                        fprintf(stderr,
+                                "shell: background pipelines are not supported\n");
+                        last_status = 2;
+                        failed = 1;
+                        break;
+                    }
+                }
+            } else if (commands[0].is_background &&
+                       commands[0].is_builtin) {
+                fprintf(stderr,
+                        "shell: background execution of built-ins is not supported\n");
+                last_status = 2;
+                failed = 1;
+            }
+        }
+
+        /*
+         * Add only successfully parsed and supported commands
+         * to history. Store the original, complete command.
+         */
+        if (!failed)
+            history_add(history_line);
 
         if (!failed && count == 1) {
             ParsedCommand *cmd = &commands[0];

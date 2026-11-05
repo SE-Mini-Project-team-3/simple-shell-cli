@@ -1,7 +1,7 @@
-
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "parser.h"
 #include "shell.h"
 
@@ -49,7 +49,8 @@ static void test_external_command(void)
 static void test_all_builtins(void)
 {
     const char *builtins[] = {
-        "cd", "pwd", "echo", "exit", "help", "history"
+        "cd", "pwd", "echo", "exit", "help",
+        "history", "export", "unset", "env"
     };
 
     for (size_t i = 0; i < sizeof(builtins) / sizeof(builtins[0]); i++) {
@@ -121,9 +122,8 @@ static void test_too_many_arguments(void)
     char input[SHELL_MAX_INPUT + 1] = "echo";
     ParsedCommand cmd;
 
-    for (int i = 0; i < SHELL_MAX_ARGS + 1; i++) {
+    for (int i = 0; i < SHELL_MAX_ARGS + 1; i++)
         strcat(input, " x");
-    }
 
     assert(parse_command(input, &cmd) == -1);
     assert(cmd.argv[0] == NULL);
@@ -140,6 +140,66 @@ static void test_free_parsed_command(void)
 
     assert(cmd.argv[0] == NULL);
     assert(!cmd.is_builtin);
+    assert(!cmd.is_background);
+}
+
+static void test_background_command(void)
+{
+    char input[] = "sleep 5 &";
+    ParsedCommand cmd;
+
+    assert(parse_command(input, &cmd) == 0);
+    assert(!cmd.is_builtin);
+    assert(cmd.is_background);
+    assert(strcmp(cmd.argv[0], "sleep") == 0);
+    assert(strcmp(cmd.argv[1], "5") == 0);
+    assert(cmd.argv[2] == NULL);
+
+    free_parsed_command(&cmd);
+}
+
+static void test_background_with_whitespace(void)
+{
+    char input[] = "sleep 5    &   ";
+    ParsedCommand cmd;
+
+    assert(parse_command(input, &cmd) == 0);
+    assert(cmd.is_background);
+    assert(strcmp(cmd.argv[0], "sleep") == 0);
+    assert(strcmp(cmd.argv[1], "5") == 0);
+
+    free_parsed_command(&cmd);
+}
+
+static void test_invalid_background_marker(void)
+{
+    char input[] = "sleep & 5";
+    ParsedCommand cmd;
+
+    assert(parse_command(input, &cmd) == -1);
+    assert(cmd.argv[0] == NULL);
+}
+
+static void test_quoted_ampersand(void)
+{
+    char input[] = "echo \"&\"";
+    ParsedCommand cmd;
+
+    assert(parse_command(input, &cmd) == 0);
+    assert(!cmd.is_background);
+    assert(strcmp(cmd.argv[0], "echo") == 0);
+    assert(strcmp(cmd.argv[1], "&") == 0);
+
+    free_parsed_command(&cmd);
+}
+
+static void test_background_marker_without_command(void)
+{
+    char input[] = "&";
+    ParsedCommand cmd;
+
+    assert(parse_command(input, &cmd) == -1);
+    assert(cmd.argv[0] == NULL);
 }
 
 int main(void)
@@ -153,6 +213,12 @@ int main(void)
     test_input_length_boundary();
     test_too_many_arguments();
     test_free_parsed_command();
+
+    test_background_command();
+    test_background_with_whitespace();
+    test_invalid_background_marker();
+    test_quoted_ampersand();
+    test_background_marker_without_command();
 
     printf("All parser tests passed.\n");
     return 0;
