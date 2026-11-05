@@ -51,6 +51,7 @@ int parse_command(char *input, ParsedCommand *cmd)
         if (*p == '\0')
             break;
 
+        /* Handle input/output redirection. */
         if (*p == '<' || *p == '>') {
             char op = *p++;
             int append = 0;
@@ -108,6 +109,7 @@ int parse_command(char *input, ParsedCommand *cmd)
 
         size_t len = 0;
         char quote = '\0';
+        bool token_was_quoted = false;
 
         while (*p != '\0') {
             if (quote != '\0') {
@@ -118,6 +120,7 @@ int parse_command(char *input, ParsedCommand *cmd)
                     arg[len++] = *p++;
                 }
             } else if (*p == '\'' || *p == '"') {
+                token_was_quoted = true;
                 quote = *p++;
             } else if (isspace((unsigned char)*p) ||
                        *p == '<' || *p == '>') {
@@ -133,6 +136,24 @@ int parse_command(char *input, ParsedCommand *cmd)
         }
 
         arg[len] = '\0';
+
+        /*
+         * Recognize '&' only as a standalone, unquoted,
+         * final token.
+         */
+        if (strcmp(arg, "&") == 0 && !token_was_quoted) {
+            free(arg);
+
+            while (isspace((unsigned char)*p))
+                p++;
+
+            if (argc == 0 || *p != '\0')
+                goto error;
+
+            cmd->is_background = true;
+            break;
+        }
+
         cmd->argv[argc++] = arg;
         cmd->argv[argc] = NULL;
     }
