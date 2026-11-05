@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 
 #include "pipeline.h"
 
@@ -7,8 +8,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <errno.h>
 
 #define TEST_FILE "/tmp/simple_shell_pipeline_test.txt"
+#define BG_STAGE1_FILE "/tmp/simple_shell_pipeline_stage1.pid"
+#define BG_STAGE2_FILE "/tmp/simple_shell_pipeline_stage2.pid"
 
 static int count_open_fds(void)
 {
@@ -81,6 +87,38 @@ static int run_pipeline_test(
 
     printf("FAIL: %s (status=%d, output_ok=%d)\n",
            name, status, output_ok);
+
+    return 0;
+}
+
+static pid_t read_pid_file(const char *path)
+{
+    FILE *file = fopen(path, "r");
+
+    if (file == NULL)
+        return -1;
+
+    long value = -1;
+    int result = fscanf(file, "%ld", &value);
+    fclose(file);
+
+    if (result != 1 || value <= 0)
+        return -1;
+
+    return (pid_t)value;
+}
+
+static int wait_for_pid_files(pid_t *pid1, pid_t *pid2)
+{
+    for (int i = 0; i < 100; i++) {
+        *pid1 = read_pid_file(BG_STAGE1_FILE);
+        *pid2 = read_pid_file(BG_STAGE2_FILE);
+
+        if (*pid1 > 0 && *pid2 > 0)
+            return 1;
+
+        usleep(10000);
+    }
 
     return 0;
 }
@@ -316,6 +354,147 @@ int main(void)
         );
     }
 
+    /*
+     * Test 8: Background pipeline returns and its children complete.
+     */
+
+    char *background_printf_args[] = {
+        "printf", "background-pipeline", NULL
+    };
+
+    char *background_cat_args[] = {"cat", NULL};
+
+    init_command(&stages[0], background_printf_args);
+    init_command(&stages[1], background_cat_args);
+
+    stages[1].output_file = TEST_FILE;
+    stages[1].is_background = true;
+
+    unlink(TEST_FILE);
+
+    total++;
+    status = pipeline_execute(commands, 2);
+
+    int children_reaped = 0;
+
+    for (int i = 0; i < 2; i++) {
+        int child_status;
+        pid_t child;
+
+        do {
+            child = waitpid(-1, &child_status, 0);
+        } while (child < 0 && errno == EINTR);
+
+        if (child > 0)
+            children_reaped++;
+    }
+
+    if (status == 0 && children_reaped == 2 &&
+        check_output("background-pipeline")) {
+        printf(
+            "PASS: background pipeline executes asynchronously and completes\n"
+        );
+        passed++;
+    } else {
+        printf(
+            "FAIL: background pipeline (status=%d, reaped=%d)\n",
+            status, children_reaped
+        );
+    }
+
+    /*
+     * Test 9: All background pipeline stages share one separate
+     * process group.
+     */
+
+    unlink(BG_STAGE1_FILE);
+    unlink(BG_STAGE2_FILE);
+
+    char stage1_command[256];
+    char stage2_command[256];
+
+    snprintf(
+        stage1_command,
+        sizeof(stage1_command),
+        "echo $$ > %s; printf x",
+        BG_STAGE1_FILE
+    );
+
+    snprintf(
+        stage2_command,
+        sizeof(stage2_command),
+        "echo $$ > %s; cat > /dev/null; sleep 0.4",
+        BG_STAGE2_FILE
+    );
+
+    char *stage1_args[] = {
+        "sh", "-c", stage1_command, NULL
+    };
+
+    char *stage2_args[] = {
+        "sh", "-c", stage2_command, NULL
+    };
+
+    init_command(&stages[0], stage1_args);
+    init_command(&stages[1], stage2_args);
+
+    stages[1].is_background = true;
+
+    total++;
+
+    status = pipeline_execute(commands, 2);
+
+    pid_t stage1_pid = -1;
+    pid_t stage2_pid = -1;
+
+    int pid_files_ok = wait_for_pid_files(&stage1_pid, &stage2_pid);
+
+    int group_check_ok = 0;
+
+    if (pid_files_ok) {
+        pid_t stage1_pgid = getpgid(stage1_pid);
+        pid_t stage2_pgid = getpgid(stage2_pid);
+
+        group_check_ok =
+            stage1_pgid > 0 &&
+            stage1_pgid == stage2_pgid &&
+            stage1_pgid == stage1_pid &&
+            stage1_pgid != getpgrp();
+    }
+
+    /*
+     * Reap both background pipeline children.
+     */
+    children_reaped = 0;
+
+    for (int i = 0; i < 2; i++) {
+        int child_status;
+        pid_t child;
+
+        do {
+            child = waitpid(-1, &child_status, 0);
+        } while (child < 0 && errno == EINTR);
+
+        if (child > 0)
+            children_reaped++;
+    }
+
+    if (status == 0 && pid_files_ok && group_check_ok &&
+        children_reaped == 2) {
+        printf(
+            "PASS: background pipeline stages share one separate process group\n"
+        );
+        passed++;
+    } else {
+        printf(
+            "FAIL: background pipeline process-group isolation "
+            "(status=%d, pid_files=%d, group_check=%d, reaped=%d)\n",
+            status, pid_files_ok, group_check_ok, children_reaped
+        );
+    }
+
+    unlink(BG_STAGE1_FILE);
+    unlink(BG_STAGE2_FILE);
     unlink(TEST_FILE);
 
     printf("\nPipeline tests: %d/%d passed\n", passed, total);
