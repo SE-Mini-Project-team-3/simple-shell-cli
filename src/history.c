@@ -1,3 +1,4 @@
+
 #include "history.h"
 #include "shell.h"
 
@@ -5,7 +6,7 @@
 #include <string.h>
 
 typedef struct {
-    char command[SHELL_MAX_INPUT];
+    char command[SHELL_MAX_INPUT + 1];
     unsigned long number;
 } HistoryEntry;
 
@@ -16,28 +17,33 @@ static unsigned long next_number = 1;
 void history_add(const char *command_line)
 {
     if (command_line == NULL || command_line[0] == '\0')
-    {
         return;
-    }
 
-    if (count == SHELL_MAX_HISTORY)
-    {
-        memmove(&entries[0], &entries[1], (size_t)(SHELL_MAX_HISTORY - 1) * sizeof(HistoryEntry));
+    if (count == SHELL_MAX_HISTORY) {
+        memmove(
+            &entries[0],
+            &entries[1],
+            (size_t)(SHELL_MAX_HISTORY - 1) * sizeof(HistoryEntry)
+        );
+
         count--;
     }
 
     HistoryEntry *slot = &entries[count];
-    strncpy(slot->command, command_line, SHELL_MAX_INPUT - 1);
-    slot->command[SHELL_MAX_INPUT - 1] = '\0';
+
+    strncpy(slot->command, command_line, SHELL_MAX_INPUT);
+    slot->command[SHELL_MAX_INPUT] = '\0';
+
     slot->number = next_number++;
     count++;
 }
 
 void history_print(void)
 {
-    for (int i = 0; i < count; i++)
-    {
-        printf("%5lu  %s\n", entries[i].number, entries[i].command);
+    for (int i = 0; i < count; i++) {
+        printf("%5lu  %s\n",
+               entries[i].number,
+               entries[i].command);
     }
 }
 
@@ -49,9 +55,7 @@ int history_count(void)
 const char *history_get(int position)
 {
     if (position < 0 || position >= count)
-    {
         return NULL;
-    }
 
     return entries[position].command;
 }
@@ -59,9 +63,7 @@ const char *history_get(int position)
 unsigned long history_get_number(int position)
 {
     if (position < 0 || position >= count)
-    {
         return 0;
-    }
 
     return entries[position].number;
 }

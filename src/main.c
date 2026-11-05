@@ -1,3 +1,4 @@
+
 #include "shell.h"
 #include "parser.h"
 #include "executor.h"
@@ -327,8 +328,14 @@ int main(void)
 
         char *command_line = trim(line);
 
-        if (*command_line == '\0')
+        /*
+         * Empty input is treated as an invalid command.
+         */
+        if (*command_line == '\0') {
+            fprintf(stderr, "shell: empty command\n");
+            last_status = 2;
             continue;
+        }
 
         /*
          * Preserve the complete command before split_pipeline()
@@ -423,6 +430,7 @@ int main(void)
             } else {
                 last_status = executor_run(cmd);
             }
+
         } else if (!failed) {
             last_status = pipeline_execute(stages, count);
         }

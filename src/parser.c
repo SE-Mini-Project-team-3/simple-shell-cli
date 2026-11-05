@@ -1,3 +1,4 @@
+
 #include "parser.h"
 
 #include <ctype.h>
@@ -51,6 +52,24 @@ int parse_command(char *input, ParsedCommand *cmd)
         if (*p == '\0')
             break;
 
+        /*
+         * Recognize '&' as a standalone, unquoted,
+         * final background marker.
+         * This also supports attached forms such as sleep 3&.
+         */
+        if (*p == '&') {
+            p++;
+
+            while (isspace((unsigned char)*p))
+                p++;
+
+            if (argc == 0 || *p != '\0')
+                goto error;
+
+            cmd->is_background = true;
+            break;
+        }
+
         /* Handle input/output redirection. */
         if (*p == '<' || *p == '>') {
             char op = *p++;
@@ -71,7 +90,7 @@ int parse_command(char *input, ParsedCommand *cmd)
 
             while (*p != '\0' &&
                    !isspace((unsigned char)*p) &&
-                   *p != '<' && *p != '>')
+                   *p != '<' && *p != '>' && *p != '&')
                 p++;
 
             char *filename = copy_text(start, (size_t)(p - start));
@@ -109,7 +128,6 @@ int parse_command(char *input, ParsedCommand *cmd)
 
         size_t len = 0;
         char quote = '\0';
-        bool token_was_quoted = false;
 
         while (*p != '\0') {
             if (quote != '\0') {
@@ -120,10 +138,9 @@ int parse_command(char *input, ParsedCommand *cmd)
                     arg[len++] = *p++;
                 }
             } else if (*p == '\'' || *p == '"') {
-                token_was_quoted = true;
                 quote = *p++;
             } else if (isspace((unsigned char)*p) ||
-                       *p == '<' || *p == '>') {
+                       *p == '<' || *p == '>' || *p == '&') {
                 break;
             } else {
                 arg[len++] = *p++;
@@ -136,23 +153,6 @@ int parse_command(char *input, ParsedCommand *cmd)
         }
 
         arg[len] = '\0';
-
-        /*
-         * Recognize '&' only as a standalone, unquoted,
-         * final token.
-         */
-        if (strcmp(arg, "&") == 0 && !token_was_quoted) {
-            free(arg);
-
-            while (isspace((unsigned char)*p))
-                p++;
-
-            if (argc == 0 || *p != '\0')
-                goto error;
-
-            cmd->is_background = true;
-            break;
-        }
 
         cmd->argv[argc++] = arg;
         cmd->argv[argc] = NULL;
