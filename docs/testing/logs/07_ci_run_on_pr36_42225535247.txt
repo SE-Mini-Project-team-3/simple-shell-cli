@@ -1,0 +1,380 @@
+build	Set up job	﻿2026-11-06T13:26:44.2547938Z Current runner version: '2.338.2'
+build	Set up job	2026-11-06T13:26:44.2585775Z ##[group]Runner Image Provisioner
+build	Set up job	2026-11-06T13:26:44.2587131Z Hosted Compute Agent
+build	Set up job	2026-11-06T13:26:44.2588126Z Version: 20261028.624
+build	Set up job	2026-11-06T13:26:44.2589394Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+build	Set up job	2026-11-06T13:26:44.2590619Z Build Date: 2026-10-28T21:51:42Z
+build	Set up job	2026-11-06T13:26:44.2592176Z Worker ID: {16abd825-afd6-4bce-ad4d-5e63c08bae08}
+build	Set up job	2026-11-06T13:26:44.2593501Z Region: eastus
+build	Set up job	2026-11-06T13:26:44.2594571Z Cloud: Azure
+build	Set up job	2026-11-06T13:26:44.2595563Z ##[endgroup]
+build	Set up job	2026-11-06T13:26:44.2598517Z ##[group]Operating System
+build	Set up job	2026-11-06T13:26:44.2599624Z Ubuntu
+build	Set up job	2026-11-06T13:26:44.2600575Z 26.04.1
+build	Set up job	2026-11-06T13:26:44.2601797Z LTS
+build	Set up job	2026-11-06T13:26:44.2602718Z ##[endgroup]
+build	Set up job	2026-11-06T13:26:44.2603822Z ##[group]Runner Image
+build	Set up job	2026-11-06T13:26:44.2604875Z Image: ubuntu-26.04
+build	Set up job	2026-11-06T13:26:44.2605951Z Version: 20261101.186.1
+build	Set up job	2026-11-06T13:26:44.2607874Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+build	Set up job	2026-11-06T13:26:44.2610994Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+build	Set up job	2026-11-06T13:26:44.2612964Z ##[endgroup]
+build	Set up job	2026-11-06T13:26:44.2615088Z ##[group]GITHUB_TOKEN Permissions
+build	Set up job	2026-11-06T13:26:44.2618152Z Contents: read
+build	Set up job	2026-11-06T13:26:44.2619157Z Metadata: read
+build	Set up job	2026-11-06T13:26:44.2620114Z Packages: read
+build	Set up job	2026-11-06T13:26:44.2621201Z ##[endgroup]
+build	Set up job	2026-11-06T13:26:44.2624449Z Secret source: Actions
+build	Set up job	2026-11-06T13:26:44.2626167Z Cache mode: write
+build	Set up job	2026-11-06T13:26:44.2627638Z Prepare workflow directory
+build	Set up job	2026-11-06T13:26:44.3131965Z Prepare all required actions
+build	Set up job	2026-11-06T13:26:44.3205909Z Getting action download info
+build	Set up job	2026-11-06T13:26:44.4775664Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+build	Set up job	2026-11-06T13:26:44.6827477Z Complete job name: build
+build	Checkout repository	﻿2026-11-06T13:26:44.7735755Z ##[group]Run actions/checkout@v4
+build	Checkout repository	2026-11-06T13:26:44.7736693Z with:
+build	Checkout repository	2026-11-06T13:26:44.7737237Z   repository: SE-Mini-Project-team-3/simple-shell-cli
+build	Checkout repository	2026-11-06T13:26:44.7741019Z   token: ***
+build	Checkout repository	2026-11-06T13:26:44.7741632Z   ssh-strict: true
+build	Checkout repository	2026-11-06T13:26:44.7742093Z   ssh-user: git
+build	Checkout repository	2026-11-06T13:26:44.7742538Z   persist-credentials: true
+build	Checkout repository	2026-11-06T13:26:44.7743030Z   clean: true
+build	Checkout repository	2026-11-06T13:26:44.7743483Z   sparse-checkout-cone-mode: true
+build	Checkout repository	2026-11-06T13:26:44.7744011Z   fetch-depth: 1
+build	Checkout repository	2026-11-06T13:26:44.7744449Z   fetch-tags: false
+build	Checkout repository	2026-11-06T13:26:44.7744898Z   show-progress: true
+build	Checkout repository	2026-11-06T13:26:44.7745342Z   lfs: false
+build	Checkout repository	2026-11-06T13:26:44.7745757Z   submodules: false
+build	Checkout repository	2026-11-06T13:26:44.7746214Z   set-safe-directory: true
+build	Checkout repository	2026-11-06T13:26:44.7746731Z   allow-unsafe-pr-checkout: false
+build	Checkout repository	2026-11-06T13:26:44.7747519Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.0736471Z Syncing repository: SE-Mini-Project-team-3/simple-shell-cli
+build	Checkout repository	2026-11-06T13:26:45.0738448Z ##[group]Getting Git version info
+build	Checkout repository	2026-11-06T13:26:45.0739372Z Working directory is '/home/runner/work/simple-shell-cli/simple-shell-cli'
+build	Checkout repository	2026-11-06T13:26:45.0740538Z [command]/usr/bin/git version
+build	Checkout repository	2026-11-06T13:26:45.0765266Z git version 2.56.0
+build	Checkout repository	2026-11-06T13:26:45.0788208Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.0804031Z Temporarily overriding HOME='/home/runner/work/_temp/4249da99-0078-40d3-946a-24d21fb954c3' before making global git config changes
+build	Checkout repository	2026-11-06T13:26:45.0806396Z Adding repository directory to the temporary git global config as a safe directory
+build	Checkout repository	2026-11-06T13:26:45.0808838Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/simple-shell-cli/simple-shell-cli
+build	Checkout repository	2026-11-06T13:26:45.0880951Z Deleting the contents of '/home/runner/work/simple-shell-cli/simple-shell-cli'
+build	Checkout repository	2026-11-06T13:26:45.0886103Z ##[group]Initializing the repository
+build	Checkout repository	2026-11-06T13:26:45.0890936Z [command]/usr/bin/git init /home/runner/work/simple-shell-cli/simple-shell-cli
+build	Checkout repository	2026-11-06T13:26:45.0998892Z hint: Using 'master' as the name for the initial branch. This default branch name
+build	Checkout repository	2026-11-06T13:26:45.1000776Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build	Checkout repository	2026-11-06T13:26:45.1003160Z hint: to use in all of your new repositories, which will suppress this warning,
+build	Checkout repository	2026-11-06T13:26:45.1004571Z hint: call:
+build	Checkout repository	2026-11-06T13:26:45.1005418Z hint:
+build	Checkout repository	2026-11-06T13:26:45.1006410Z hint: 	git config --global init.defaultBranch <name>
+build	Checkout repository	2026-11-06T13:26:45.1007733Z hint:
+build	Checkout repository	2026-11-06T13:26:45.1008866Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build	Checkout repository	2026-11-06T13:26:45.1010586Z hint: 'development'. The just-created branch can be renamed via this command:
+build	Checkout repository	2026-11-06T13:26:45.1012285Z hint:
+build	Checkout repository	2026-11-06T13:26:45.1013171Z hint: 	git branch -m <name>
+build	Checkout repository	2026-11-06T13:26:45.1014126Z hint:
+build	Checkout repository	2026-11-06T13:26:45.1015311Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build	Checkout repository	2026-11-06T13:26:45.1017308Z Initialized empty Git repository in /home/runner/work/simple-shell-cli/simple-shell-cli/.git/
+build	Checkout repository	2026-11-06T13:26:45.1028281Z [command]/usr/bin/git remote add origin https://github.com/SE-Mini-Project-team-3/simple-shell-cli
+build	Checkout repository	2026-11-06T13:26:45.1083412Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.1084813Z ##[group]Disabling automatic garbage collection
+build	Checkout repository	2026-11-06T13:26:45.1088383Z [command]/usr/bin/git config --local gc.auto 0
+build	Checkout repository	2026-11-06T13:26:45.1125600Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.1126849Z ##[group]Setting up auth
+build	Checkout repository	2026-11-06T13:26:45.1133119Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Checkout repository	2026-11-06T13:26:45.1169258Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Checkout repository	2026-11-06T13:26:45.1738137Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Checkout repository	2026-11-06T13:26:45.1789114Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Checkout repository	2026-11-06T13:26:45.2077309Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Checkout repository	2026-11-06T13:26:45.2113467Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Checkout repository	2026-11-06T13:26:45.2409882Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build	Checkout repository	2026-11-06T13:26:45.2452191Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.2453022Z ##[group]Fetching the repository
+build	Checkout repository	2026-11-06T13:26:45.2462805Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +46cf6eed564c3405b7a5d2913c89ac5d91b64f3a:refs/remotes/pull/36/merge
+build	Checkout repository	2026-11-06T13:26:45.8317521Z From https://github.com/SE-Mini-Project-team-3/simple-shell-cli
+build	Checkout repository	2026-11-06T13:26:45.8319751Z  * [new ref]         46cf6eed564c3405b7a5d2913c89ac5d91b64f3a -> pull/36/merge
+build	Checkout repository	2026-11-06T13:26:45.8323530Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.8325109Z ##[group]Determining the checkout info
+build	Checkout repository	2026-11-06T13:26:45.8326903Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.8331135Z [command]/usr/bin/git sparse-checkout disable
+build	Checkout repository	2026-11-06T13:26:45.8400716Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build	Checkout repository	2026-11-06T13:26:45.8434049Z ##[group]Checking out the ref
+build	Checkout repository	2026-11-06T13:26:45.8437937Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/36/merge
+build	Checkout repository	2026-11-06T13:26:45.8739943Z Note: switching to 'refs/remotes/pull/36/merge'.
+build	Checkout repository	2026-11-06T13:26:45.8741644Z 
+build	Checkout repository	2026-11-06T13:26:45.8742695Z You are in 'detached HEAD' state. You can look around, make experimental
+build	Checkout repository	2026-11-06T13:26:45.8744285Z changes and commit them, and you can discard any commits you make in this
+build	Checkout repository	2026-11-06T13:26:45.8745710Z state without impacting any branches by switching back to a branch.
+build	Checkout repository	2026-11-06T13:26:45.8746539Z 
+build	Checkout repository	2026-11-06T13:26:45.8747188Z If you want to create a new branch to retain commits you create, you may
+build	Checkout repository	2026-11-06T13:26:45.8748511Z do so (now or later) by using -c with the switch command. Example:
+build	Checkout repository	2026-11-06T13:26:45.8749375Z 
+build	Checkout repository	2026-11-06T13:26:45.8750361Z   git switch -c <new-branch-name>
+build	Checkout repository	2026-11-06T13:26:45.8751085Z 
+build	Checkout repository	2026-11-06T13:26:45.8751692Z Or undo this operation with:
+build	Checkout repository	2026-11-06T13:26:45.8752277Z 
+build	Checkout repository	2026-11-06T13:26:45.8752613Z   git switch -
+build	Checkout repository	2026-11-06T13:26:45.8753064Z 
+build	Checkout repository	2026-11-06T13:26:45.8753831Z Turn off this advice by setting config variable advice.detachedHead to false
+build	Checkout repository	2026-11-06T13:26:45.8754858Z 
+build	Checkout repository	2026-11-06T13:26:45.8756293Z HEAD is now at 46cf6ee Merge 680414e3169ee2c43d6afa706221d07dfde44acd into 9b7cf66022c50a7fe80956dfc2377910692e6795
+build	Checkout repository	2026-11-06T13:26:45.8760036Z ##[endgroup]
+build	Checkout repository	2026-11-06T13:26:45.8802484Z [command]/usr/bin/git log -1 --format=%H
+build	Checkout repository	2026-11-06T13:26:45.8828485Z 46cf6eed564c3405b7a5d2913c89ac5d91b64f3a
+build	Install build tools	﻿2026-11-06T13:26:45.9129135Z ##[group]Run sudo apt-get update
+build	Install build tools	2026-11-06T13:26:45.9130634Z ^[[36;1msudo apt-get update^[[0m
+build	Install build tools	2026-11-06T13:26:45.9132270Z ^[[36;1msudo apt-get install -y gcc make^[[0m
+build	Install build tools	2026-11-06T13:26:45.9187785Z shell: /usr/bin/bash -e {0}
+build	Install build tools	2026-11-06T13:26:45.9189037Z ##[endgroup]
+build	Install build tools	2026-11-06T13:26:46.0042802Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+build	Install build tools	2026-11-06T13:26:46.0408737Z Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+build	Install build tools	2026-11-06T13:26:46.0448530Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+build	Install build tools	2026-11-06T13:26:46.0531025Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+build	Install build tools	2026-11-06T13:26:46.0569129Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+build	Install build tools	2026-11-06T13:26:46.0846828Z Get:6 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [845 kB]
+build	Install build tools	2026-11-06T13:26:46.1071815Z Get:7 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [192 kB]
+build	Install build tools	2026-11-06T13:26:46.1090456Z Get:8 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [377 kB]
+build	Install build tools	2026-11-06T13:26:46.1124681Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [118 kB]
+build	Install build tools	2026-11-06T13:26:46.1155516Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted amd64v3 Packages [573 kB]
+build	Install build tools	2026-11-06T13:26:46.1225768Z Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted Translation-en [119 kB]
+build	Install build tools	2026-11-06T13:26:46.1259456Z Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [657 kB]
+build	Install build tools	2026-11-06T13:26:46.1299449Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [148 kB]
+build	Install build tools	2026-11-06T13:26:46.1326439Z Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [208 kB]
+build	Install build tools	2026-11-06T13:26:46.1351781Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [68.7 kB]
+build	Install build tools	2026-11-06T13:26:46.1815962Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted amd64v3 Packages [529 kB]
+build	Install build tools	2026-11-06T13:26:46.1840909Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted Translation-en [108 kB]
+build	Install build tools	2026-11-06T13:26:46.2279959Z Get:18 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+build	Install build tools	2026-11-06T13:26:46.2362666Z Get:19 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [149 kB]
+build	Install build tools	2026-11-06T13:26:46.2394244Z Get:20 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [135 kB]
+build	Install build tools	2026-11-06T13:26:48.3327415Z Fetched 4642 kB in 0s (11.5 MB/s)
+build	Install build tools	2026-11-06T13:26:49.0053212Z Reading package lists...
+build	Install build tools	2026-11-06T13:26:49.0411534Z Reading package lists...
+build	Install build tools	2026-11-06T13:26:49.2034907Z Building dependency tree...
+build	Install build tools	2026-11-06T13:26:49.2041813Z Reading state information...
+build	Install build tools	2026-11-06T13:26:49.2344282Z gcc is already the newest version (4:15.2.0-5ubuntu1).
+build	Install build tools	2026-11-06T13:26:49.2344925Z make is already the newest version (4.4.1-3).
+build	Install build tools	2026-11-06T13:26:49.2884563Z Solving dependencies...
+build	Install build tools	2026-11-06T13:26:49.3932114Z 0 upgraded, 0 newly installed, 0 to remove and 31 not upgraded.
+build	Clean build	﻿2026-11-06T13:26:49.4007993Z ##[group]Run make clean && make
+build	Clean build	2026-11-06T13:26:49.4008388Z ^[[36;1mmake clean && make^[[0m
+build	Clean build	2026-11-06T13:26:49.4061518Z shell: /usr/bin/bash -e {0}
+build	Clean build	2026-11-06T13:26:49.4061881Z ##[endgroup]
+build	Clean build	2026-11-06T13:26:49.4234977Z rm -f src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o simple-shell tests/test_parser \
+build	Clean build	2026-11-06T13:26:49.4236244Z       tests/test_history tests/test_env_manager \
+build	Clean build	2026-11-06T13:26:49.4236995Z       tests/test_parser_spec test_executor \
+build	Clean build	2026-11-06T13:26:49.4237625Z       tests/test_env_integration \
+build	Clean build	2026-11-06T13:26:49.4238324Z       tests/.tmp_env_integration_input \
+build	Clean build	2026-11-06T13:26:49.4238957Z       tests/.tmp_env_integration_output \
+build	Clean build	2026-11-06T13:26:49.4239580Z       tests/test_pipeline \
+build	Clean build	2026-11-06T13:26:49.4240119Z       tests/test_integration \
+build	Clean build	2026-11-06T13:26:49.4240662Z       tests/.tmp_integration_input \
+build	Clean build	2026-11-06T13:26:49.4241212Z       tests/.tmp_integration_output \
+build	Clean build	2026-11-06T13:26:49.4242025Z       tests/.tmp_integration_env_output.txt \
+build	Clean build	2026-11-06T13:26:49.4242695Z       tests/.tmp_integration_bg_output.txt \
+build	Clean build	2026-11-06T13:26:49.4243279Z       tests/test_sec03_env_exposure \
+build	Clean build	2026-11-06T13:26:49.4243846Z       tests/.tmp_sec03_input \
+build	Clean build	2026-11-06T13:26:49.4244344Z       tests/.tmp_sec03_output \
+build	Clean build	2026-11-06T13:26:49.4244923Z       *.gcda *.gcno *.gcov src/*.gcda src/*.gcno src/*.gcov
+build	Clean build	2026-11-06T13:26:49.4271166Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/main.c -o src/main.o
+build	Clean build	2026-11-06T13:26:49.6149612Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/parser.c -o src/parser.o
+build	Clean build	2026-11-06T13:26:49.6428745Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/executor.c -o src/executor.o
+build	Clean build	2026-11-06T13:26:49.6750771Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/pipeline.c -o src/pipeline.o
+build	Clean build	2026-11-06T13:26:49.7099762Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/history.c -o src/history.o
+build	Clean build	2026-11-06T13:26:49.7317705Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/env_manager.c -o src/env_manager.o
+build	Clean build	2026-11-06T13:26:49.7528327Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o simple-shell src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o
+build	Run parser tests	﻿2026-11-06T13:26:49.7845208Z ##[group]Run make test
+build	Run parser tests	2026-11-06T13:26:49.7845483Z ^[[36;1mmake test^[[0m
+build	Run parser tests	2026-11-06T13:26:49.7894895Z shell: /usr/bin/bash -e {0}
+build	Run parser tests	2026-11-06T13:26:49.7895167Z ##[endgroup]
+build	Run parser tests	2026-11-06T13:26:49.7975449Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_parser tests/test_parser.c src/parser.c
+build	Run parser tests	2026-11-06T13:26:49.8727429Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_history tests/test_history.c src/history.c
+build	Run parser tests	2026-11-06T13:26:49.9325825Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_env_manager tests/test_env_manager.c src/env_manager.c
+build	Run parser tests	2026-11-06T13:26:50.0000732Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o test_executor src/test_executor.c src/executor.c
+build	Run parser tests	2026-11-06T13:26:50.0846408Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_env_integration tests/test_env_integration.c
+build	Run parser tests	2026-11-06T13:26:50.1255705Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_pipeline tests/test_pipeline.c src/pipeline.c
+build	Run parser tests	2026-11-06T13:26:50.2188486Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_parser_spec tests/test_parser_spec.c src/parser.c
+build	Run parser tests	2026-11-06T13:26:50.2897720Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_integration tests/test_integration.c
+build	Run parser tests	2026-11-06T13:26:50.3378888Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_sec03_env_exposure tests/test_sec03_env_exposure.c
+build	Run parser tests	2026-11-06T13:26:50.3792700Z === Running Parser Tests ===
+build	Run parser tests	2026-11-06T13:26:50.3793501Z ./tests/test_parser
+build	Run parser tests	2026-11-06T13:26:50.3800241Z All parser tests passed.
+build	Run parser tests	2026-11-06T13:26:50.3810014Z === Running History Tests ===
+build	Run parser tests	2026-11-06T13:26:50.3811108Z ./tests/test_history
+build	Run parser tests	2026-11-06T13:26:50.3818879Z PASS: two commands are recorded
+build	Run parser tests	2026-11-06T13:26:50.3819492Z PASS: first entry stores the oldest command
+build	Run parser tests	2026-11-06T13:26:50.3820099Z PASS: second entry stores the newest command
+build	Run parser tests	2026-11-06T13:26:50.3820654Z PASS: first command is numbered 1
+build	Run parser tests	2026-11-06T13:26:50.3821154Z PASS: second command is numbered 2
+build	Run parser tests	2026-11-06T13:26:50.3821865Z PASS: third command is numbered 3
+build	Run parser tests	2026-11-06T13:26:50.3822397Z PASS: history never exceeds the maximum size
+build	Run parser tests	2026-11-06T13:26:50.3823061Z PASS: oldest entries are evicted once the limit is exceeded
+build	Run parser tests	2026-11-06T13:26:50.3823700Z PASS: the most recent command is retained
+build	Run parser tests	2026-11-06T13:26:50.3824326Z PASS: numbering keeps counting up instead of resetting after eviction
+build	Run parser tests	2026-11-06T13:26:50.3824836Z PASS: empty or null commands are not recorded
+build	Run parser tests	2026-11-06T13:26:50.3825221Z PASS: history_get rejects a negative position
+build	Run parser tests	2026-11-06T13:26:50.3825662Z PASS: history_get rejects a position at count (out of range)
+build	Run parser tests	2026-11-06T13:26:50.3826135Z PASS: history_get_number returns 0 for a negative position
+build	Run parser tests	2026-11-06T13:26:50.3826718Z PASS: history_get_number returns 0 for a position at count (out of range)
+build	Run parser tests	2026-11-06T13:26:50.3827083Z 
+build	Run parser tests	2026-11-06T13:26:50.3827196Z All history tests passed.
+build	Run parser tests	2026-11-06T13:26:50.3828476Z === Running Environment Manager Tests ===
+build	Run parser tests	2026-11-06T13:26:50.3830169Z ./tests/test_env_manager
+build	Run parser tests	2026-11-06T13:26:50.3840126Z PASS: env_set succeeds for a valid name/value
+build	Run parser tests	2026-11-06T13:26:50.3840533Z PASS: the variable is visible via getenv after env_set
+build	Run parser tests	2026-11-06T13:26:50.3841107Z PASS: env_set overwrites an existing value
+build	Run parser tests	2026-11-06T13:26:50.3841817Z PASS: env_unset succeeds
+build	Run parser tests	2026-11-06T13:26:50.3842325Z PASS: the variable is gone after env_unset
+build	Run parser tests	2026-11-06T13:26:50.3842831Z PASS: env_set rejects a NULL name
+build	Run parser tests	2026-11-06T13:26:50.3843310Z PASS: env_set rejects an empty name
+build	Run parser tests	2026-11-06T13:26:50.3843778Z PASS: env_set rejects a name containing '='
+build	Run parser tests	2026-11-06T13:26:50.3844094Z PASS: env_unset rejects a NULL name
+build	Run parser tests	2026-11-06T13:26:50.3844385Z PASS: env_list includes a variable set via env_set
+build	Run parser tests	2026-11-06T13:26:50.3844749Z PASS: a forked child process inherits environment updates
+build	Run parser tests	2026-11-06T13:26:50.3844998Z 
+build	Run parser tests	2026-11-06T13:26:50.3845362Z All env_manager tests passed.
+build	Run parser tests	2026-11-06T13:26:50.3849443Z === Running Executor Tests ===
+build	Run parser tests	2026-11-06T13:26:50.3850753Z ./test_executor
+build	Run parser tests	2026-11-06T13:26:50.3867995Z shell: nonexistent_command_xyz_12345: No such file or directory
+build	Run parser tests	2026-11-06T13:26:50.3870709Z === STARTING EXECUTOR UNIT TESTS ===
+build	Run parser tests	2026-11-06T13:26:50.3871477Z Running test: test_executor_foreground_valid...
+build	Run parser tests	2026-11-06T13:26:50.3872078Z PASSED: test_executor_foreground_valid
+build	Run parser tests	2026-11-06T13:26:50.3872623Z Running test: test_executor_invalid_command...
+build	Run parser tests	2026-11-06T13:26:50.3873164Z PASSED: test_executor_invalid_command
+build	Run parser tests	2026-11-06T13:26:50.3873656Z Running test: test_executor_background...
+build	Run parser tests	2026-11-06T13:26:50.3874137Z [Background PID: 2592]
+build	Run parser tests	2026-11-06T13:26:50.6987952Z shell: process terminated abnormally by signal 15
+build	Run parser tests	2026-11-06T13:26:50.6996764Z shell: process terminated abnormally by signal 2
+build	Run parser tests	2026-11-06T13:26:50.6997400Z PASSED: test_executor_background
+build	Run parser tests	2026-11-06T13:26:50.6997884Z Running test: test_executor_abnormal_termination...
+build	Run parser tests	2026-11-06T13:26:50.6998326Z PASSED: test_executor_abnormal_termination
+build	Run parser tests	2026-11-06T13:26:50.6998697Z Running test: test_executor_child_sigint...
+build	Run parser tests	2026-11-06T13:26:50.6999054Z PASSED: test_executor_child_sigint
+build	Run parser tests	2026-11-06T13:26:50.6999389Z Running test: test_shell_ignores_sigint...
+build	Run parser tests	2026-11-06T13:26:50.6999762Z PASSED: test_shell_ignores_sigint
+build	Run parser tests	2026-11-06T13:26:50.7000101Z === ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===
+build	Run parser tests	2026-11-06T13:26:50.7004538Z === Running Environment Integration Tests ===
+build	Run parser tests	2026-11-06T13:26:50.7005628Z ./tests/test_env_integration
+build	Run parser tests	2026-11-06T13:26:50.7098085Z PASS: shell script for export/env ran
+build	Run parser tests	2026-11-06T13:26:50.7098662Z PASS: export followed by env shows the new variable
+build	Run parser tests	2026-11-06T13:26:50.7099116Z PASS: shell script for unset ran
+build	Run parser tests	2026-11-06T13:26:50.7099705Z PASS: unset removes the variable from subsequent env output
+build	Run parser tests	2026-11-06T13:26:50.7100100Z PASS: shell script for export/printenv ran
+build	Run parser tests	2026-11-06T13:26:50.7100521Z PASS: an external child process launched after export sees the variable
+build	Run parser tests	2026-11-06T13:26:50.7100947Z PASS: shell script for malformed export ran
+build	Run parser tests	2026-11-06T13:26:50.7101545Z PASS: export without NAME=VALUE reports the exact expected error
+build	Run parser tests	2026-11-06T13:26:50.7102164Z PASS: the malformed export argument is not set as an environment variable
+build	Run parser tests	2026-11-06T13:26:50.7102489Z 
+build	Run parser tests	2026-11-06T13:26:50.7102596Z All env integration tests passed.
+build	Run parser tests	2026-11-06T13:26:50.7105083Z === Running Pipeline Tests ===
+build	Run parser tests	2026-11-06T13:26:50.7106224Z ./tests/test_pipeline
+build	Run parser tests	2026-11-06T13:26:50.7264652Z shell: invalid pipeline
+build	Run parser tests	2026-11-06T13:26:50.7536812Z PASS: two-stage pipeline
+build	Run parser tests	2026-11-06T13:26:50.7537382Z PASS: three-stage pipeline
+build	Run parser tests	2026-11-06T13:26:50.7537930Z PASS: maximum five-stage pipeline
+build	Run parser tests	2026-11-06T13:26:50.7538537Z PASS: final-stage exit status
+build	Run parser tests	2026-11-06T13:26:50.7539203Z PASS: invalid command reports expected diagnostic
+build	Run parser tests	2026-11-06T13:26:50.7540236Z PASS: following valid pipeline stage executes successfully
+build	Run parser tests	2026-11-06T13:26:50.7541011Z PASS: excessive pipeline stages rejected before array access
+build	Run parser tests	2026-11-06T13:26:50.7541993Z PASS: no parent file descriptor leaks across repeated pipelines
+build	Run parser tests	2026-11-06T13:26:50.7542610Z [Background PID: 2642]
+build	Run parser tests	2026-11-06T13:26:50.7566189Z PASS: background pipeline executes asynchronously and completes
+build	Run parser tests	2026-11-06T13:26:50.7566834Z [Background PID: 2644]
+build	Run parser tests	2026-11-06T13:26:51.1624851Z PASS: background pipeline stages share one separate process group
+build	Run parser tests	2026-11-06T13:26:51.1625431Z 
+build	Run parser tests	2026-11-06T13:26:51.1625560Z Pipeline tests: 9/9 passed
+build	Run parser tests	2026-11-06T13:26:51.1634855Z === Running Parser Specification Tests ===
+build	Run parser tests	2026-11-06T13:26:51.1635708Z ./tests/test_parser_spec
+build	Run parser tests	2026-11-06T13:26:51.1641246Z PASS: a simple builtin command parses successfully
+build	Run parser tests	2026-11-06T13:26:51.1642108Z PASS: argv[0] is the command name
+build	Run parser tests	2026-11-06T13:26:51.1642694Z PASS: argv is NULL-terminated after a single token
+build	Run parser tests	2026-11-06T13:26:51.1643217Z PASS: pwd is classified as a builtin (FR-CI-03/FR-CI-04)
+build	Run parser tests	2026-11-06T13:26:51.1643690Z PASS: a command with arguments parses successfully
+build	Run parser tests	2026-11-06T13:26:51.1644117Z PASS: argv[0] is the command name
+build	Run parser tests	2026-11-06T13:26:51.1644735Z PASS: argv[1] is the first argument
+build	Run parser tests	2026-11-06T13:26:51.1645081Z PASS: argv[2] is the second argument
+build	Run parser tests	2026-11-06T13:26:51.1645464Z PASS: argv is NULL-terminated after all tokens
+build	Run parser tests	2026-11-06T13:26:51.1645865Z PASS: echo is classified as a builtin
+build	Run parser tests	2026-11-06T13:26:51.1646249Z PASS: an external command parses successfully
+build	Run parser tests	2026-11-06T13:26:51.1646734Z PASS: ls is classified as external, not a builtin (FR-CI-03)
+build	Run parser tests	2026-11-06T13:26:51.1647195Z PASS: NULL input is rejected (FR-CI-05)
+build	Run parser tests	2026-11-06T13:26:51.1647601Z PASS: empty input is accepted as an empty command
+build	Run parser tests	2026-11-06T13:26:51.1648094Z PASS: empty input has no command token
+build	Run parser tests	2026-11-06T13:26:51.1648666Z PASS: empty input is not a builtin
+build	Run parser tests	2026-11-06T13:26:51.1649316Z PASS: whitespace-only input is accepted as an empty command
+build	Run parser tests	2026-11-06T13:26:51.1650103Z PASS: whitespace-only input has no command token
+build	Run parser tests	2026-11-06T13:26:51.1650702Z PASS: whitespace-only input is not a builtin
+build	Run parser tests	2026-11-06T13:26:51.1651195Z PASS: input of exactly SHELL_MAX_INPUT characters is accepted
+build	Run parser tests	2026-11-06T13:26:51.1652066Z PASS: input longer than SHELL_MAX_INPUT is rejected (FR-CI-01/FR-CI-06/SEC-02)
+build	Run parser tests	2026-11-06T13:26:51.1652700Z PASS: more than SHELL_MAX_ARGS tokens is rejected (FR-CI-02/SEC-02)
+build	Run parser tests	2026-11-06T13:26:51.1653298Z PASS: a redirection operator with no filename is rejected (FR-CI-05)
+build	Run parser tests	2026-11-06T13:26:51.1653830Z PASS: an unterminated quote is rejected (FR-CI-05)
+build	Run parser tests	2026-11-06T13:26:51.1654128Z 
+build	Run parser tests	2026-11-06T13:26:51.1654255Z All parser spec tests passed.
+build	Run parser tests	2026-11-06T13:26:51.1654620Z === Running Cross-Module Integration Tests ===
+build	Run parser tests	2026-11-06T13:26:51.1655003Z ./tests/test_integration
+build	Run parser tests	2026-11-06T13:26:51.4800547Z PASS: shell script for history format ran
+build	Run parser tests	2026-11-06T13:26:51.4801674Z PASS: history numbers the first command '1' with the stored text
+build	Run parser tests	2026-11-06T13:26:51.4802224Z PASS: history numbers the second command '2' with the stored text
+build	Run parser tests	2026-11-06T13:26:51.4802749Z PASS: shell script for export-through-pipeline ran
+build	Run parser tests	2026-11-06T13:26:51.4803244Z PASS: a pipeline stage launched after export sees the variable
+build	Run parser tests	2026-11-06T13:26:51.4803708Z PASS: shell script for env redirection ran
+build	Run parser tests	2026-11-06T13:26:51.4804081Z PASS: redirected env output file was created
+build	Run parser tests	2026-11-06T13:26:51.4804512Z PASS: env redirected to a file contains the exported variable
+build	Run parser tests	2026-11-06T13:26:51.4805018Z PASS: env output sent to a file does not also leak to the terminal
+build	Run parser tests	2026-11-06T13:26:51.4805487Z PASS: shell script for export-to-background ran
+build	Run parser tests	2026-11-06T13:26:51.4805890Z PASS: background process output file was created
+build	Run parser tests	2026-11-06T13:26:51.4806401Z PASS: a background external process launched after export sees the variable
+build	Run parser tests	2026-11-06T13:26:51.4807073Z PASS: shell script for history boundary ran
+build	Run parser tests	2026-11-06T13:26:51.4807701Z PASS: 49 of the 55 echoed commands survive the history cap
+build	Run parser tests	2026-11-06T13:26:51.4808344Z PASS: the history command's own invocation occupies the 50th slot
+build	Run parser tests	2026-11-06T13:26:51.4809223Z PASS: history's oldest surviving entry is numbered 7 (6 evicted: cmd1..cmd6)
+build	Run parser tests	2026-11-06T13:26:51.4809780Z PASS: the last echoed command is numbered 55
+build	Run parser tests	2026-11-06T13:26:51.4810177Z PASS: the history command's own entry is numbered 56
+build	Run parser tests	2026-11-06T13:26:51.4810624Z PASS: cmd6 and earlier no longer appear in history output
+build	Run parser tests	2026-11-06T13:26:51.4810918Z 
+build	Run parser tests	2026-11-06T13:26:51.4811032Z All integration tests passed.
+build	Run parser tests	2026-11-06T13:26:51.4811669Z === Running SEC-03 Environment Exposure Tests ===
+build	Run parser tests	2026-11-06T13:26:51.4812038Z ./tests/test_sec03_env_exposure
+build	Run parser tests	2026-11-06T13:26:51.5037672Z PASS: positive-control script ran
+build	Run parser tests	2026-11-06T13:26:51.5038334Z PASS: env (the explicit disclosure path) does show the secret value
+build	Run parser tests	2026-11-06T13:26:51.5038922Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5039264Z PASS: a failed cd (bad path) does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5039693Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5040162Z PASS: a failed output redirection does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5040770Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5041264Z PASS: a failed input redirection does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5042337Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5042870Z PASS: an unknown external command does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5043503Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5044208Z PASS: a malformed pipeline does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5044701Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5045023Z PASS: a malformed export argument does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5045409Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5045787Z PASS: unset followed by another malformed export does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5046238Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5046518Z PASS: the help builtin does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5046871Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5047148Z PASS: the pwd builtin does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5047481Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5047841Z PASS: the echo builtin with unrelated arguments does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5048284Z PASS: script ran
+build	Run parser tests	2026-11-06T13:26:51.5048632Z PASS: an unrelated multi-stage pipeline does not leak the exported secret value
+build	Run parser tests	2026-11-06T13:26:51.5049094Z PASS: history-echoes-typed-input script ran
+build	Run parser tests	2026-11-06T13:26:51.5049672Z PASS: history shows the user's own typed export line verbatim (expected: this is the user's input, not an env-table read)
+build	Run parser tests	2026-11-06T13:26:51.5050146Z 
+build	Run parser tests	2026-11-06T13:26:51.5050279Z All SEC-03 environment-exposure tests passed.
+build	Post Checkout repository	﻿2026-11-06T13:26:51.5169753Z Post job cleanup.
+build	Post Checkout repository	2026-11-06T13:26:51.6056612Z [command]/usr/bin/git version
+build	Post Checkout repository	2026-11-06T13:26:51.6106755Z git version 2.56.0
+build	Post Checkout repository	2026-11-06T13:26:51.6152784Z Temporarily overriding HOME='/home/runner/work/_temp/db36c885-1c6f-464f-b10e-46b713ab8dae' before making global git config changes
+build	Post Checkout repository	2026-11-06T13:26:51.6154671Z Adding repository directory to the temporary git global config as a safe directory
+build	Post Checkout repository	2026-11-06T13:26:51.6160691Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/simple-shell-cli/simple-shell-cli
+build	Post Checkout repository	2026-11-06T13:26:51.6211438Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Post Checkout repository	2026-11-06T13:26:51.6251117Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Post Checkout repository	2026-11-06T13:26:51.6559806Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Post Checkout repository	2026-11-06T13:26:51.6589428Z http.https://github.com/.extraheader
+build	Post Checkout repository	2026-11-06T13:26:51.6602762Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build	Post Checkout repository	2026-11-06T13:26:51.6644956Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Post Checkout repository	2026-11-06T13:26:51.6960644Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Post Checkout repository	2026-11-06T13:26:51.6996254Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Complete job	﻿2026-11-06T13:26:51.7473266Z Cleaning up orphan processes
+build	Complete job	2026-11-06T13:26:51.7914126Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
