@@ -52,8 +52,16 @@ tests/test_pipeline: tests/test_pipeline.c src/pipeline.c
 tests/test_parser_spec: tests/test_parser_spec.c src/parser.c
 	$(CC) $(CFLAGS) -o $@ tests/test_parser_spec.c src/parser.c
 
+# Cross-module integration tests (drive the real shell binary)
+tests/test_integration: tests/test_integration.c
+	$(CC) $(CFLAGS) -o $@ tests/test_integration.c
+
+# SEC-03 environment-variable exposure tests
+tests/test_sec03_env_exposure: tests/test_sec03_env_exposure.c
+	$(CC) $(CFLAGS) -o $@ tests/test_sec03_env_exposure.c
+
 # Combined test target
-test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor tests/test_env_integration tests/test_pipeline tests/test_parser_spec
+test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor tests/test_env_integration tests/test_pipeline tests/test_parser_spec tests/test_integration tests/test_sec03_env_exposure
 	@echo "=== Running Parser Tests ==="
 	./$(TEST_TARGET)
 	@echo "=== Running History Tests ==="
@@ -68,6 +76,10 @@ test: all $(TEST_TARGET) tests/test_history tests/test_env_manager test_executor
 	./tests/test_pipeline
 	@echo "=== Running Parser Specification Tests ==="
 	./tests/test_parser_spec
+	@echo "=== Running Cross-Module Integration Tests ==="
+	./tests/test_integration
+	@echo "=== Running SEC-03 Environment Exposure Tests ==="
+	./tests/test_sec03_env_exposure
 
 # Standalone parser specification target
 test-parser-spec: tests/test_parser_spec
@@ -81,4 +93,13 @@ clean:
 	      tests/test_env_integration \
 	      tests/.tmp_env_integration_input \
 	      tests/.tmp_env_integration_output \
-	      tests/test_pipeline
+	      tests/test_pipeline \
+	      tests/test_integration \
+	      tests/.tmp_integration_input \
+	      tests/.tmp_integration_output \
+	      tests/.tmp_integration_env_output.txt \
+	      tests/.tmp_integration_bg_output.txt \
+	      tests/test_sec03_env_exposure \
+	      tests/.tmp_sec03_input \
+	      tests/.tmp_sec03_output \
+	      *.gcda *.gcno *.gcov src/*.gcda src/*.gcno src/*.gcov
