@@ -1,0 +1,61 @@
+        -:    0:Source:src/env_manager.c
+        -:    0:Graph:tests/test_env_manager-env_manager.gcno
+        -:    0:Data:tests/test_env_manager-env_manager.gcda
+        -:    0:Runs:1
+        -:    1:#include "env_manager.h"
+        -:    2:
+        -:    3:#include <stdio.h>
+        -:    4:#include <stdlib.h>
+        -:    5:
+        -:    6:extern char **environ;
+        -:    7:
+       60:    8:static int is_valid_name(const char *name)
+        -:    9:{
+       60:   10:    if (name == NULL || name[0] == '\0')
+        -:   11:    {
+       12:   12:        return 0;
+        -:   13:    }
+        -:   14:
+      984:   15:    for (const char *p = name; *p != '\0'; p++)
+        -:   16:    {
+      940:   17:        if (*p == '=')
+        -:   18:        {
+        4:   19:            return 0;
+        -:   20:        }
+      936:   21:    }
+        -:   22:
+       44:   23:    return 1;
+       60:   24:}
+        -:   25:
+       36:   26:int env_set(const char *name, const char *value)
+        -:   27:{
+       36:   28:    if (!is_valid_name(name) || value == NULL)
+        -:   29:    {
+       12:   30:        return -1;
+        -:   31:    }
+        -:   32:
+       24:   33:    return setenv(name, value, 1) == 0 ? 0 : -1;
+       36:   34:}
+        -:   35:
+       24:   36:int env_unset(const char *name)
+        -:   37:{
+       24:   38:    if (!is_valid_name(name))
+        -:   39:    {
+        4:   40:        return -1;
+        -:   41:    }
+        -:   42:
+       20:   43:    return unsetenv(name) == 0 ? 0 : -1;
+       24:   44:}
+        -:   45:
+        4:   46:char **env_list(void)
+        -:   47:{
+        4:   48:    return environ;
+        -:   49:}
+        -:   50:
+    #####:   51:void env_print(void)
+        -:   52:{
+    #####:   53:    for (char **entry = environ; entry != NULL && *entry != NULL; entry++)
+        -:   54:    {
+    #####:   55:        printf("%s\n", *entry);
+    #####:   56:    }
+    #####:   57:}

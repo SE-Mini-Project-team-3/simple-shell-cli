@@ -1,0 +1,294 @@
+build	UNKNOWN STEP	﻿2026-11-05T20:21:12.2666857Z Current runner version: '2.338.2'
+build	UNKNOWN STEP	2026-11-05T20:21:12.2685232Z ##[group]Runner Image Provisioner
+build	UNKNOWN STEP	2026-11-05T20:21:12.2685785Z Hosted Compute Agent
+build	UNKNOWN STEP	2026-11-05T20:21:12.2686189Z Version: 20261028.624
+build	UNKNOWN STEP	2026-11-05T20:21:12.2686586Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+build	UNKNOWN STEP	2026-11-05T20:21:12.2687021Z Build Date: 2026-10-28T21:51:42Z
+build	UNKNOWN STEP	2026-11-05T20:21:12.2687428Z Worker ID: {c5b742fa-d89d-470a-859b-6b26c82609d3}
+build	UNKNOWN STEP	2026-11-05T20:21:12.2687840Z Region: westus3
+build	UNKNOWN STEP	2026-11-05T20:21:12.2688191Z Cloud: Azure
+build	UNKNOWN STEP	2026-11-05T20:21:12.2688528Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:12.2689408Z ##[group]Operating System
+build	UNKNOWN STEP	2026-11-05T20:21:12.2689839Z Ubuntu
+build	UNKNOWN STEP	2026-11-05T20:21:12.2690140Z 26.04.1
+build	UNKNOWN STEP	2026-11-05T20:21:12.2690470Z LTS
+build	UNKNOWN STEP	2026-11-05T20:21:12.2690801Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:12.2691105Z ##[group]Runner Image
+build	UNKNOWN STEP	2026-11-05T20:21:12.2691500Z Image: ubuntu-26.04
+build	UNKNOWN STEP	2026-11-05T20:21:12.2691827Z Version: 20261101.186.1
+build	UNKNOWN STEP	2026-11-05T20:21:12.2692626Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+build	UNKNOWN STEP	2026-11-05T20:21:12.2693454Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+build	UNKNOWN STEP	2026-11-05T20:21:12.2694043Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:12.2694847Z ##[group]GITHUB_TOKEN Permissions
+build	UNKNOWN STEP	2026-11-05T20:21:12.2696329Z Contents: read
+build	UNKNOWN STEP	2026-11-05T20:21:12.2696658Z Metadata: read
+build	UNKNOWN STEP	2026-11-05T20:21:12.2697016Z Packages: read
+build	UNKNOWN STEP	2026-11-05T20:21:12.2697372Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:12.2698693Z Secret source: Actions
+build	UNKNOWN STEP	2026-11-05T20:21:12.2699588Z Cache mode: write
+build	UNKNOWN STEP	2026-11-05T20:21:12.2700002Z Prepare workflow directory
+build	UNKNOWN STEP	2026-11-05T20:21:12.2905235Z Prepare all required actions
+build	UNKNOWN STEP	2026-11-05T20:21:12.2936145Z Getting action download info
+build	UNKNOWN STEP	2026-11-05T20:21:12.5833671Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+build	UNKNOWN STEP	2026-11-05T20:21:12.7138704Z Complete job name: build
+build	UNKNOWN STEP	2026-11-05T20:21:12.7766438Z ##[group]Run actions/checkout@v4
+build	UNKNOWN STEP	2026-11-05T20:21:12.7766872Z with:
+build	UNKNOWN STEP	2026-11-05T20:21:12.7767162Z   repository: SE-Mini-Project-team-3/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:12.7769209Z   token: ***
+build	UNKNOWN STEP	2026-11-05T20:21:12.7769456Z   ssh-strict: true
+build	UNKNOWN STEP	2026-11-05T20:21:12.7769705Z   ssh-user: git
+build	UNKNOWN STEP	2026-11-05T20:21:12.7769957Z   persist-credentials: true
+build	UNKNOWN STEP	2026-11-05T20:21:12.7770227Z   clean: true
+build	UNKNOWN STEP	2026-11-05T20:21:12.7770476Z   sparse-checkout-cone-mode: true
+build	UNKNOWN STEP	2026-11-05T20:21:12.7770763Z   fetch-depth: 1
+build	UNKNOWN STEP	2026-11-05T20:21:12.7771005Z   fetch-tags: false
+build	UNKNOWN STEP	2026-11-05T20:21:12.7771252Z   show-progress: true
+build	UNKNOWN STEP	2026-11-05T20:21:12.7771504Z   lfs: false
+build	UNKNOWN STEP	2026-11-05T20:21:12.7771733Z   submodules: false
+build	UNKNOWN STEP	2026-11-05T20:21:12.7771985Z   set-safe-directory: true
+build	UNKNOWN STEP	2026-11-05T20:21:12.7772269Z   allow-unsafe-pr-checkout: false
+build	UNKNOWN STEP	2026-11-05T20:21:12.7772732Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:12.9962248Z Syncing repository: SE-Mini-Project-team-3/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:12.9963368Z ##[group]Getting Git version info
+build	UNKNOWN STEP	2026-11-05T20:21:12.9963798Z Working directory is '/home/runner/work/simple-shell-cli/simple-shell-cli'
+build	UNKNOWN STEP	2026-11-05T20:21:12.9964387Z [command]/usr/bin/git version
+build	UNKNOWN STEP	2026-11-05T20:21:12.9982558Z git version 2.56.0
+build	UNKNOWN STEP	2026-11-05T20:21:12.9994373Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:13.0015857Z Temporarily overriding HOME='/home/runner/work/_temp/1497dbbe-4361-44f3-9ffe-88f67f83da67' before making global git config changes
+build	UNKNOWN STEP	2026-11-05T20:21:13.0016979Z Adding repository directory to the temporary git global config as a safe directory
+build	UNKNOWN STEP	2026-11-05T20:21:13.0045459Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/simple-shell-cli/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:13.0067617Z Deleting the contents of '/home/runner/work/simple-shell-cli/simple-shell-cli'
+build	UNKNOWN STEP	2026-11-05T20:21:13.0077152Z ##[group]Initializing the repository
+build	UNKNOWN STEP	2026-11-05T20:21:13.0080021Z [command]/usr/bin/git init /home/runner/work/simple-shell-cli/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:13.0178696Z hint: Using 'master' as the name for the initial branch. This default branch name
+build	UNKNOWN STEP	2026-11-05T20:21:13.0179502Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build	UNKNOWN STEP	2026-11-05T20:21:13.0180401Z hint: to use in all of your new repositories, which will suppress this warning,
+build	UNKNOWN STEP	2026-11-05T20:21:13.0180942Z hint: call:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0181169Z hint:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0181474Z hint: 	git config --global init.defaultBranch <name>
+build	UNKNOWN STEP	2026-11-05T20:21:13.0181815Z hint:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0182136Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build	UNKNOWN STEP	2026-11-05T20:21:13.0182645Z hint: 'development'. The just-created branch can be renamed via this command:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0183053Z hint:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0183409Z hint: 	git branch -m <name>
+build	UNKNOWN STEP	2026-11-05T20:21:13.0183675Z hint:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0184019Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build	UNKNOWN STEP	2026-11-05T20:21:13.0192626Z Initialized empty Git repository in /home/runner/work/simple-shell-cli/simple-shell-cli/.git/
+build	UNKNOWN STEP	2026-11-05T20:21:13.0201534Z [command]/usr/bin/git remote add origin https://github.com/SE-Mini-Project-team-3/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:13.0243997Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:13.0244740Z ##[group]Disabling automatic garbage collection
+build	UNKNOWN STEP	2026-11-05T20:21:13.0247003Z [command]/usr/bin/git config --local gc.auto 0
+build	UNKNOWN STEP	2026-11-05T20:21:13.0275671Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:13.0276087Z ##[group]Setting up auth
+build	UNKNOWN STEP	2026-11-05T20:21:13.0281431Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	UNKNOWN STEP	2026-11-05T20:21:13.0311052Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	UNKNOWN STEP	2026-11-05T20:21:13.0713407Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	UNKNOWN STEP	2026-11-05T20:21:13.0742127Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	UNKNOWN STEP	2026-11-05T20:21:13.0959170Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	UNKNOWN STEP	2026-11-05T20:21:13.0988118Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	UNKNOWN STEP	2026-11-05T20:21:13.1199848Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build	UNKNOWN STEP	2026-11-05T20:21:13.1233395Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:13.1234052Z ##[group]Fetching the repository
+build	UNKNOWN STEP	2026-11-05T20:21:13.1240226Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +9b7cf66022c50a7fe80956dfc2377910692e6795:refs/remotes/origin/main
+build	UNKNOWN STEP	2026-11-05T20:21:14.1338753Z From https://github.com/SE-Mini-Project-team-3/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:14.1340392Z  * [new ref]         9b7cf66022c50a7fe80956dfc2377910692e6795 -> origin/main
+build	UNKNOWN STEP	2026-11-05T20:21:14.1354754Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:14.1355910Z ##[group]Determining the checkout info
+build	UNKNOWN STEP	2026-11-05T20:21:14.1357308Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:14.1358122Z [command]/usr/bin/git sparse-checkout disable
+build	UNKNOWN STEP	2026-11-05T20:21:14.1398671Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build	UNKNOWN STEP	2026-11-05T20:21:14.1423325Z ##[group]Checking out the ref
+build	UNKNOWN STEP	2026-11-05T20:21:14.1425940Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build	UNKNOWN STEP	2026-11-05T20:21:14.1643850Z Switched to a new branch 'main'
+build	UNKNOWN STEP	2026-11-05T20:21:14.1648739Z branch 'main' set up to track 'origin/main'.
+build	UNKNOWN STEP	2026-11-05T20:21:14.1653500Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:14.1686563Z [command]/usr/bin/git log -1 --format=%H
+build	UNKNOWN STEP	2026-11-05T20:21:14.1706283Z 9b7cf66022c50a7fe80956dfc2377910692e6795
+build	UNKNOWN STEP	2026-11-05T20:21:14.1905878Z ##[group]Run sudo apt-get update
+build	UNKNOWN STEP	2026-11-05T20:21:14.1906729Z ^[[36;1msudo apt-get update^[[0m
+build	UNKNOWN STEP	2026-11-05T20:21:14.1907482Z ^[[36;1msudo apt-get install -y gcc make^[[0m
+build	UNKNOWN STEP	2026-11-05T20:21:14.1951222Z shell: /usr/bin/bash -e {0}
+build	UNKNOWN STEP	2026-11-05T20:21:14.1951927Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:14.2543064Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+build	UNKNOWN STEP	2026-11-05T20:21:14.2873722Z Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+build	UNKNOWN STEP	2026-11-05T20:21:14.2876713Z Get:6 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+build	UNKNOWN STEP	2026-11-05T20:21:14.2903774Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.2967698Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.2989381Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3091158Z Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [147 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3240520Z Get:8 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [809 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3250670Z Get:12 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [134 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3330828Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [187 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3336006Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [377 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3376786Z Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [118 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3429503Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [657 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3461364Z Get:14 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [148 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3485274Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [208 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3503844Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [68.7 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3516339Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted amd64v3 Packages [529 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:14.3542028Z Get:18 http://azure.archive.ubuntu.com/ubuntu resolute-security/restricted Translation-en [108 kB]
+build	UNKNOWN STEP	2026-11-05T20:21:16.3028656Z Fetched 3905 kB in 0s (16.6 MB/s)
+build	UNKNOWN STEP	2026-11-05T20:21:16.7398482Z Reading package lists...
+build	UNKNOWN STEP	2026-11-05T20:21:16.7677633Z Reading package lists...
+build	UNKNOWN STEP	2026-11-05T20:21:16.9109544Z Building dependency tree...
+build	UNKNOWN STEP	2026-11-05T20:21:16.9114883Z Reading state information...
+build	UNKNOWN STEP	2026-11-05T20:21:16.9379701Z gcc is already the newest version (4:15.2.0-5ubuntu1).
+build	UNKNOWN STEP	2026-11-05T20:21:16.9380189Z make is already the newest version (4.4.1-3).
+build	UNKNOWN STEP	2026-11-05T20:21:16.9813400Z Solving dependencies...
+build	UNKNOWN STEP	2026-11-05T20:21:17.0695329Z 0 upgraded, 0 newly installed, 0 to remove and 26 not upgraded.
+build	UNKNOWN STEP	2026-11-05T20:21:17.0748160Z ##[group]Run make clean && make
+build	UNKNOWN STEP	2026-11-05T20:21:17.0748359Z ^[[36;1mmake clean && make^[[0m
+build	UNKNOWN STEP	2026-11-05T20:21:17.0790611Z shell: /usr/bin/bash -e {0}
+build	UNKNOWN STEP	2026-11-05T20:21:17.0790763Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:17.0868949Z rm -f src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o simple-shell tests/test_parser \
+build	UNKNOWN STEP	2026-11-05T20:21:17.0869430Z       tests/test_history tests/test_env_manager \
+build	UNKNOWN STEP	2026-11-05T20:21:17.0869763Z       tests/test_parser_spec test_executor \
+build	UNKNOWN STEP	2026-11-05T20:21:17.0869971Z       tests/test_env_integration \
+build	UNKNOWN STEP	2026-11-05T20:21:17.0870218Z       tests/.tmp_env_integration_input \
+build	UNKNOWN STEP	2026-11-05T20:21:17.0870514Z       tests/.tmp_env_integration_output \
+build	UNKNOWN STEP	2026-11-05T20:21:17.0870762Z       tests/test_pipeline
+build	UNKNOWN STEP	2026-11-05T20:21:17.0889185Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/main.c -o src/main.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.2433213Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/parser.c -o src/parser.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.2635401Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/executor.c -o src/executor.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.2891682Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/pipeline.c -o src/pipeline.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.3141037Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/history.c -o src/history.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.3303141Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/env_manager.c -o src/env_manager.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.3455197Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o simple-shell src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o
+build	UNKNOWN STEP	2026-11-05T20:21:17.3696361Z ##[group]Run make test
+build	UNKNOWN STEP	2026-11-05T20:21:17.3696533Z ^[[36;1mmake test^[[0m
+build	UNKNOWN STEP	2026-11-05T20:21:17.3738428Z shell: /usr/bin/bash -e {0}
+build	UNKNOWN STEP	2026-11-05T20:21:17.3738618Z ##[endgroup]
+build	UNKNOWN STEP	2026-11-05T20:21:17.3804183Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_parser tests/test_parser.c src/parser.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.4382693Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_history tests/test_history.c src/history.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.4803767Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_env_manager tests/test_env_manager.c src/env_manager.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.5323834Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o test_executor src/test_executor.c src/executor.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.5909619Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_env_integration tests/test_env_integration.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.6198014Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_pipeline tests/test_pipeline.c src/pipeline.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.6885081Z gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_parser_spec tests/test_parser_spec.c src/parser.c
+build	UNKNOWN STEP	2026-11-05T20:21:17.7329073Z === Running Parser Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:17.7329631Z ./tests/test_parser
+build	UNKNOWN STEP	2026-11-05T20:21:17.7333998Z All parser tests passed.
+build	UNKNOWN STEP	2026-11-05T20:21:17.7339479Z === Running History Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:17.7340342Z ./tests/test_history
+build	UNKNOWN STEP	2026-11-05T20:21:17.7344355Z PASS: two commands are recorded
+build	UNKNOWN STEP	2026-11-05T20:21:17.7344676Z PASS: first entry stores the oldest command
+build	UNKNOWN STEP	2026-11-05T20:21:17.7344960Z PASS: second entry stores the newest command
+build	UNKNOWN STEP	2026-11-05T20:21:17.7345207Z PASS: first command is numbered 1
+build	UNKNOWN STEP	2026-11-05T20:21:17.7345375Z PASS: second command is numbered 2
+build	UNKNOWN STEP	2026-11-05T20:21:17.7345526Z PASS: third command is numbered 3
+build	UNKNOWN STEP	2026-11-05T20:21:17.7345685Z PASS: history never exceeds the maximum size
+build	UNKNOWN STEP	2026-11-05T20:21:17.7345872Z PASS: oldest entries are evicted once the limit is exceeded
+build	UNKNOWN STEP	2026-11-05T20:21:17.7346058Z PASS: the most recent command is retained
+build	UNKNOWN STEP	2026-11-05T20:21:17.7346260Z PASS: numbering keeps counting up instead of resetting after eviction
+build	UNKNOWN STEP	2026-11-05T20:21:17.7346472Z PASS: empty or null commands are not recorded
+build	UNKNOWN STEP	2026-11-05T20:21:17.7346582Z 
+build	UNKNOWN STEP	2026-11-05T20:21:17.7346635Z All history tests passed.
+build	UNKNOWN STEP	2026-11-05T20:21:17.7349949Z === Running Environment Manager Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:17.7350802Z ./tests/test_env_manager
+build	UNKNOWN STEP	2026-11-05T20:21:17.7356392Z PASS: env_set succeeds for a valid name/value
+build	UNKNOWN STEP	2026-11-05T20:21:17.7356678Z PASS: the variable is visible via getenv after env_set
+build	UNKNOWN STEP	2026-11-05T20:21:17.7356956Z PASS: env_set overwrites an existing value
+build	UNKNOWN STEP	2026-11-05T20:21:17.7357187Z PASS: env_unset succeeds
+build	UNKNOWN STEP	2026-11-05T20:21:17.7357347Z PASS: the variable is gone after env_unset
+build	UNKNOWN STEP	2026-11-05T20:21:17.7357502Z PASS: env_set rejects a NULL name
+build	UNKNOWN STEP	2026-11-05T20:21:17.7357653Z PASS: env_set rejects an empty name
+build	UNKNOWN STEP	2026-11-05T20:21:17.7357805Z PASS: env_set rejects a name containing '='
+build	UNKNOWN STEP	2026-11-05T20:21:17.7357961Z PASS: env_unset rejects a NULL name
+build	UNKNOWN STEP	2026-11-05T20:21:17.7358135Z PASS: env_list includes a variable set via env_set
+build	UNKNOWN STEP	2026-11-05T20:21:17.7358345Z PASS: a forked child process inherits environment updates
+build	UNKNOWN STEP	2026-11-05T20:21:17.7358469Z 
+build	UNKNOWN STEP	2026-11-05T20:21:17.7358524Z All env_manager tests passed.
+build	UNKNOWN STEP	2026-11-05T20:21:17.7361264Z === Running Executor Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:17.7362079Z ./test_executor
+build	UNKNOWN STEP	2026-11-05T20:21:17.7373061Z shell: nonexistent_command_xyz_12345: No such file or directory
+build	UNKNOWN STEP	2026-11-05T20:21:17.7374320Z === STARTING EXECUTOR UNIT TESTS ===
+build	UNKNOWN STEP	2026-11-05T20:21:17.7374955Z Running test: test_executor_foreground_valid...
+build	UNKNOWN STEP	2026-11-05T20:21:17.7375210Z PASSED: test_executor_foreground_valid
+build	UNKNOWN STEP	2026-11-05T20:21:17.7375374Z Running test: test_executor_invalid_command...
+build	UNKNOWN STEP	2026-11-05T20:21:17.7375540Z PASSED: test_executor_invalid_command
+build	UNKNOWN STEP	2026-11-05T20:21:17.7375830Z Running test: test_executor_background...
+build	UNKNOWN STEP	2026-11-05T20:21:17.7375984Z [Background PID: 2424]
+build	UNKNOWN STEP	2026-11-05T20:21:18.0488320Z shell: process terminated abnormally by signal 15
+build	UNKNOWN STEP	2026-11-05T20:21:18.0493766Z shell: process terminated abnormally by signal 2
+build	UNKNOWN STEP	2026-11-05T20:21:18.0494120Z PASSED: test_executor_background
+build	UNKNOWN STEP	2026-11-05T20:21:18.0494490Z Running test: test_executor_abnormal_termination...
+build	UNKNOWN STEP	2026-11-05T20:21:18.0494971Z PASSED: test_executor_abnormal_termination
+build	UNKNOWN STEP	2026-11-05T20:21:18.0495444Z Running test: test_executor_child_sigint...
+build	UNKNOWN STEP	2026-11-05T20:21:18.0495711Z PASSED: test_executor_child_sigint
+build	UNKNOWN STEP	2026-11-05T20:21:18.0495949Z Running test: test_shell_ignores_sigint...
+build	UNKNOWN STEP	2026-11-05T20:21:18.0496217Z PASSED: test_shell_ignores_sigint
+build	UNKNOWN STEP	2026-11-05T20:21:18.0496462Z === ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===
+build	UNKNOWN STEP	2026-11-05T20:21:18.0500751Z === Running Environment Integration Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:18.0501374Z ./tests/test_env_integration
+build	UNKNOWN STEP	2026-11-05T20:21:18.0572353Z PASS: shell script for export/env ran
+build	UNKNOWN STEP	2026-11-05T20:21:18.0572670Z PASS: export followed by env shows the new variable
+build	UNKNOWN STEP	2026-11-05T20:21:18.0572940Z PASS: shell script for unset ran
+build	UNKNOWN STEP	2026-11-05T20:21:18.0573165Z PASS: unset removes the variable from subsequent env output
+build	UNKNOWN STEP	2026-11-05T20:21:18.0573365Z PASS: shell script for export/printenv ran
+build	UNKNOWN STEP	2026-11-05T20:21:18.0573570Z PASS: an external child process launched after export sees the variable
+build	UNKNOWN STEP	2026-11-05T20:21:18.0573780Z PASS: shell script for malformed export ran
+build	UNKNOWN STEP	2026-11-05T20:21:18.0573989Z PASS: export without NAME=VALUE reports the exact expected error
+build	UNKNOWN STEP	2026-11-05T20:21:18.0574225Z PASS: the malformed export argument is not set as an environment variable
+build	UNKNOWN STEP	2026-11-05T20:21:18.0574389Z 
+build	UNKNOWN STEP	2026-11-05T20:21:18.0574445Z All env integration tests passed.
+build	UNKNOWN STEP	2026-11-05T20:21:18.0577087Z === Running Pipeline Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:18.0577893Z ./tests/test_pipeline
+build	UNKNOWN STEP	2026-11-05T20:21:18.0705307Z shell: invalid pipeline
+build	UNKNOWN STEP	2026-11-05T20:21:18.0917792Z PASS: two-stage pipeline
+build	UNKNOWN STEP	2026-11-05T20:21:18.0918059Z PASS: three-stage pipeline
+build	UNKNOWN STEP	2026-11-05T20:21:18.0918317Z PASS: maximum five-stage pipeline
+build	UNKNOWN STEP	2026-11-05T20:21:18.0918538Z PASS: final-stage exit status
+build	UNKNOWN STEP	2026-11-05T20:21:18.0918781Z PASS: invalid command reports expected diagnostic
+build	UNKNOWN STEP	2026-11-05T20:21:18.0919093Z PASS: following valid pipeline stage executes successfully
+build	UNKNOWN STEP	2026-11-05T20:21:18.0919577Z PASS: excessive pipeline stages rejected before array access
+build	UNKNOWN STEP	2026-11-05T20:21:18.0919932Z PASS: no parent file descriptor leaks across repeated pipelines
+build	UNKNOWN STEP	2026-11-05T20:21:18.0920225Z [Background PID: 2474]
+build	UNKNOWN STEP	2026-11-05T20:21:18.0940183Z PASS: background pipeline executes asynchronously and completes
+build	UNKNOWN STEP	2026-11-05T20:21:18.0940576Z [Background PID: 2476]
+build	UNKNOWN STEP	2026-11-05T20:21:18.4986336Z PASS: background pipeline stages share one separate process group
+build	UNKNOWN STEP	2026-11-05T20:21:18.4986628Z 
+build	UNKNOWN STEP	2026-11-05T20:21:18.4986688Z Pipeline tests: 9/9 passed
+build	UNKNOWN STEP	2026-11-05T20:21:18.4995097Z === Running Parser Specification Tests ===
+build	UNKNOWN STEP	2026-11-05T20:21:18.4996134Z ./tests/test_parser_spec
+build	UNKNOWN STEP	2026-11-05T20:21:18.5000017Z PASS: a simple builtin command parses successfully
+build	UNKNOWN STEP	2026-11-05T20:21:18.5000279Z PASS: argv[0] is the command name
+build	UNKNOWN STEP	2026-11-05T20:21:18.5000525Z PASS: argv is NULL-terminated after a single token
+build	UNKNOWN STEP	2026-11-05T20:21:18.5000874Z PASS: pwd is classified as a builtin (FR-CI-03/FR-CI-04)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5001162Z PASS: a command with arguments parses successfully
+build	UNKNOWN STEP	2026-11-05T20:21:18.5001415Z PASS: argv[0] is the command name
+build	UNKNOWN STEP	2026-11-05T20:21:18.5001631Z PASS: argv[1] is the first argument
+build	UNKNOWN STEP	2026-11-05T20:21:18.5001853Z PASS: argv[2] is the second argument
+build	UNKNOWN STEP	2026-11-05T20:21:18.5002125Z PASS: argv is NULL-terminated after all tokens
+build	UNKNOWN STEP	2026-11-05T20:21:18.5002382Z PASS: echo is classified as a builtin
+build	UNKNOWN STEP	2026-11-05T20:21:18.5002903Z PASS: an external command parses successfully
+build	UNKNOWN STEP	2026-11-05T20:21:18.5003094Z PASS: ls is classified as external, not a builtin (FR-CI-03)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5003282Z PASS: NULL input is rejected (FR-CI-05)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5003447Z PASS: empty input is accepted as an empty command
+build	UNKNOWN STEP	2026-11-05T20:21:18.5003740Z PASS: empty input has no command token
+build	UNKNOWN STEP	2026-11-05T20:21:18.5003891Z PASS: empty input is not a builtin
+build	UNKNOWN STEP	2026-11-05T20:21:18.5004068Z PASS: whitespace-only input is accepted as an empty command
+build	UNKNOWN STEP	2026-11-05T20:21:18.5004267Z PASS: whitespace-only input has no command token
+build	UNKNOWN STEP	2026-11-05T20:21:18.5004440Z PASS: whitespace-only input is not a builtin
+build	UNKNOWN STEP	2026-11-05T20:21:18.5004806Z PASS: input of exactly SHELL_MAX_INPUT characters is accepted
+build	UNKNOWN STEP	2026-11-05T20:21:18.5005049Z PASS: input longer than SHELL_MAX_INPUT is rejected (FR-CI-01/FR-CI-06/SEC-02)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5005301Z PASS: more than SHELL_MAX_ARGS tokens is rejected (FR-CI-02/SEC-02)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5005538Z PASS: a redirection operator with no filename is rejected (FR-CI-05)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5005889Z PASS: an unterminated quote is rejected (FR-CI-05)
+build	UNKNOWN STEP	2026-11-05T20:21:18.5006088Z 
+build	UNKNOWN STEP	2026-11-05T20:21:18.5006171Z All parser spec tests passed.
+build	UNKNOWN STEP	2026-11-05T20:21:18.5081552Z Post job cleanup.
+build	UNKNOWN STEP	2026-11-05T20:21:18.5622244Z [command]/usr/bin/git version
+build	UNKNOWN STEP	2026-11-05T20:21:18.5655474Z git version 2.56.0
+build	UNKNOWN STEP	2026-11-05T20:21:18.5679104Z Temporarily overriding HOME='/home/runner/work/_temp/c8c9256a-d300-4ef4-ab7a-098f4c2f724a' before making global git config changes
+build	UNKNOWN STEP	2026-11-05T20:21:18.5679911Z Adding repository directory to the temporary git global config as a safe directory
+build	UNKNOWN STEP	2026-11-05T20:21:18.5682611Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/simple-shell-cli/simple-shell-cli
+build	UNKNOWN STEP	2026-11-05T20:21:18.5715166Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	UNKNOWN STEP	2026-11-05T20:21:18.5745463Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	UNKNOWN STEP	2026-11-05T20:21:18.5999985Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	UNKNOWN STEP	2026-11-05T20:21:18.6023732Z http.https://github.com/.extraheader
+build	UNKNOWN STEP	2026-11-05T20:21:18.6033903Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build	UNKNOWN STEP	2026-11-05T20:21:18.6063690Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	UNKNOWN STEP	2026-11-05T20:21:18.6289976Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	UNKNOWN STEP	2026-11-05T20:21:18.6317712Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	UNKNOWN STEP	2026-11-05T20:21:18.6673971Z Cleaning up orphan processes
+build	UNKNOWN STEP	2026-11-05T20:21:18.6922839Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

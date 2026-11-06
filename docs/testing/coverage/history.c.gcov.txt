@@ -1,0 +1,79 @@
+        -:    0:Source:src/history.c
+        -:    0:Graph:tests/test_history-history.gcno
+        -:    0:Data:tests/test_history-history.gcda
+        -:    0:Runs:1
+        -:    1:
+        -:    2:#include "history.h"
+        -:    3:#include "shell.h"
+        -:    4:
+        -:    5:#include <stdio.h>
+        -:    6:#include <string.h>
+        -:    7:
+        -:    8:typedef struct {
+        -:    9:    char command[SHELL_MAX_INPUT + 1];
+        -:   10:    unsigned long number;
+        -:   11:} HistoryEntry;
+        -:   12:
+        -:   13:static HistoryEntry entries[SHELL_MAX_HISTORY];
+        -:   14:static int count = 0;
+        -:   15:static unsigned long next_number = 1;
+        -:   16:
+      126:   17:void history_add(const char *command_line)
+        -:   18:{
+      126:   19:    if (command_line == NULL || command_line[0] == '\0')
+        4:   20:        return;
+        -:   21:
+      122:   22:    if (count == SHELL_MAX_HISTORY) {
+       10:   23:        memmove(
+        -:   24:            &entries[0],
+        -:   25:            &entries[1],
+        -:   26:            (size_t)(SHELL_MAX_HISTORY - 1) * sizeof(HistoryEntry)
+        -:   27:        );
+        -:   28:
+       10:   29:        count--;
+       10:   30:    }
+        -:   31:
+      122:   32:    HistoryEntry *slot = &entries[count];
+        -:   33:
+      122:   34:    strncpy(slot->command, command_line, SHELL_MAX_INPUT);
+      122:   35:    slot->command[SHELL_MAX_INPUT] = '\0';
+        -:   36:
+      122:   37:    slot->number = next_number++;
+      122:   38:    count++;
+      126:   39:}
+        -:   40:
+    #####:   41:void history_print(void)
+        -:   42:{
+    #####:   43:    for (int i = 0; i < count; i++) {
+    #####:   44:        printf("%5lu  %s\n",
+    #####:   45:               entries[i].number,
+    #####:   46:               entries[i].command);
+    #####:   47:    }
+    #####:   48:}
+        -:   49:
+        6:   50:int history_count(void)
+        -:   51:{
+        6:   52:    return count;
+        -:   53:}
+        -:   54:
+       12:   55:const char *history_get(int position)
+        -:   56:{
+       12:   57:    if (position < 0 || position >= count)
+        4:   58:        return NULL;
+        -:   59:
+        8:   60:    return entries[position].command;
+       12:   61:}
+        -:   62:
+       12:   63:unsigned long history_get_number(int position)
+        -:   64:{
+       12:   65:    if (position < 0 || position >= count)
+        4:   66:        return 0;
+        -:   67:
+        8:   68:    return entries[position].number;
+       12:   69:}
+        -:   70:
+       10:   71:void history_clear(void)
+        -:   72:{
+       10:   73:    count = 0;
+       10:   74:    next_number = 1;
+       10:   75:}

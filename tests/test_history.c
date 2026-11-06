@@ -69,12 +69,27 @@ static void test_ignores_empty_input(void)
     CHECK(history_count() == 0, "empty or null commands are not recorded");
 }
 
+static void test_out_of_range_access(void)
+{
+    history_clear();
+    history_add("only entry");
+
+    CHECK(history_get(-1) == NULL, "history_get rejects a negative position");
+    CHECK(history_get(1) == NULL,
+          "history_get rejects a position at count (out of range)");
+    CHECK(history_get_number(-1) == 0,
+          "history_get_number returns 0 for a negative position");
+    CHECK(history_get_number(1) == 0,
+          "history_get_number returns 0 for a position at count (out of range)");
+}
+
 int main(void)
 {
     test_add_and_retrieve();
     test_numbering();
     test_capacity_eviction();
     test_ignores_empty_input();
+    test_out_of_range_access();
 
     if (failures == 0)
     {
