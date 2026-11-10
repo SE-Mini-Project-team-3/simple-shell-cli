@@ -15,10 +15,10 @@
 
 | Test Case | Requirements | Actual Result | Status |
 |---|---|---|---|
-| TC-CI-01 | FR-CI-01, FR-CI-04 | Built-in classification and command parsing are tested. Explicit prompt display/redisplay evidence is unavailable. | Partial |
+| TC-CI-01 | FR-CI-01, FR-CI-04 | Built-in classification and parsing tests passed. A pseudo-terminal test verified initial prompt display and redisplay after `pwd` across three runs. | Pass |
 | TC-CI-02 | FR-CI-02, FR-CI-06, SEC-02 | Exactly 1024 characters accepted; oversized input and excess arguments rejected. Malformed redirection and quotes rejected. | Pass |
 | TC-PE-01 | FR-PE-01, FR-PE-02, FR-PE-03 | Foreground execution, invalid command handling, abnormal termination and child signal handling tests passed. | Pass |
-| TC-PE-02 | FR-PE-04, FR-PE-06 | Background execution tests passed. Explicit `ps`-based zombie verification is not recorded. | Partial |
+| TC-PE-02 | FR-PE-04, FR-PE-06 | Background execution and process-group tests passed. The test waits for the background child to finish, calls `reap_background_jobs()`, then verifies `waitpid(-1, NULL, WNOHANG)` returns -1 with `errno == ECHILD`. | Pass |
 | TC-IO-01 | FR-IO-01, FR-IO-02, FR-IO-03 | Output, append and input redirection tests passed; integration also verified redirected `env` output. | Pass |
 | TC-IO-02 | FR-IO-04, FR-IO-05, FR-IO-07 | Two-stage, three-stage and maximum five-stage pipelines passed. Repeated-pipeline descriptor leak checks passed. | Pass |
 | TC-HE-01 | FR-HE-01, FR-HE-02, FR-HE-03 | History recording, numbering, 50-entry limit and eviction verified through the real shell. The `history` command itself consumes a slot; six earlier entries are evicted in the 55-command scenario. | Pass |
@@ -31,8 +31,8 @@
 ## 3. Execution Summary
 
 - Total planned test cases: 12
-- Passed: 9
-- Partially verified: 3
+- Passed: 11
+- Partially verified: 1
 - Not executed: 0
 
 A partially verified test case has supporting evidence for some, but not all, of its specified steps. It is not counted as fully passed.
