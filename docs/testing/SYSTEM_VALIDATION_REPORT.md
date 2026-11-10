@@ -9,6 +9,7 @@
 - Validation evidence: `logs/10_linux_coverage_run_20261110.txt`
 - Final test-suite evidence: `logs/11_final_validation_20261110.txt`
 - Performance evidence: `logs/12_performance_20261110.txt`
+- Three-run prompt latency: `logs/13_prompt_latency_20261110.txt`
 - Security evidence: `logs/08_sec03_hardened_validation_20261110.txt`
 - Memory-safety evidence: `logs/09_sec03_hardened_asan_20261110.txt`
 
@@ -17,7 +18,7 @@
 | Workflow | Related Requirements | Validation Evidence | Result |
 |---|---|---|---|
 | Command input and parsing | FR-CI-02, FR-CI-06, SEC-02 | Parser specification tests cover empty input, whitespace, maximum input, oversized input, excessive arguments and malformed syntax. | Pass |
-| Shell prompt and startup | FR-CI-01, FR-CI-04 | Main and parser components are tested, but explicit prompt display and redisplay evidence is unavailable. | Partial |
+| Shell prompt and startup | FR-CI-01, FR-CI-04 | A pseudo-terminal test verified initial prompt display and prompt redisplay after `pwd` across three runs. | Pass |
 | Built-in command handling | FR-CI-04, FR-HE-04, FR-HE-05, FR-HE-06 | Built-in parsing, environment operations, history integration and `cd` edge cases were tested. | Pass |
 | Foreground process execution | FR-PE-01, FR-PE-02, FR-PE-03 | Executor tests cover successful execution, invalid commands, abnormal termination and signal handling. | Pass |
 | Background process execution | FR-PE-04, FR-PE-06 | Background execution and background pipeline process-group behavior were tested. Explicit zombie-process verification is unavailable. | Partial |
@@ -28,12 +29,12 @@
 | Security: environment exposure | SEC-03 | Positive control and 11 negative scenarios passed, with 37 assertions and scenario-completion checks. | Pass |
 | Security: input and memory safety | SEC-02, SEC-06 | Boundary and malformed-input tests passed; full AddressSanitizer/LeakSanitizer run completed without errors. | Pass |
 | Security: shell interpretation and file operations | SEC-01, SEC-05 | Quoted metacharacter input remained literal, no injected marker file was created, non-writable-directory output was denied, and explicit redirection tests passed. | Pass |
-| Performance and usability | NFR-01, NFR-02, NFR-03, NFR-04 | Startup averaged 1.50 ms over 100 invocations and the command batch took 2 ms. The required three-run prompt-response measurements, ten-run pipeline throughput and first-time-user usability check remain incomplete. | Partial |
+| Performance and usability | NFR-01, NFR-02, NFR-03, NFR-04 | Three-run average startup was 1.773 ms and foreground `pwd`-to-next-prompt latency was 0.332 ms; both meet the 1-second limits. Ten-run pipeline throughput and first-time-user usability checks remain incomplete. | Partial |
 
 ## 3. Validation Summary
 
-- Fully passed workflows: 10
-- Partially validated workflows: 3
+- Fully passed workflows: 11
+- Partially validated workflows: 2
 - Not executed workflows: 0
 
 A partial result means that some relevant behavior has supporting test evidence, but the complete acceptance criteria have not been demonstrated.
@@ -56,12 +57,8 @@ These aggregate figures cover production source files under `src/` and exclude `
 
 The following work remains before all planned acceptance criteria can be considered verified:
 
-1. Record explicit shell prompt display and redisplay validation.
-2. Verify background-process cleanup and absence of zombie processes using process inspection.
-3. Execute the specified SEC-01 metacharacter-injection test.
-4. Execute the specified SEC-05 explicit-redirection-only file-operation test.
-5. Record three-run startup and prompt-response timing measurements.
-6. Perform ten-run pipeline throughput and first-time-user usability checks.
+1. Verify background-process cleanup and absence of zombie processes using process inspection.
+2. Perform ten-run pipeline throughput and first-time-user usability checks.
 
 ## 6. Evidence References
 

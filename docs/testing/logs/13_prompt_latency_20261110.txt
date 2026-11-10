@@ -1,0 +1,7 @@
+Run 1: startup=2.689 ms, pwd-to-next-prompt=0.409 ms
+Run 2: startup=0.954 ms, pwd-to-next-prompt=0.312 ms
+Run 3: startup=1.675 ms, pwd-to-next-prompt=0.276 ms
+
+Average startup: 1.773 ms
+Average pwd-to-next-prompt: 0.332 ms
+Target for both: <= 1000 ms
