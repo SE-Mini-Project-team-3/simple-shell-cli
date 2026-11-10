@@ -1,6 +1,8 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 
 /*
  * SEC-03 / SEC-OBJ-03: "The shell shall not print or log environment-
@@ -16,18 +18,18 @@
 
 static int failures = 0;
 
-#define CHECK(cond, message)                \
-    do                                        \
-    {                                          \
-        if (!(cond))                           \
+#define CHECK(cond, message)                    \
+    do                                          \
+    {                                           \
+        if (!(cond))                            \
         {                                       \
             printf("FAIL: %s\n", message);      \
-            failures++;                          \
-        }                                           \
-        else                                         \
-        {                                             \
-            printf("PASS: %s\n", message);              \
-        }                                                  \
+            failures++;                         \
+        }                                       \
+        else                                    \
+        {                                       \
+            printf("PASS: %s\n", message);      \
+        }                                       \
     } while (0)
 
 static char *run_shell_script(const char *script)
@@ -43,40 +45,64 @@ static char *run_shell_script(const char *script)
     fclose(in);
 
     char command[512];
-    snprintf(command, sizeof(command), "./simple-shell < %s > %s 2>&1",
-              input_path, output_path);
+    snprintf(command, sizeof(command),
+             "./simple-shell < %s > %s 2>&1",
+             input_path, output_path);
 
-    if (system(command) == -1)
+    int status = system(command);
+
+    if (status == -1 || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
+    {
+        remove(input_path);
+        remove(output_path);
         return NULL;
+    }
 
     FILE *out = fopen(output_path, "r");
     if (out == NULL)
+    {
+        remove(input_path);
+        remove(output_path);
         return NULL;
+    }
 
     fseek(out, 0, SEEK_END);
     long size = ftell(out);
+
+    if (size < 0)
+    {
+        fclose(out);
+        remove(input_path);
+        remove(output_path);
+        return NULL;
+    }
+
     fseek(out, 0, SEEK_SET);
 
     char *buffer = malloc((size_t)size + 1);
     if (buffer == NULL)
     {
         fclose(out);
+        remove(input_path);
+        remove(output_path);
         return NULL;
     }
 
     size_t read_bytes = fread(buffer, 1, (size_t)size, out);
     buffer[read_bytes] = '\0';
-    fclose(out);
 
+    fclose(out);
     remove(input_path);
     remove(output_path);
 
     return buffer;
 }
 
-/* Positive control: confirm the secret DOES appear via the one
+/*
+ * Positive control: confirm the secret DOES appear via the one
  * sanctioned disclosure path, so a false "PASS" elsewhere can't be
- * explained by the value never having been set correctly at all. */
+ * explained by the value never having been set correctly at all.
+ */
 static void test_positive_control_env_discloses_value(void)
 {
     char *output = run_shell_script(
@@ -85,6 +111,7 @@ static void test_positive_control_env_discloses_value(void)
         "exit\n");
 
     CHECK(output != NULL, "positive-control script ran");
+
     CHECK(output != NULL && strstr(output, SECRET_VALUE) != NULL,
           "env (the explicit disclosure path) does show the secret value");
 
@@ -94,8 +121,13 @@ static void test_positive_control_env_discloses_value(void)
 static void check_no_leak(const char *script, const char *label)
 {
     char full_script[1024];
+
     snprintf(full_script, sizeof(full_script),
-             "export " SECRET_VAR "=" SECRET_VALUE "\n%s\nexit\n", script);
+             "export " SECRET_VAR "=" SECRET_VALUE "\n"
+             "%s\n"
+             "echo SEC03_TEST_COMPLETED\n"
+             "exit\n",
+             script);
 
     char *output = run_shell_script(full_script);
 
@@ -104,6 +136,11 @@ static void check_no_leak(const char *script, const char *label)
              "%s does not leak the exported secret value", label);
 
     CHECK(output != NULL, "script ran");
+
+    CHECK(output != NULL &&
+              strstr(output, "SEC03_TEST_COMPLETED") != NULL,
+          "shell completed the test scenario without premature termination");
+
     CHECK(output != NULL && strstr(output, SECRET_VALUE) == NULL, message);
 
     free(output);
@@ -114,33 +151,33 @@ int main(void)
     test_positive_control_env_discloses_value();
 
     check_no_leak("cd /no/such/nonexistent/directory",
-                   "a failed cd (bad path)");
+                  "a failed cd (bad path)");
 
     check_no_leak("echo hi > /no/such/nonexistent/dir/file.txt",
-                   "a failed output redirection");
+                  "a failed output redirection");
 
     check_no_leak("cat < /no/such/nonexistent/input.txt",
-                   "a failed input redirection");
+                  "a failed input redirection");
 
     check_no_leak("nonexistent_command_xyz_12345",
-                   "an unknown external command");
+                  "an unknown external command");
 
     check_no_leak("| | |", "a malformed pipeline");
 
     check_no_leak("export NOVALUE", "a malformed export argument");
 
     check_no_leak("unset " SECRET_VAR "\nexport MISSING_EQUALS",
-                   "unset followed by another malformed export");
+                  "unset followed by another malformed export");
 
     check_no_leak("help", "the help builtin");
 
     check_no_leak("pwd", "the pwd builtin");
 
     check_no_leak("echo just some ordinary output",
-                   "the echo builtin with unrelated arguments");
+                  "the echo builtin with unrelated arguments");
 
     check_no_leak("ls | grep .c | wc -l",
-                   "an unrelated multi-stage pipeline");
+                  "an unrelated multi-stage pipeline");
 
     /*
      * Note (not a SEC-03 violation, documented deliberately):
@@ -154,15 +191,18 @@ int main(void)
      * values out of the environment table unprompted; it does not,
      * and cannot reasonably, redact a user's own typed input.
      */
+
     char *history_output = run_shell_script(
         "export " SECRET_VAR "=" SECRET_VALUE "\n"
         "history\n"
         "exit\n");
 
-    CHECK(history_output != NULL, "history-echoes-typed-input script ran");
+    CHECK(history_output != NULL,
+          "history-echoes-typed-input script ran");
+
     CHECK(history_output != NULL &&
-              strstr(history_output, "export " SECRET_VAR "=" SECRET_VALUE)
-                  != NULL,
+              strstr(history_output,
+                     "export " SECRET_VAR "=" SECRET_VALUE) != NULL,
           "history shows the user's own typed export line verbatim "
           "(expected: this is the user's input, not an env-table read)");
 

@@ -142,12 +142,11 @@ There is exactly one disclosure path in the reviewed codebase (`env` → `env_pr
 The `export`/`unset` error paths in the builtin dispatch only echo the variable **name** the user typed, never its value. This was confirmed by reviewing the relevant `fprintf` call sites, where the `=` character is replaced with `\0` before the error is printed and restored afterwards.
 
 ### 5.2 Dynamic verification
+`tests/test_sec03_env_exposure.c` — **37 assertions pass** (`docs/testing/logs/08_sec03_hardened_validation_20261110.txt`).
 
-`tests/test_sec03_env_exposure.c` — **26 assertions pass** (`docs/testing/logs/06_final_production_build_*.txt`).
+Methodology: export a secret value, then run 11 different scenarios (failed `cd`, failed input/output redirection, unknown command, malformed pipeline, malformed `export`, `unset` followed by malformed `export`, `help`, `pwd`, `echo`, and an unrelated pipeline). Each scenario checks that the shell process exits successfully, that the completion marker appears in captured output, and that the secret string never appears.
 
-Methodology: export a secret value, then run 11 different scenarios (failed `cd`, failed input/output redirection, unknown command, malformed pipeline, malformed `export`, `unset` followed by malformed `export`, `help`, `pwd`, `echo`, and an unrelated pipeline) and assert the secret string never appears in output.
-
-A **positive control** (`env` after `export`) confirms the methodology itself is sound: the secret does appear there, so the other checks are not passing by accident (for example, because a broken test harness never captures output).
+A **positive control** (`env` after `export`) confirms the methodology itself is sound: the secret does appear there, so the other checks are not passing by accident.
 
 ### 5.3 One documented, deliberate exception (not a violation)
 
@@ -173,6 +172,8 @@ All files are plain text (renamed from `.log`/`.gcov` to `.txt` so they are not 
 | `docs/testing/logs/06_final_production_build_*.txt` | Final non-instrumented (production-config) clean build and full test run. Source for §2 and §5.2. |
 | `docs/testing/coverage/history.c.gcov.txt` | Line-by-line annotated coverage for `history.c` (F4). |
 | `docs/testing/coverage/env_manager.c.gcov.txt` | Line-by-line annotated coverage for `env_manager.c` (F4). |
+| `docs/testing/logs/08_sec03_hardened_validation_20261110.txt` | Fresh full clean-build and test-suite transcript after hardening SEC-03 with child exit-status and scenario-completion checks. Source for the updated 37-assertion SEC-03 result. |
+| `docs/testing/logs/09_sec03_hardened_asan_20261110.txt` | Full AddressSanitizer-instrumented test-suite transcript after SEC-03 exit-status and completion-marker hardening. |
 
 ---
 
@@ -180,7 +181,7 @@ All files are plain text (renamed from `.log`/`.gcov` to `.txt` so they are not 
 
 - **F4:** the history and environment modules passed their earlier dedicated unit tests with 80%+ line coverage on both files.
 - **Cross-module integration coverage:** 38 CHECK assertions spanning F2+F3+F4 combinations.
-- **SEC-03:** 26 assertions covering the positive control, 11 negative scenarios and the documented history exception.
+- **SEC-03:** 37 assertions covering the positive control, 11 negative scenarios (including process-exit and scenario-completion checks) and the documented history exception.
 - **Platform-specific test issue:** two pipeline-test failures were observed on macOS and documented; the reference CI environment passed the corresponding tests.
 - **History-boundary test correction:** an initial test expectation was corrected after identifying that the `history` command itself consumes a history entry.
 - **Coverage action items:** earlier dedicated unit-test coverage for F1, F2 and F3 was below the 70% NFR-05 target. The latest Linux coverage status is documented in §8.
@@ -196,6 +197,8 @@ It supersedes earlier platform-specific test results and coverage figures wherev
 **Branch used for this validation:** `test/f4-testing-and-security`
 
 **Test commit at the time of validation:** `eb9d7a4`
+
+The subsequent SEC-03 hardening and final normal/AddressSanitizer reruns were performed on `test/sprint2-testing-security-validation` on 10 November 2026. The corresponding evidence is listed in §6.
 
 **Coverage toolchain:** GCC 13.3.0 and gcovr 7.0.
 
@@ -213,7 +216,7 @@ The complete test suite was rebuilt and executed with AddressSanitizer.
 | Pipeline tests | 10/10 passed |
 | Parser specification tests | Passed |
 | Cross-module integration tests | Passed |
-| SEC-03 environment exposure tests | Passed |
+| SEC-03 environment exposure tests | Passed - 37 assertions |
 
 The final AddressSanitizer run completed without sanitizer or LeakSanitizer errors.
 
@@ -241,6 +244,8 @@ The test was corrected to free `history_output` exactly once.
 The complete AddressSanitizer test suite was rerun after this correction.
 
 All test groups passed without sanitizer or memory-leak errors.
+
+Following the SEC-03 test-harness hardening, the full AddressSanitizer test suite was rerun on 10 November 2026. All test groups passed without AddressSanitizer or LeakSanitizer errors. Evidence: `docs/testing/logs/09_sec03_hardened_asan_20261110.txt`.
 
 ### 8.4 Current status
 
