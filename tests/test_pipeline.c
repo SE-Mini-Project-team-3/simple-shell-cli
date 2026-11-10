@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <signal.h>
 
 #define TEST_FILE "/tmp/simple_shell_pipeline_test.txt"
 #define INPUT_TEST_FILE "/tmp/simple_shell_pipeline_input.txt"
@@ -335,6 +336,131 @@ int main(void)
     stages[0].input_file = NULL;
     stages[0].output_file = NULL;
     unlink(INPUT_TEST_FILE);
+
+
+    /*
+     * Test: Successful output redirection in truncate and append modes.
+     */
+    char *redirect_first_args[] = {"printf", "first", NULL};
+    char *redirect_second_args[] = {"printf", "second", NULL};
+
+    init_command(&stages[0], redirect_first_args);
+    stages[0].output_file = TEST_FILE;
+    stages[0].append_mode = 0;
+
+    unlink(TEST_FILE);
+    total++;
+
+    int first_redirect_status = pipeline_execute(commands, 1);
+    int first_redirect_ok = check_output("first");
+
+    init_command(&stages[0], redirect_second_args);
+    stages[0].output_file = TEST_FILE;
+    stages[0].append_mode = 1;
+
+    int append_redirect_status = pipeline_execute(commands, 1);
+    int append_redirect_ok = check_output("firstsecond");
+
+    if (first_redirect_status == 0 && first_redirect_ok &&
+        append_redirect_status == 0 && append_redirect_ok) {
+        printf("PASS: pipeline output redirection truncate and append\n");
+        passed++;
+    } else {
+        printf(
+            "FAIL: output redirection (truncate=%d/%d, append=%d/%d)\n",
+            first_redirect_status, first_redirect_ok,
+            append_redirect_status, append_redirect_ok
+        );
+    }
+
+    stages[0].output_file = NULL;
+    stages[0].append_mode = 0;
+    unlink(TEST_FILE);
+
+    /*
+     * Additional validation and error-path tests.
+     */
+
+    /* Test: Null pipeline stage. */
+    ParsedCommand *null_stage_commands[1] = {NULL};
+
+    total++;
+    status = pipeline_execute(null_stage_commands, 1);
+
+    if (status == 2) {
+        printf("PASS: null pipeline stage rejected\n");
+        passed++;
+    } else {
+        printf("FAIL: null pipeline stage (status=%d)\n", status);
+    }
+
+    /* Test: Empty pipeline stage. */
+    char *empty_args[] = {NULL};
+    init_command(&stages[0], empty_args);
+
+    total++;
+    status = pipeline_execute(commands, 1);
+
+    if (status == 2) {
+        printf("PASS: empty pipeline stage rejected\n");
+        passed++;
+    } else {
+        printf("FAIL: empty pipeline stage (status=%d)\n", status);
+    }
+
+    /* Test: Failed input redirection. */
+    char *failure_cat_args[] = {"cat", NULL};
+    init_command(&stages[0], failure_cat_args);
+    stages[0].input_file =
+        "/tmp/simple_shell_pipeline_missing_input_12345";
+
+    total++;
+    status = pipeline_execute(commands, 1);
+
+    if (status == 1) {
+        printf("PASS: failed pipeline input redirection\n");
+        passed++;
+    } else {
+        printf("FAIL: input redirection failure (status=%d)\n", status);
+    }
+
+    stages[0].input_file = NULL;
+
+    /* Test: Failed output redirection. */
+    init_command(&stages[0], printf_args);
+    stages[0].output_file =
+        "/tmp/simple_shell_pipeline_missing_dir_12345/output.txt";
+
+    total++;
+    status = pipeline_execute(commands, 1);
+
+    if (status == 1) {
+        printf("PASS: failed pipeline output redirection\n");
+        passed++;
+    } else {
+        printf("FAIL: output redirection failure (status=%d)\n", status);
+    }
+
+    stages[0].output_file = NULL;
+
+    /* Test: Final pipeline stage terminated by a signal. */
+    char *signal_args[] = {
+        "sh", "-c", "kill -TERM $$", NULL
+    };
+    init_command(&stages[0], signal_args);
+
+    total++;
+    status = pipeline_execute(commands, 1);
+
+    if (status == 128 + SIGTERM) {
+        printf("PASS: final pipeline stage signal termination\n");
+        passed++;
+    } else {
+        printf("FAIL: signal termination status (got %d)\n", status);
+    }
+
+    /* Restore a valid command for subsequent tests. */
+    init_command(&stages[0], printf_args);
 
     /*
      * Test 6: Reject more than five stages before array access.
