@@ -7,6 +7,8 @@
 - Build system: GNU Make 4.3
 - Language standard: C11
 - Validation evidence: `logs/10_linux_coverage_run_20261110.txt`
+- Final test-suite evidence: `logs/11_final_validation_20261110.txt`
+- Performance evidence: `logs/12_performance_20261110.txt`
 - Security evidence: `logs/08_sec03_hardened_validation_20261110.txt`
 - Memory-safety evidence: `logs/09_sec03_hardened_asan_20261110.txt`
 
@@ -25,14 +27,14 @@
 | Environment management | FR-HE-04, FR-HE-05, FR-HE-06, FR-HE-07 | Export, overwrite, unset, validation and child-process visibility were tested. | Pass |
 | Security: environment exposure | SEC-03 | Positive control and 11 negative scenarios passed, with 37 assertions and scenario-completion checks. | Pass |
 | Security: input and memory safety | SEC-02, SEC-06 | Boundary and malformed-input tests passed; full AddressSanitizer/LeakSanitizer run completed without errors. | Pass |
-| Security: shell interpretation and file operations | SEC-01, SEC-05 | The specified metacharacter-injection and explicit-redirection-only scenarios have not been directly validated. | Not Executed |
-| Performance and usability | NFR-01, NFR-02, NFR-03, NFR-04 | Maximum five-stage pipeline execution was tested, but timing benchmarks, ten-run throughput and first-time-user usability checks are not evidenced. | Partial |
+| Security: shell interpretation and file operations | SEC-01, SEC-05 | Quoted metacharacter input remained literal, no injected marker file was created, non-writable-directory output was denied, and explicit redirection tests passed. | Pass |
+| Performance and usability | NFR-01, NFR-02, NFR-03, NFR-04 | Startup averaged 1.50 ms over 100 invocations and the command batch took 2 ms. The required three-run prompt-response measurements, ten-run pipeline throughput and first-time-user usability check remain incomplete. | Partial |
 
 ## 3. Validation Summary
 
-- Fully passed workflows: 9
+- Fully passed workflows: 10
 - Partially validated workflows: 3
-- Not executed workflows: 1
+- Not executed workflows: 0
 
 A partial result means that some relevant behavior has supporting test evidence, but the complete acceptance criteria have not been demonstrated.
 

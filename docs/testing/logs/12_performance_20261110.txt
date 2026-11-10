@@ -1,0 +1,40 @@
+=== SIMPLE-SHELL PERFORMANCE VALIDATION (US-13) ===
+Date: Tue Nov 10 17:36:17 UTC 2026
+Environment: macOS / Linux (GCC gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0)
+--------------------------------------------------
+Building simple-shell...
+rm -f src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o simple-shell tests/test_parser \
+      tests/test_history tests/test_env_manager \
+      tests/test_parser_spec test_executor \
+      tests/test_env_integration \
+      tests/.tmp_env_integration_input \
+      tests/.tmp_env_integration_output \
+      tests/test_pipeline \
+      tests/test_integration \
+      tests/.tmp_integration_input \
+      tests/.tmp_integration_output \
+      tests/.tmp_integration_env_output.txt \
+      tests/.tmp_integration_bg_output.txt \
+      tests/test_sec03_env_exposure \
+      tests/.tmp_sec03_input \
+      tests/.tmp_sec03_output \
+      *.gcda *.gcno *.gcov src/*.gcda src/*.gcno src/*.gcov
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/main.c -o src/main.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/parser.c -o src/parser.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/executor.c -o src/executor.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/pipeline.c -o src/pipeline.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/history.c -o src/history.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/env_manager.c -o src/env_manager.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o simple-shell src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o
+Build successful.
+
+Running Startup Latency Test (100 iterations)...
+Average Startup Latency: 1.50 ms per invocation
+
+Running Command-Response Latency Test...
+
+real	0m0.002s
+user	0m0.001s
+sys	0m0.000s
+--------------------------------------------------
+Performance validation completed successfully!

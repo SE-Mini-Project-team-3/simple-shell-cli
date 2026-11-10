@@ -1,0 +1,223 @@
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/main.c -o src/main.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/parser.c -o src/parser.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/executor.c -o src/executor.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/pipeline.c -o src/pipeline.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/history.c -o src/history.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -c src/env_manager.c -o src/env_manager.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o simple-shell src/main.o src/parser.o src/executor.o src/pipeline.o src/history.o src/env_manager.o
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_parser tests/test_parser.c src/parser.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_history tests/test_history.c src/history.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_env_manager tests/test_env_manager.c src/env_manager.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o test_executor src/test_executor.c src/executor.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_env_integration tests/test_env_integration.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_pipeline tests/test_pipeline.c src/pipeline.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_parser_spec tests/test_parser_spec.c src/parser.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_integration tests/test_integration.c
+gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Iinclude -o tests/test_sec03_env_exposure tests/test_sec03_env_exposure.c
+=== Running Parser Tests ===
+./tests/test_parser
+All parser tests passed.
+=== Running History Tests ===
+./tests/test_history
+PASS: two commands are recorded
+PASS: first entry stores the oldest command
+PASS: second entry stores the newest command
+PASS: first command is numbered 1
+PASS: second command is numbered 2
+PASS: third command is numbered 3
+PASS: history never exceeds the maximum size
+PASS: oldest entries are evicted once the limit is exceeded
+PASS: the most recent command is retained
+PASS: numbering keeps counting up instead of resetting after eviction
+PASS: empty or null commands are not recorded
+PASS: history_get rejects a negative position
+PASS: history_get rejects a position at count (out of range)
+PASS: history_get_number returns 0 for a negative position
+PASS: history_get_number returns 0 for a position at count (out of range)
+
+All history tests passed.
+=== Running Environment Manager Tests ===
+./tests/test_env_manager
+PASS: env_set succeeds for a valid name/value
+PASS: the variable is visible via getenv after env_set
+PASS: env_set overwrites an existing value
+PASS: env_unset succeeds
+PASS: the variable is gone after env_unset
+PASS: env_set rejects a NULL name
+PASS: env_set rejects an empty name
+PASS: env_set rejects a name containing '='
+PASS: env_unset rejects a NULL name
+PASS: env_list includes a variable set via env_set
+PASS: a forked child process inherits environment updates
+
+All env_manager tests passed.
+=== Running Executor Tests ===
+./test_executor
+shell: nonexistent_command_xyz_12345: No such file or directory
+=== STARTING EXECUTOR UNIT TESTS ===
+Running test: test_executor_foreground_valid...
+PASSED: test_executor_foreground_valid
+Running test: test_executor_invalid_command...
+PASSED: test_executor_invalid_command
+Running test: test_executor_background...
+[Background PID: 15503]
+shell: process terminated abnormally by signal 15
+shell: process terminated abnormally by signal 2
+shell: empty command
+/nonexistent/executor_input_file: No such file or directory
+/nonexistent/executor_output_file: No such file or directory
+shell: /tmp/executor_no_permission_wVryHc: Permission denied
+PASSED: test_executor_background
+Running test: test_executor_abnormal_termination...
+PASSED: test_executor_abnormal_termination
+Running test: test_executor_child_sigint...
+PASSED: test_executor_child_sigint
+Running test: test_shell_ignores_sigint...
+PASSED: test_shell_ignores_sigint
+PASSED: null command
+PASSED: input and output redirection
+PASSED: append redirection
+PASSED: input redirection failure
+PASSED: output redirection failure
+PASSED: permission denied (exit 126)
+=== ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===
+=== Running Environment Integration Tests ===
+./tests/test_env_integration
+PASS: shell script for export/env ran
+PASS: export followed by env shows the new variable
+PASS: shell script for unset ran
+PASS: unset removes the variable from subsequent env output
+PASS: shell script for export/printenv ran
+PASS: an external child process launched after export sees the variable
+PASS: shell script for malformed export ran
+PASS: export without NAME=VALUE reports the exact expected error
+PASS: the malformed export argument is not set as an environment variable
+
+All env integration tests passed.
+=== Running Pipeline Tests ===
+./tests/test_pipeline
+shell: invalid pipeline
+PASS: two-stage pipeline
+PASS: three-stage pipeline
+PASS: maximum five-stage pipeline
+PASS: final-stage exit status
+PASS: invalid command reports expected diagnostic
+PASS: following valid pipeline stage executes successfully
+PASS: pipeline input redirection
+PASS: excessive pipeline stages rejected before array access
+PASS: no parent file descriptor leaks across repeated pipelines
+[Background PID: 15559]
+PASS: background pipeline executes asynchronously and completes
+[Background PID: 15561]
+PASS: background pipeline stages share one separate process group
+
+Pipeline tests: 10/10 passed
+=== Running Parser Specification Tests ===
+./tests/test_parser_spec
+PASS: a simple builtin command parses successfully
+PASS: argv[0] is the command name
+PASS: argv is NULL-terminated after a single token
+PASS: pwd is classified as a builtin (FR-CI-03/FR-CI-04)
+PASS: a command with arguments parses successfully
+PASS: argv[0] is the command name
+PASS: argv[1] is the first argument
+PASS: argv[2] is the second argument
+PASS: argv is NULL-terminated after all tokens
+PASS: echo is classified as a builtin
+PASS: an external command parses successfully
+PASS: ls is classified as external, not a builtin (FR-CI-03)
+PASS: NULL input is rejected (FR-CI-05)
+PASS: empty input is accepted as an empty command
+PASS: empty input has no command token
+PASS: empty input is not a builtin
+PASS: whitespace-only input is accepted as an empty command
+PASS: whitespace-only input has no command token
+PASS: whitespace-only input is not a builtin
+PASS: input of exactly SHELL_MAX_INPUT characters is accepted
+PASS: input longer than SHELL_MAX_INPUT is rejected (FR-CI-01/FR-CI-06/SEC-02)
+PASS: more than SHELL_MAX_ARGS tokens is rejected (FR-CI-02/SEC-02)
+PASS: a redirection operator with no filename is rejected (FR-CI-05)
+PASS: an unterminated quote is rejected (FR-CI-05)
+
+All parser spec tests passed.
+=== Running Cross-Module Integration Tests ===
+./tests/test_integration
+PASS: shell script for history format ran
+PASS: history numbers the first command '1' with the stored text
+PASS: history numbers the second command '2' with the stored text
+PASS: shell script for export-through-pipeline ran
+PASS: a pipeline stage launched after export sees the variable
+PASS: shell script for env redirection ran
+PASS: redirected env output file was created
+PASS: env redirected to a file contains the exported variable
+PASS: env output sent to a file does not also leak to the terminal
+PASS: shell script for export-to-background ran
+PASS: background process output file was created
+PASS: a background external process launched after export sees the variable
+PASS: shell script for history boundary ran
+PASS: 49 of the 55 echoed commands survive the history cap
+PASS: the history command's own invocation occupies the 50th slot
+PASS: history's oldest surviving entry is numbered 7 (6 evicted: cmd1..cmd6)
+PASS: the last echoed command is numbered 55
+PASS: the history command's own entry is numbered 56
+PASS: cmd6 and earlier no longer appear in history output
+PASS: pipeline edge-case script ran
+PASS: a pipe inside quotes is treated as ordinary text
+PASS: shell continues after malformed and excessive pipelines
+PASS: built-in error script ran
+PASS: export without arguments displays usage
+PASS: unset without arguments displays usage
+PASS: shell continues after built-in usage errors
+PASS: background cd script ran
+PASS: background cd does not change the parent shell directory
+PASS: cd edge-case script ran
+PASS: cd, cd ~ and cd ~/ all resolve to HOME
+PASS: cd to a nonexistent directory reports an error
+PASS: shell continues after cd failure
+PASS: input edge-case script ran
+PASS: empty input is rejected
+PASS: oversized input is rejected
+PASS: shell continues after invalid input
+
+All integration tests passed.
+=== Running SEC-03 Environment Exposure Tests ===
+./tests/test_sec03_env_exposure
+PASS: positive-control script ran
+PASS: env (the explicit disclosure path) does show the secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: a failed cd (bad path) does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: a failed output redirection does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: a failed input redirection does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: an unknown external command does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: a malformed pipeline does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: a malformed export argument does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: unset followed by another malformed export does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: the help builtin does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: the pwd builtin does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: the echo builtin with unrelated arguments does not leak the exported secret value
+PASS: script ran
+PASS: shell completed the test scenario without premature termination
+PASS: an unrelated multi-stage pipeline does not leak the exported secret value
+PASS: history-echoes-typed-input script ran
+PASS: history shows the user's own typed export line verbatim (expected: this is the user's input, not an env-table read)
+
+All SEC-03 environment-exposure tests passed.

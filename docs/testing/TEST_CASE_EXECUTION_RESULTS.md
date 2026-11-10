@@ -5,6 +5,8 @@
 - Compiler: GCC 13.3.0
 - Test execution: GCC coverage-instrumented build
 - Main execution log: `logs/10_linux_coverage_run_20261110.txt`
+- Final test-suite log: `logs/11_final_validation_20261110.txt`
+- Performance benchmark: `logs/12_performance_20261110.txt`
 - Security validation: `logs/08_sec03_hardened_validation_20261110.txt`
 - Memory-safety validation: `logs/09_sec03_hardened_asan_20261110.txt`
 
@@ -20,17 +22,17 @@
 | TC-IO-02 | FR-IO-04, FR-IO-05, FR-IO-07 | Two-stage, three-stage and maximum five-stage pipelines passed. Repeated-pipeline descriptor leak checks passed. | Pass |
 | TC-HE-01 | FR-HE-01, FR-HE-02, FR-HE-03 | History recording, numbering, 50-entry limit and eviction verified through the real shell. The `history` command itself consumes a slot; six earlier entries are evicted in the 55-command scenario. | Pass |
 | TC-HE-02 | FR-HE-04, FR-HE-05, FR-HE-06, FR-HE-07 | Export, env, unset and environment visibility in child processes verified. | Pass |
-| TC-SEC-01 | SEC-01, SEC-05 | No direct execution evidence for the specified metacharacter-injection and unintended-file-operation scenario. | Not Executed |
+| TC-SEC-01 | SEC-01, SEC-05 | A quoted semicolon injection attempt was printed literally; no secondary command or marker file was created. A write to a non-writable directory was denied. Existing tests verify explicit output redirection. | Pass |
 | TC-SEC-02 | SEC-02, SEC-06 | Input-boundary tests passed. Full AddressSanitizer suite completed without sanitizer or LeakSanitizer errors. Valgrind was not run. | Pass |
-| TC-NFR-01 | NFR-01, NFR-02 | No three-run startup or prompt-response timing measurements recorded. | Not Executed |
+| TC-NFR-01 | NFR-01, NFR-02 | Startup averaged 1.50 ms over 100 invocations. A command batch took 2 ms, but the required three-run startup average and separate prompt-redisplay measurement were not recorded. | Partial |
 | TC-NFR-02 | NFR-03, NFR-04 | Maximum five-stage pipeline test passed. Ten-run throughput and first-time-user built-in discoverability checks are not evidenced. | Partial |
 
 ## 3. Execution Summary
 
 - Total planned test cases: 12
-- Passed: 7
-- Partially verified: 3
-- Not executed: 2
+- Passed: 8
+- Partially verified: 4
+- Not executed: 0
 
 A partially verified test case has supporting evidence for some, but not all, of its specified steps. It is not counted as fully passed.
 
