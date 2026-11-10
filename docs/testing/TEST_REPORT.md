@@ -174,6 +174,14 @@ All files are plain text (renamed from `.log`/`.gcov` to `.txt` so they are not 
 | `docs/testing/coverage/env_manager.c.gcov.txt` | Line-by-line annotated coverage for `env_manager.c` (F4). |
 | `docs/testing/logs/08_sec03_hardened_validation_20261110.txt` | Fresh full clean-build and test-suite transcript after hardening SEC-03 with child exit-status and scenario-completion checks. Source for the updated 37-assertion SEC-03 result. |
 | `docs/testing/logs/09_sec03_hardened_asan_20261110.txt` | Full AddressSanitizer-instrumented test-suite transcript after SEC-03 exit-status and completion-marker hardening. |
+| `docs/testing/logs/10_linux_coverage_run_20261110.txt` | Clean Linux coverage-instrumented build and complete automated test execution on 10 November 2026. |
+| `docs/testing/coverage/code_coverage_20261110.txt` | Aggregate production-source line and function coverage output from the latest Linux run. |
+| `docs/testing/coverage/branch_coverage_20261110.txt` | Aggregate production-source branch coverage output from the latest Linux run. |
+| `docs/testing/TEST_CASE_EXECUTION_RESULTS.md` | Execution status and evidence for all 12 planned Test Plan cases, including partial and unexecuted cases. |
+| `docs/testing/UNIT_TEST_REPORT.md` | Unit and component test suite results, expected versus actual outcomes, and memory-safety evidence. |
+| `docs/testing/SYSTEM_VALIDATION_REPORT.md` | End-to-end workflow validation against functional, security and non-functional requirements. |
+| `docs/testing/CODE_COVERAGE_REPORT.md` | Formal aggregate production-source code coverage report. |
+| `docs/testing/BRANCH_COVERAGE_REPORT.md` | Formal aggregate production-source branch coverage report. |
 
 ---
 
@@ -196,7 +204,7 @@ It supersedes earlier platform-specific test results and coverage figures wherev
 
 **Branch used for this validation:** `test/f4-testing-and-security`
 
-**Test commit at the time of validation:** `eb9d7a4`
+**Test commit at the time of validation:** `e1d1e63`
 
 The subsequent SEC-03 hardening and final normal/AddressSanitizer reruns were performed on `test/sprint2-testing-security-validation` on 10 November 2026. The corresponding evidence is listed in §6.
 
@@ -235,6 +243,27 @@ F1 and F4 meet the 70% line-coverage target. F2 and F3 remain below the NFR-05 t
 
 Branch coverage was also measured, but the NFR-05 threshold reported here is line coverage.
 
+### 8.2.1 Aggregate production-source coverage — 10 November 2026
+
+A separate coverage-instrumented full-suite run measured aggregate coverage
+across production source files under `src/`, excluding `src/test_executor.c`.
+
+- Line coverage: **67.1% (440/656)**
+- Function coverage: **93.1% (27/29)**
+- Branch coverage: **61.4% (313/510)**
+
+These aggregate figures use a different measurement scope from the
+module-specific F1–F4 results above. The aggregate line coverage is below
+70%; this is reported separately and does not replace the module-wise
+NFR-05 assessment.
+
+Formal reports:
+- `CODE_COVERAGE_REPORT.md`
+- `BRANCH_COVERAGE_REPORT.md`
+
+Execution evidence: `docs/testing/logs/10_linux_coverage_run_20261110.txt`.
+
+
 ### 8.3 AddressSanitizer finding and resolution
 
 The first AddressSanitizer run identified a 175-byte allocation leak in `tests/test_sec03_env_exposure.c`, in the test helper output handling.
@@ -255,6 +284,6 @@ Following the SEC-03 test-harness hardening, the full AddressSanitizer test suit
 - SEC-03 environment-exposure tests pass.
 - F1 and F4 meet the NFR-05 line-coverage target.
 - F2 and F3 remain below the NFR-05 line-coverage target.
-- The test changes in this Linux revalidation were recorded in commit `eb9d7a4`.
+- The test changes in this Linux revalidation were recorded in commit `e1d1e63`.
 
 This Linux revalidation is the latest test evidence in this report and should be used when describing the current test status.
