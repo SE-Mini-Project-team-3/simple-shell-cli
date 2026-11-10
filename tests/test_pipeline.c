@@ -13,6 +13,7 @@
 #include <errno.h>
 
 #define TEST_FILE "/tmp/simple_shell_pipeline_test.txt"
+#define INPUT_TEST_FILE "/tmp/simple_shell_pipeline_input.txt"
 #define BG_STAGE1_FILE "/tmp/simple_shell_pipeline_stage1.pid"
 #define BG_STAGE2_FILE "/tmp/simple_shell_pipeline_stage2.pid"
 
@@ -294,6 +295,46 @@ int main(void)
             }
         }
     }
+
+
+    /*
+     * Test 6: Input redirection for a single pipeline stage.
+     */
+
+    FILE *input_file = fopen(INPUT_TEST_FILE, "w");
+    int input_setup_ok = 0;
+
+    if (input_file != NULL) {
+        input_setup_ok =
+            fputs("pipeline-input-check", input_file) >= 0;
+        fclose(input_file);
+    }
+
+    char *input_cat_args[] = {"cat", NULL};
+    init_command(&stages[0], input_cat_args);
+    stages[0].input_file = INPUT_TEST_FILE;
+    stages[0].output_file = TEST_FILE;
+
+    unlink(TEST_FILE);
+    total++;
+
+    status = input_setup_ok ? pipeline_execute(commands, 1) : -1;
+    int input_output_ok =
+        input_setup_ok && check_output("pipeline-input-check");
+
+    if (status == 0 && input_output_ok) {
+        printf("PASS: pipeline input redirection\n");
+        passed++;
+    } else {
+        printf(
+            "FAIL: pipeline input redirection (status=%d, output_ok=%d)\n",
+            status, input_output_ok
+        );
+    }
+
+    stages[0].input_file = NULL;
+    stages[0].output_file = NULL;
+    unlink(INPUT_TEST_FILE);
 
     /*
      * Test 6: Reject more than five stages before array access.
