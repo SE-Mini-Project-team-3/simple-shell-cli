@@ -28,15 +28,15 @@ Command: `make clean && make && make <each test target> && <run each binary>` (s
 
 | Test binary | Module(s) | Result | Notes |
 |---|---|---|---|
-| `tests/test_parser` | F1 | ✅ pass | |
-| `tests/test_parser_spec` | F1 | ✅ pass | US-01 acceptance spec |
-| `tests/test_history` | F4 | ✅ pass | 15/15, incl. 4 new boundary checks |
-| `tests/test_env_manager` | F4 | ✅ pass | |
-| `test_executor` | F2 | ✅ pass | |
-| `tests/test_env_integration` | F4 (via real shell) | ✅ pass | |
-| `tests/test_pipeline` | F3 | ⚠️ 7/9 | 2 failures — platform-specific, see §3 |
-| `tests/test_integration` | F2+F3+F4 (new) | ✅ pass | 18/18 checks |
-| `tests/test_sec03_env_exposure` | F4 / security (new) | ✅ pass | 18/18 checks |
+| `tests/test_parser` | F1 |  pass | |
+| `tests/test_parser_spec` | F1 |  pass | US-01 acceptance spec |
+| `tests/test_history` | F4 |  pass | 15/15, incl. 4 new boundary checks |
+| `tests/test_env_manager` | F4 |  pass | |
+| `test_executor` | F2 |  pass | |
+| `tests/test_env_integration` | F4 (via real shell) |  pass | |
+| `tests/test_pipeline` | F3 |  7/9 | 2 failures — platform-specific, see §3 |
+| `tests/test_integration` | F2+F3+F4 (new) |  pass | 18/18 checks |
+| `tests/test_sec03_env_exposure` | F4 / security (new) |  pass | 18/18 checks |
 
 **9 binaries run, 8 fully green, 1 with 2 known-platform failures out of 9 sub-checks.** Nothing here is marked passed without the corresponding log.
 
@@ -74,12 +74,12 @@ Toolchain note: `make`'s recipe shell does not read this machine's `gcc` alias, 
 
 | Module | Owner | Suite | Lines covered | **vs. 70% target** |
 |---|---|---|---|---|
-| F4 `history.c` | Sanjana | `tests/test_history` | **80.56%** (29/36) | ✅ pass |
-| F4 `env_manager.c` | Sanjana | `tests/test_env_manager` | **80.77%** (21/26) | ✅ pass |
-| F1 `parser.c` | Rekha | `tests/test_parser` | 65.00% (78/120) | ❌ below target |
-| F1 `parser.c` | Rekha | `tests/test_parser_spec` | 63.33% (76/120) | ❌ below target |
-| F2 `executor.c` | Rohan | `test_executor` | 45.68% (37/81) | ❌ below target |
-| F3 `pipeline.c` | Samika | `tests/test_pipeline` | 57.24% (87/152) | ❌ below target |
+| F4 `history.c` | Sanjana | `tests/test_history` | **80.56%** (29/36) |  pass |
+| F4 `env_manager.c` | Sanjana | `tests/test_env_manager` | **80.77%** (21/26) |  pass |
+| F1 `parser.c` | Rekha | `tests/test_parser` | 65.00% (78/120) |  below target |
+| F1 `parser.c` | Rekha | `tests/test_parser_spec` | 63.33% (76/120) |  below target |
+| F2 `executor.c` | Rohan | `test_executor` | 45.68% (37/81) |  below target |
+| F3 `pipeline.c` | Samika | `tests/test_pipeline` | 57.24% (87/152) |  below target |
 
 **F4 (my own module) clears the NFR-05 target in both files.** Annotated line-by-line evidence for both is saved at `docs/testing/coverage/history.c.gcov.txt` and `docs/testing/coverage/env_manager.c.gcov.txt`. The only uncovered lines in either file are `history_print()` and `env_print()`'s bodies — their *output* is instead verified by the integration/SEC-03 tests below (a deliberate choice: output-formatting functions are better asserted end-to-end than by instrumenting stdout in a unit test), plus the two boundary-check lines added in §1/§3.2 area... (now covered).
 
@@ -154,3 +154,76 @@ All files are plain text (renamed from `.log`/`.gcov` to `.txt` so they aren't s
 - **One real defect found and documented** (pipeline tests, platform-specific, not blocking — confirmed green on the actual reference CI environment).
 - **One bug found and fixed in my own new test** during development (history-boundary expectation), documented rather than silently patched over.
 - **Action items for other owners:** F1/F2/F3 are below the 70% NFR-05 target in their own dedicated unit suites (§4.1) — flagging for Rekha/Rohan/Samika respectively, not fixed here since it's outside F4 and I don't have context on each module's intended remaining test scope.
+
+---
+
+## 8. Linux revalidation update — 10 November 2026
+
+This update records the latest validation on the Linux development environment.
+It supersedes earlier platform-specific test results and coverage figures
+wherever they differ.
+
+**Branch:** `test/f4-testing-and-security`
+**Test commit:** `eb9d7a4`
+**Coverage toolchain:** GCC 13.3.0 and gcovr 7.0.
+
+### 8.1 Automated test results
+
+The complete test suite was rebuilt and executed with AddressSanitizer.
+
+| Test group | Latest result |
+|---|---|
+| Parser unit tests | Passed |
+| History unit tests | Passed |
+| Environment manager tests | Passed |
+| Executor tests | 12/12 passed |
+| Environment integration tests | Passed |
+| Pipeline tests | 10/10 passed |
+| Parser specification tests | Passed |
+| Cross-module integration tests | Passed |
+| SEC-03 environment exposure tests | Passed |
+
+The final AddressSanitizer run completed without sanitizer or
+LeakSanitizer errors.
+
+The earlier macOS pipeline failures described in §3.1 were not reproduced
+in the Linux environment. All 10 current pipeline tests passed, including
+file-descriptor handling and background process-group checks.
+
+### 8.2 Latest module-wise line coverage
+
+| Module | Source files | Lines covered | NFR-05 (70%) |
+|---|---|---:|---|
+| F1 — Command Interpreter | `src/main.c`, `src/parser.c` | 79.7% (315/395) | Meets target |
+| F2 — Process Executor | `src/executor.c` | 61.9% (52/84) | Below target |
+| F3 — I/O and Pipeline Manager | `src/pipeline.c` | 52.45% (75/143) | Below target |
+| F4 — History and Environment Manager | `src/history.c`, `src/env_manager.c` | 100% (51/51) | Meets target |
+
+F1 and F4 meet the 70% line-coverage target. F2 and F3 remain below
+the NFR-05 target. These gaps are reported transparently and are not
+represented as full compliance.
+
+Branch coverage was also measured, but the NFR-05 threshold reported
+here is line coverage.
+
+### 8.3 AddressSanitizer finding and resolution
+
+The first AddressSanitizer run identified a 175-byte allocation leak
+in `tests/test_sec03_env_exposure.c`, in the test helper output handling.
+
+The test was corrected to free `history_output` exactly once.
+The complete AddressSanitizer test suite was rerun after this correction.
+All test groups passed without sanitizer or memory-leak errors.
+
+### 8.4 Current status
+
+- Executor tests pass: 12/12.
+- Pipeline tests pass: 10/10.
+- Full AddressSanitizer test run passes.
+- SEC-03 environment-exposure tests pass.
+- F1 and F4 meet the NFR-05 line-coverage target.
+- F2 and F3 remain below the NFR-05 line-coverage target.
+- Test changes are committed in `eb9d7a4`.
+
+This Linux revalidation is the latest test evidence and should be used
+when describing the current test status.
