@@ -228,20 +228,29 @@ The complete test suite was rebuilt and executed with AddressSanitizer.
 
 The final AddressSanitizer run completed without sanitizer or LeakSanitizer errors.
 
-The earlier macOS pipeline failures described in §3.1 were not reproduced in the Linux environment. All 10 current pipeline tests passed, including file-descriptor handling and background process-group checks.
+The earlier macOS pipeline failures described in §3.1 were not reproduced in the Linux environment. The 10 November full-suite run passed all 10 pipeline tests. The focused 11 November Linux run subsequently passed all 16 pipeline tests, including the added validation, redirection-failure, and signal-termination cases.
 
 ### 8.2 Latest module-wise line coverage
 
 | Module | Source files | Lines covered | NFR-05 (70%) |
 |---|---|---:|---|
 | F1 — Command Interpreter | `src/main.c`, `src/parser.c` | 79.7% (315/395) | Meets target |
-| F2 — Process Executor | `src/executor.c` | 61.9% (52/84) | Below target |
-| F3 — I/O and Pipeline Manager | `src/pipeline.c` | 52.45% (75/143) | Below target |
+| F2 — Process Executor | `src/executor.c` | **73.7% (56/76)** | Meets target |
+| F3 — I/O and Pipeline Manager | `src/pipeline.c` | **64.9% (87/134)** | Below target |
 | F4 — History and Environment Manager | `src/history.c`, `src/env_manager.c` | 100% (51/51) | Meets target |
 
-F1 and F4 meet the 70% line-coverage target. F2 and F3 remain below the NFR-05 target. These gaps are reported transparently and are not represented as full compliance.
+F1, F2 and F4 meet the 70% line-coverage target. F3 remains below the NFR-05 target at 64.9%. These results are reported transparently and are not represented as full compliance.
 
 Branch coverage was also measured, but the NFR-05 threshold reported here is line coverage.
+
+The F2 and F3 figures above were remeasured on Linux on 11 November 2026
+using GCC coverage instrumentation. For these process-creating modules,
+the focused measurement used GCC's coverage-aware fork/exec hooks and an
+exit wrapper so child-process coverage was collected. F2 measured 56/76
+lines (73.7%), with 68.0% branch coverage. F3 measured 87/134 lines
+(64.9%), with 64.0% branch coverage. The focused pipeline suite passed
+16/16 tests. F3 remains below the 70% line-coverage target.
+
 
 ### 8.2.1 Aggregate production-source coverage — 10 November 2026
 
@@ -279,11 +288,80 @@ Following the SEC-03 test-harness hardening, the full AddressSanitizer test suit
 ### 8.4 Current status
 
 - Executor tests pass: 12/12.
-- Pipeline tests pass: 10/10.
+- Pipeline tests pass: 16/16 in the focused 11 November Linux run. The earlier 10 November full-suite run recorded 10/10.
 - Full AddressSanitizer test run passes.
 - SEC-03 environment-exposure tests pass.
 - F1 and F4 meet the NFR-05 line-coverage target.
-- F2 and F3 remain below the NFR-05 line-coverage target.
-- The test changes in this Linux revalidation were recorded in commit `e1d1e63`.
+- F2 meets the NFR-05 line-coverage target at 73.7%; F3 remains below target at 64.9%.
+- The earlier 10 November Linux revalidation changes were recorded in commit `e1d1e63`. The focused 11 November pipeline test additions and coverage updates are currently documented in this working tree.
+- Full-suite execution transcript: `docs/testing/logs/11_linux_full_test_run_20261111.txt`.
+- Focused F2/F3 coverage transcript: `docs/testing/logs/12_f2_f3_focused_coverage_20261111.txt`.
 
 This Linux revalidation is the latest test evidence in this report and should be used when describing the current test status.
+---
+
+## 9. Latest Linux revalidation — 11 November 2026
+
+Sections 1–8 retain the earlier results as historical evidence. This
+section records the latest Linux validation.
+
+### 9.1 Full-suite results
+
+All nine test groups passed in the fresh Linux run.
+
+- Aggregate line coverage: **67.7% (444/656)**.
+- Function coverage: **93.1% (27/29)**.
+- Branch coverage: **62.4% (318/510)**.
+
+Compared with 10 November (67.1% line and 61.4% branch coverage),
+aggregate line coverage increased by 0.6 percentage points and branch
+coverage increased by 1.0 percentage point. Function coverage remained
+unchanged.
+
+### 9.2 Latest module-wise line coverage
+
+| Feature | Measurement scope | Result | NFR-05 |
+|---|---|---:|---|
+| F1 — Command Interpreter | Full suite (`main.c` + `parser.c`) | 315/395 (79.7%) | Meets |
+| F2 — Process Executor | Focused, coverage-aware | 56/76 (73.7%) | Meets |
+| F3 — I/O and Pipeline Manager | Focused, coverage-aware | 87/134 (64.9%) | Below |
+| F4 — History and Environment Manager | Full suite | 51/51 (100%) | Meets |
+
+F3 remains below the 70% target. NFR-05 is therefore not fully satisfied
+across all four features.
+
+### 9.3 Explanation of different measurement results
+
+The full-suite run separately measured `executor.c` at 30/76 (39.5%)
+and `pipeline.c` at 48/134 (35.8%). These ordinary full-suite figures
+do not capture all coverage generated by forked or executed child
+processes.
+
+The focused F2/F3 measurement used GCC coverage-aware fork/exec hooks
+and an exit wrapper to collect child-process coverage. It measured
+73.7% for F2 and 64.9% for F3. These results have a different collection
+scope and must not be compared directly with the ordinary full-suite
+per-file figures as though they were identical measurements.
+
+Earlier dedicated-suite results also used different toolchains, source
+line denominators and test scopes:
+
+- F1's earlier parser-only results (65.00% and 63.33%) covered parser
+  tests, whereas the latest 79.7% combines `main.c` and `parser.c`
+  under the full suite.
+- F2's earlier 45.68% (37/81) and latest focused 73.7% (56/76) use
+  different source-line denominators and coverage collection methods.
+- F3's earlier 57.24% (87/152) and latest focused 64.9% (87/134) use
+  different source-line denominators and measurement setups.
+- F4's earlier dedicated-suite results were 80.56% for history and
+  80.77% for environment management. The latest full-suite combined
+  result is 100% (51/51), including additional integration execution.
+
+These differences do not by themselves establish a regression.
+All earlier results remain preserved in their original sections.
+
+### 9.4 Latest test and coverage evidence
+
+- `logs/11_linux_full_test_run_20261111.txt` — complete test-suite run.
+- `logs/12_f2_f3_focused_coverage_20261111.txt` — focused F2/F3 coverage.
+- `logs/13_linux_full_coverage_run_20261111.txt` — aggregate coverage.

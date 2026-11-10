@@ -1,0 +1,113 @@
+=== Focused F2/F3 Linux coverage remeasurement ===
+Tue Nov 10 19:06:34 UTC 2026
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+gcovr 7.0
+
+Copyright (c) 2013-2024 the gcovr authors
+Copyright (c) 2013 Sandia Corporation.
+Under the terms of Contract DE-AC04-94AL85000 with Sandia Corporation,
+the U.S. Government retains certain rights in this software.
+
+===== F2: EXECUTOR =====
+shell: nonexistent_command_xyz_12345: No such file or directory
+=== STARTING EXECUTOR UNIT TESTS ===
+Running test: test_executor_foreground_valid...
+PASSED: test_executor_foreground_valid
+Running test: test_executor_invalid_command...
+PASSED: test_executor_invalid_command
+Running test: test_executor_background...
+[Background PID: 17245]
+shell: process terminated abnormally by signal 15
+shell: process terminated abnormally by signal 2
+shell: empty command
+/nonexistent/executor_input_file: No such file or directory
+/nonexistent/executor_output_file: No such file or directory
+shell: /tmp/executor_no_permission_cMFndk: Permission denied
+PASSED: test_executor_background
+Running test: test_executor_abnormal_termination...
+PASSED: test_executor_abnormal_termination
+Running test: test_executor_child_sigint...
+PASSED: test_executor_child_sigint
+Running test: test_shell_ignores_sigint...
+PASSED: test_shell_ignores_sigint
+PASSED: null command
+PASSED: input and output redirection
+PASSED: append redirection
+PASSED: input redirection failure
+PASSED: output redirection failure
+PASSED: permission denied (exit 126)
+=== ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===
+File 'src/executor.c'
+Lines executed:73.68% of 76
+Branches executed:88.00% of 50
+Taken at least once:68.00% of 50
+Calls executed:64.29% of 42
+Creating 'executor.c.gcov'
+
+Lines executed:73.68% of 76
+(INFO) Reading coverage data...
+(INFO) Writing coverage report...
+------------------------------------------------------------------------------
+                           GCC Code Coverage Report
+Directory: .
+------------------------------------------------------------------------------
+File                                       Lines    Exec  Cover   Missing
+------------------------------------------------------------------------------
+src/executor.c                                76      56    73%   23-24,34-35,45-46,59-61,80-82,106-110,126-127,140
+------------------------------------------------------------------------------
+TOTAL                                         76      56    73%
+------------------------------------------------------------------------------
+lines: 73.7% (56 out of 76)
+functions: 100.0% (3 out of 3)
+branches: 68.0% (34 out of 50)
+
+===== F3: PIPELINE =====
+shell: empty pipeline stage
+shell: empty pipeline stage
+/tmp/simple_shell_pipeline_missing_input_12345: No such file or directory
+/tmp/simple_shell_pipeline_missing_dir_12345/output.txt: No such file or directory
+shell: invalid pipeline
+PASS: two-stage pipeline
+PASS: three-stage pipeline
+PASS: maximum five-stage pipeline
+PASS: final-stage exit status
+PASS: invalid command reports expected diagnostic
+PASS: following valid pipeline stage executes successfully
+PASS: pipeline input redirection
+PASS: pipeline output redirection truncate and append
+PASS: null pipeline stage rejected
+PASS: empty pipeline stage rejected
+PASS: failed pipeline input redirection
+PASS: failed pipeline output redirection
+PASS: final pipeline stage signal termination
+PASS: excessive pipeline stages rejected before array access
+PASS: no parent file descriptor leaks across repeated pipelines
+[Background PID: 17328]
+PASS: background pipeline executes asynchronously and completes
+[Background PID: 17330]
+PASS: background pipeline stages share one separate process group
+
+Pipeline tests: 16/16 passed
+File 'src/pipeline.c'
+Lines executed:64.93% of 134
+Branches executed:80.70% of 114
+Taken at least once:64.04% of 114
+Calls executed:54.41% of 68
+Creating 'pipeline.c.gcov'
+
+Lines executed:64.93% of 134
+(INFO) Reading coverage data...
+(INFO) Writing coverage report...
+------------------------------------------------------------------------------
+                           GCC Code Coverage Report
+Directory: .
+------------------------------------------------------------------------------
+File                                       Lines    Exec  Cover   Missing
+------------------------------------------------------------------------------
+src/pipeline.c                               134      87    64%   23,28-29,31-32,34-35,39,70-72,81-83,94,96,98-101,103,106,119-120,140-141,153-154,160-161,167-168,185,204,227-228,230,232-233,235-236,238,276,278-279,281,290
+------------------------------------------------------------------------------
+TOTAL                                        134      87    64%
+------------------------------------------------------------------------------
+lines: 64.9% (87 out of 134)
+functions: 66.7% (2 out of 3)
+branches: 64.0% (73 out of 114)
