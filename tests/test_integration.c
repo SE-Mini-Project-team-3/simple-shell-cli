@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /*
  * Cross-module integration tests.
@@ -263,6 +264,132 @@ static void test_history_boundary_through_real_shell(void)
     free(output);
 }
 
+static void test_pipeline_split_edge_cases(void)
+{
+    char *output = run_shell_script(
+        "echo \"left|right\"\n"
+        "echo \"unterminated\n"
+        "true | true | true | true | true | true\n"
+        "echo PIPELINE_TEST_SURVIVED\n"
+        "exit\n");
+
+    CHECK(output != NULL, "pipeline edge-case script ran");
+    CHECK(output != NULL && strstr(output, "left|right") != NULL,
+          "a pipe inside quotes is treated as ordinary text");
+    CHECK(output != NULL &&
+              strstr(output, "PIPELINE_TEST_SURVIVED") != NULL,
+          "shell continues after malformed and excessive pipelines");
+
+    free(output);
+}
+
+static void test_builtin_missing_arguments(void)
+{
+    char *output = run_shell_script(
+        "export\n"
+        "unset\n"
+        "echo after_builtin_errors\n"
+        "exit\n");
+
+    CHECK(output != NULL, "built-in error script ran");
+    CHECK(output != NULL &&
+              strstr(output, "shell: export: usage: export NAME=VALUE") != NULL,
+          "export without arguments displays usage");
+    CHECK(output != NULL &&
+              strstr(output, "shell: unset: usage: unset NAME") != NULL,
+          "unset without arguments displays usage");
+    CHECK(output != NULL &&
+              strstr(output, "after_builtin_errors") != NULL,
+          "shell continues after built-in usage errors");
+
+    free(output);
+}
+
+static void test_background_cd_preserves_parent_directory(void)
+{
+    char cwd[1024];
+
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+    {
+        CHECK(0, "could not obtain test working directory");
+        return;
+    }
+
+    char *output = run_shell_script(
+        "pwd\n"
+        "cd /tmp &\n"
+        "pwd\n"
+        "exit\n");
+
+    CHECK(output != NULL, "background cd script ran");
+    CHECK(output != NULL &&
+              count_occurrences(output, cwd) >= 2,
+          "background cd does not change the parent shell directory");
+
+    free(output);
+}
+
+static void test_cd_home_and_error_paths(void)
+{
+    const char *home = getenv("HOME");
+
+    if (home == NULL)
+    {
+        CHECK(0, "HOME is available for cd tests");
+        return;
+    }
+
+    char *output = run_shell_script(
+        "cd\n"
+        "pwd\n"
+        "cd ~\n"
+        "pwd\n"
+        "cd ~/\n"
+        "pwd\n"
+        "cd /this_directory_does_not_exist\n"
+        "echo CD_TEST_SURVIVED\n"
+        "exit\n");
+
+    CHECK(output != NULL, "cd edge-case script ran");
+    CHECK(output != NULL && count_occurrences(output, home) >= 3,
+          "cd, cd ~ and cd ~/ all resolve to HOME");
+    CHECK(output != NULL &&
+              strstr(output, "shell: cd:") != NULL,
+          "cd to a nonexistent directory reports an error");
+    CHECK(output != NULL &&
+              strstr(output, "CD_TEST_SURVIVED") != NULL,
+          "shell continues after cd failure");
+
+    free(output);
+}
+
+static void test_main_input_edge_cases(void)
+{
+    char script[1200];
+
+    script[0] = '\n';
+    memset(script + 1, 'x', 1100);
+    script[1101] = '\n';
+
+    strcpy(script + 1102,
+           "echo INPUT_TEST_SURVIVED\nexit\n");
+
+    char *output = run_shell_script(script);
+
+    CHECK(output != NULL, "input edge-case script ran");
+    CHECK(output != NULL &&
+              strstr(output, "shell: empty command") != NULL,
+          "empty input is rejected");
+    CHECK(output != NULL &&
+              strstr(output, "shell: input line too long") != NULL,
+          "oversized input is rejected");
+    CHECK(output != NULL &&
+              strstr(output, "INPUT_TEST_SURVIVED") != NULL,
+          "shell continues after invalid input");
+
+    free(output);
+}
+
 int main(void)
 {
     test_history_print_format();
@@ -270,6 +397,11 @@ int main(void)
     test_env_output_redirection();
     test_export_visible_to_background_process();
     test_history_boundary_through_real_shell();
+    test_pipeline_split_edge_cases();
+    test_builtin_missing_arguments();
+    test_background_cd_preserves_parent_directory();
+    test_cd_home_and_error_paths();
+    test_main_input_edge_cases();
 
     if (failures == 0)
     {

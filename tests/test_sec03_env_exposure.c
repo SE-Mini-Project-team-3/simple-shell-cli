@@ -166,6 +166,8 @@ int main(void)
           "history shows the user's own typed export line verbatim "
           "(expected: this is the user's input, not an env-table read)");
 
+    free(history_output);
+
     if (failures == 0)
     {
         printf("\nAll SEC-03 environment-exposure tests passed.\n");

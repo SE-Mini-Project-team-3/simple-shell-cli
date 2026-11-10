@@ -13,6 +13,7 @@
 
 #include "executor.h"
 #include "shell.h"
+#include <sys/stat.h>
 
 #define BACKGROUND_TEST_FILE "/tmp/simple_shell_executor_bg_test.txt"
 
@@ -173,6 +174,113 @@ void test_shell_ignores_sigint(void)
     printf("PASSED: test_shell_ignores_sigint\n");
 }
 
+void test_executor_null_command(void)
+{
+    ParsedCommand cmd = {0};
+    assert(executor_run(&cmd) == 2);
+    printf("PASSED: null command\n");
+}
+
+void test_executor_redirection(void)
+{
+    const char *input = "/tmp/executor_input.txt";
+    const char *output = "/tmp/executor_output.txt";
+
+    FILE *file = fopen(input, "w");
+    assert(file != NULL);
+    fprintf(file, "redirection works\n");
+    fclose(file);
+
+    ParsedCommand cmd = {0};
+    cmd.argv[0] = "cat";
+    cmd.input_file = (char *)input;
+    cmd.output_file = (char *)output;
+
+    assert(executor_run(&cmd) == 0);
+
+    file = fopen(output, "r");
+    assert(file != NULL);
+
+    char buffer[128] = {0};
+    assert(fgets(buffer, sizeof(buffer), file) != NULL);
+    fclose(file);
+
+    assert(strcmp(buffer, "redirection works\n") == 0);
+
+    unlink(input);
+    unlink(output);
+    printf("PASSED: input and output redirection\n");
+}
+
+void test_executor_append_redirection(void)
+{
+    const char *output = "/tmp/executor_append.txt";
+
+    FILE *file = fopen(output, "w");
+    assert(file != NULL);
+    fprintf(file, "first");
+    fclose(file);
+
+    ParsedCommand cmd = {0};
+    cmd.argv[0] = "printf";
+    cmd.argv[1] = "second";
+    cmd.output_file = (char *)output;
+    cmd.append_mode = true;
+
+    assert(executor_run(&cmd) == 0);
+
+    file = fopen(output, "r");
+    assert(file != NULL);
+
+    char buffer[128] = {0};
+    assert(fgets(buffer, sizeof(buffer), file) != NULL);
+    fclose(file);
+
+    assert(strcmp(buffer, "firstsecond") == 0);
+
+    unlink(output);
+    printf("PASSED: append redirection\n");
+}
+
+void test_executor_redirection_failure(void)
+{
+    ParsedCommand cmd = {0};
+    cmd.argv[0] = "cat";
+    cmd.input_file = "/nonexistent/executor_input_file";
+
+    assert(executor_run(&cmd) == 1);
+    printf("PASSED: input redirection failure\n");
+}
+
+void test_executor_output_redirection_failure(void)
+{
+    ParsedCommand cmd = {0};
+    cmd.argv[0] = "printf";
+    cmd.argv[1] = "test";
+    cmd.output_file = "/nonexistent/executor_output_file";
+
+    assert(executor_run(&cmd) == 1);
+    printf("PASSED: output redirection failure\n");
+}
+
+void test_executor_permission_denied(void)
+{
+    char path[] = "/tmp/executor_no_permission_XXXXXX";
+    int fd = mkstemp(path);
+    assert(fd >= 0);
+    close(fd);
+
+    assert(chmod(path, 0600) == 0);
+
+    ParsedCommand cmd = {0};
+    cmd.argv[0] = path;
+
+    assert(executor_run(&cmd) == 126);
+
+    unlink(path);
+    printf("PASSED: permission denied (exit 126)\n");
+}
+
 int main(void)
 {
     printf("=== STARTING EXECUTOR UNIT TESTS ===\n");
@@ -185,6 +293,12 @@ int main(void)
     test_executor_abnormal_termination();
     test_executor_child_sigint();
     test_shell_ignores_sigint();
+    test_executor_null_command();
+    test_executor_redirection();
+    test_executor_append_redirection();
+    test_executor_redirection_failure();
+    test_executor_output_redirection_failure();
+    test_executor_permission_denied();
 
     printf("=== ALL EXECUTOR TESTS PASSED SUCCESSFULLY ===\n");
 
