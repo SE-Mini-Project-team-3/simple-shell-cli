@@ -1,0 +1,20 @@
+NFR-03: Ten executions of the five-stage pipeline
+Date: Wed Nov 11 09:51:24 UTC 2026
+Command: cat file | grep x | sort | uniq | wc -l
+Expected output: 2
+Timeout per run: 5 seconds
+Output validation accepts the shell prompt preceding the result.
+
+Run 1: PASS — 8 ms
+Run 2: PASS — 7 ms
+Run 3: PASS — 6 ms
+Run 4: PASS — 5 ms
+Run 5: PASS — 6 ms
+Run 6: PASS — 5 ms
+Run 7: PASS — 7 ms
+Run 8: PASS — 7 ms
+Run 9: PASS — 5 ms
+Run 10: PASS — 5 ms
+
+Result: 10/10 successful runs
+NFR-03: PASS — no hang/deadlock observed in ten runs.

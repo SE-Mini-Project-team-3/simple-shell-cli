@@ -29,13 +29,13 @@
 | TC-SEC-01 | SEC-01, SEC-05 | A quoted semicolon injection attempt was printed literally; no secondary command or marker file was created. A write to a non-writable directory was denied. Existing tests verify explicit output redirection. | Pass |
 | TC-SEC-02 | SEC-02, SEC-06 | Input-boundary tests passed. Full AddressSanitizer suite completed without sanitizer or LeakSanitizer errors. Valgrind was not run. | Pass |
 | TC-NFR-01 | NFR-01, NFR-02 | Three-run average startup was 1.773 ms; average foreground `pwd` completion-to-next-prompt time was 0.332 ms. Both are below the 1-second limits. | Pass |
-| TC-NFR-02 | NFR-03, NFR-04 | Maximum five-stage pipeline test passed. Ten-run pipeline throughput and first-time-user built-in discoverability checks are not evidenced. | Partial |
+| TC-NFR-02 | NFR-03, NFR-04 | Five-stage pipeline executed successfully in 10/10 runs without hangs or deadlocks. A first-time user independently executed help, pwd and exit (3/5 core built-ins) in approximately 1.5 minutes. | Pass |
 
 ## 3. Execution Summary
 
 - Total planned test cases: 12
-- Passed: 11
-- Partially verified: 1
+- Passed: 12
+- Partially verified: 0
 - Not executed: 0
 
 A partially verified test case has supporting evidence for some, but not all, of its specified steps. It is not counted as fully passed.
@@ -62,9 +62,9 @@ The history integration test executes 55 distinct echo commands and then invokes
 
 Final aggregate production-source coverage:
 
-- Line coverage: 67.7% (444/656)
+- Line coverage: 68.6% (450/656)
 - Function coverage: 93.1% (27/29)
-- Branch coverage: 62.4% (318/510)
+- Branch coverage: 62.7% (320/510)
 
 Final module-specific line coverage:
 
@@ -88,7 +88,7 @@ Three-run measurements recorded:
 
 Both are below the 1-second limits.
 
-Ten-run pipeline throughput and first-time-user built-in discoverability checks remain partially unverified.
+NFR-03 passed: the five-stage pipeline completed all ten timed executions without hangs or deadlocks. NFR-04 passed: a first-time user independently executed three core built-ins within approximately 1.5 minutes.
 
 ### Security and memory safety
 
@@ -99,12 +99,7 @@ Ten-run pipeline throughput and first-time-user built-in discoverability checks 
 
 ### Remaining validation
 
-The remaining evidence gap is limited to the following TC-NFR-02 checks:
-
-- Ten-run pipeline throughput measurement.
-- First-time-user built-in discoverability/usability check.
-
-These are recorded as partially verified rather than completed.
+TC-NFR-02 is fully verified. NFR-05 remains not fully met: F3 line coverage is 64.9%, below the required 70% target. This limitation is documented in the coverage reports.
 
 ## 5. Evidence References
 
@@ -115,4 +110,6 @@ These are recorded as partially verified rather than completed.
 - `logs/09_sec03_hardened_asan_20261110.txt`
 - `logs/12_performance_20261110.txt`
 - `logs/13_prompt_latency_20261110.txt`
+- `logs/16_nfr03_ten_pipeline_runs_20261111.txt`
+- `logs/17_nfr04_usability_walkthrough_20261111.txt`
 - `TEST_REPORT.md`

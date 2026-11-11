@@ -1,0 +1,26 @@
+NFR-04: First-Time User Usability Walkthrough
+Date: 2026-11-11
+Participant: First-time user (no prior exposure to this shell)
+Time limit: 2 minutes
+Observed completion time: Approximately 1.5 minutes
+
+Commands attempted, in order:
+1. see — unsuccessful; command not found
+2. help — successful
+3. pwd — successful
+4. history — successful (additional built-in; not counted)
+5. pwd — successful
+6. exit — successful
+
+Core built-ins successfully executed:
+- help
+- pwd
+- exit
+
+Core built-ins completed: 3/5
+Expected: At least 3/5 within 2 minutes.
+
+Result: PASS
+The participant independently discovered and executed three core
+built-ins within approximately 1.5 minutes without external documentation.
+No hints or command instructions were provided by the observer.
