@@ -34,9 +34,9 @@ These are focused module measurements, not the aggregate full-suite result.
 ## 4. Comparison with 10 November 2026
 
 The 10 November full-suite run recorded 313/510 branches (61.4%).
-The 11 November full-suite run recorded 318/510 branches (62.4%).
+The 11 November full-suite run recorded 320/510 branches (62.7%).
 
-Aggregate branch coverage increased by 1.0 percentage point.
+Aggregate branch coverage increased by 1.3 percentage points.
 The November 10 report remains historical evidence.
 
 ## 5. Interpretation

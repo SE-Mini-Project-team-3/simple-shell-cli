@@ -61,9 +61,9 @@ The latest main-branch GitHub Actions workflow completed successfully.
 
 Final aggregate production-source coverage:
 
-- Line coverage: 67.7% (444/656)
+- Line coverage: 68.6% (450/656)
 - Function coverage: 93.1% (27/29)
-- Branch coverage: 62.4% (318/510)
+- Branch coverage: 62.7% (320/510)
 
 Final module-specific line coverage:
 
@@ -85,16 +85,15 @@ Three-run measurements recorded:
 
 Both measurements are below the 1-second limits.
 
-Ten-run pipeline throughput and first-time-user built-in discoverability checks remain partially unverified.
+NFR-03 passed: the five-stage pipeline completed 10/10 runs without hangs or deadlocks. NFR-04 passed: a first-time user independently executed help, pwd and exit (3/5 core built-ins) in approximately 1.5 minutes without hints.
 
 ## 3. Known Limitations
 
 - Full POSIX interactive job control (`jobs`, `fg`, `bg`) is not implemented.
 - Terminal foreground process-group handoff is not implemented.
 - History is maintained in memory and is not persisted across sessions.
-- Aggregate line coverage is below the 70% target, with F3 at 64.9%.
+- NFR-05 remains partially unmet: F3 line coverage is 64.9%, below its 70% per-module target; F1, F2 and F4 meet the target.
 - Valgrind validation was not performed.
-- Ten-run pipeline throughput and first-time-user usability evidence are incomplete.
 
 These limitations are documented rather than represented as completed work.
 

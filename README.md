@@ -225,14 +225,16 @@ Additional validation includes:
 - Security-related environment-exposure tests.
 - AddressSanitizer validation of the full test suite.
 - Startup and command-response latency measurements.
+- Ten-run five-stage pipeline no-hang validation and first-time-user usability walkthrough.
+- Cppcheck 2.13.0 analysis across 15 source and test files, with no error- or warning-severity findings.
 
 ### Latest Coverage Results
 
 | Measurement | Result |
 |---|---:|
-| Aggregate line coverage | 67.7% |
+| Aggregate line coverage | 68.6% |
 | Aggregate function coverage | 93.1% |
-| Aggregate branch coverage | 62.4% |
+| Aggregate branch coverage | 62.7% |
 | F1 module line coverage | 79.7% |
 | F2 module line coverage | 73.7% |
 | F3 module line coverage | 64.9% |
@@ -249,7 +251,7 @@ The documented three-run measurements recorded:
 
 Both measurements are below the documented one-second response-time target.
 
-The ten-run pipeline-throughput and first-time-user usability checks are not claimed as completed.
+NFR-03 passed: the five-stage pipeline completed 10/10 runs without hangs or deadlocks. NFR-04 passed: a first-time user independently completed three core built-ins within approximately 1.5 minutes.
 
 ---
 
@@ -262,6 +264,7 @@ The `docs/` directory contains project documentation and supporting evidence, in
 - Unit and integration test results.
 - Code and branch coverage reports.
 - Security and memory-safety validation logs.
+- Static analysis report and Cppcheck evidence.
 - Performance measurement evidence.
 - Sprint demonstration videos.
 
@@ -295,5 +298,5 @@ The project implementation, documented deliverables, and tracked GitHub issues h
 
 ---
 
-**Developed by Team 3**  
+**Developed by Team 3**
 **Software Engineering Mini Project — PES University**

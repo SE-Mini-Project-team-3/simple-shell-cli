@@ -31,12 +31,12 @@
 | Security: environment exposure | SEC-03 | Positive control and 11 negative scenarios passed, with 37 assertions and scenario-completion checks. | Pass |
 | Security: input and memory safety | SEC-02, SEC-06 | Boundary and malformed-input tests passed; the full AddressSanitizer/LeakSanitizer run completed without errors. Valgrind was not run. | Pass |
 | Security: shell interpretation and file operations | SEC-01, SEC-05 | Quoted metacharacter input remained literal, no injected marker file was created, non-writable-directory output was denied, and explicit redirection tests passed. | Pass |
-| Performance and usability | NFR-01, NFR-02, NFR-03, NFR-04 | Three-run average startup was 1.773 ms and foreground `pwd`-to-next-prompt latency was 0.332 ms; both meet the 1-second limits. The maximum five-stage pipeline test passed, but ten-run pipeline throughput and first-time-user usability checks remain incomplete. | Partial |
+| Performance and usability | NFR-01, NFR-02, NFR-03, NFR-04 | Startup averaged 1.773 ms and foreground `pwd`-to-next-prompt latency averaged 0.332 ms. The five-stage pipeline completed 10/10 runs without hangs; a first-time user completed help, pwd and exit (3/5 core built-ins) in approximately 1.5 minutes without hints. | Pass |
 
 ## 3. Validation Summary
 
-- Fully passed workflows: 12
-- Partially validated workflows: 1
+- Fully passed workflows: 13
+- Partially validated workflows: 0
 - Not executed workflows: 0
 
 A partial result means that some relevant behavior has supporting test evidence, but the complete acceptance criteria have not been demonstrated.
@@ -82,12 +82,10 @@ Detailed results:
 
 ## 5. Known Validation Gaps
 
-The remaining gaps are:
+- NFR-05 is not fully met: F3 line coverage is 64.9%, below the 70% per-module target. F1, F2 and F4 meet the target.
+- Valgrind was not run; AddressSanitizer and LeakSanitizer validation passed.
 
-1. Complete the ten-run pipeline throughput measurement and first-time-user built-in discoverability check (NFR-03/NFR-04). TC-NFR-02 is therefore partially verified.
-2. F3 line coverage is 64.9%, below the 70% per-module target in NFR-05. The other three modules meet the target.
-
-These gaps are explicitly recorded rather than reported as completed.
+NFR-03 and NFR-04 are fully validated and are not open gaps.
 
 ## 6. Evidence References
 
@@ -98,6 +96,8 @@ These gaps are explicitly recorded rather than reported as completed.
 - `logs/09_sec03_hardened_asan_20261110.txt`
 - `logs/12_performance_20261110.txt`
 - `logs/13_prompt_latency_20261110.txt`
+- `logs/16_nfr03_ten_pipeline_runs_20261111.txt`
+- `logs/17_nfr04_usability_walkthrough_20261111.txt`
 - `TEST_CASE_EXECUTION_RESULTS.md`
 - `UNIT_TEST_REPORT.md`
 - `CODE_COVERAGE_REPORT.md`

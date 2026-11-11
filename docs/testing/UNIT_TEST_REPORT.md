@@ -154,9 +154,9 @@ child-process coverage. These are different measurement scopes.
 
 The fresh full-suite coverage run measured:
 
-- Line coverage: **67.7% (444/656)**.
+- Line coverage: **68.6% (450/656)**.
 - Function coverage: **93.1% (27/29)**.
-- Branch coverage: **62.4% (318/510)**.
+- Branch coverage: **62.7% (320/510)**.
 
 The 10 November aggregate result was 67.1% line coverage and 61.4%
 branch coverage. The fresh aggregate measurements increased.
