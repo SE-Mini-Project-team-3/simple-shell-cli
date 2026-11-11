@@ -12,12 +12,12 @@
 
 | Metric | Covered | Total | Coverage |
 |---|---:|---:|---:|
-| Branches | 318 | 510 | 62.4% |
+| Branches | 320 | 510 | 62.7% |
 
-The latest full-suite run also measured 444/656 lines (67.7%) and
+The latest full-suite run also measured 450/656 lines (68.6%) and
 27/29 functions (93.1%).
 
-Detailed output: `logs/13_linux_full_coverage_run_20261111.txt`
+Detailed output: `logs/15_updated_full_coverage_20261111.txt`
 
 ## 3. Focused process-module branch measurements
 
@@ -40,7 +40,7 @@ Aggregate branch coverage increased by 1.0 percentage point.
 The November 10 report remains historical evidence.
 
 ## 5. Interpretation
-The latest aggregate branch coverage is 62.4%. Branch coverage is
+The latest aggregate branch coverage is 62.7%. Branch coverage is
 reported separately from NFR-05, which specifies a 70% line-coverage
 target per module.
 
@@ -49,7 +49,7 @@ Their focused measurements use child-process coverage collection and
 must not be confused with the aggregate full-suite measurement.
 
 ## 6. Evidence
-- `logs/13_linux_full_coverage_run_20261111.txt` — latest aggregate run.
+- `logs/15_updated_full_coverage_20261111.txt` — latest aggregate run.
 - `logs/12_f2_f3_focused_coverage_20261111.txt` — focused F2/F3 results.
 - `coverage/branch_coverage_20261110.txt` — historical detailed branch report.
 - `logs/10_linux_coverage_run_20261110.txt` — historical full-suite run.

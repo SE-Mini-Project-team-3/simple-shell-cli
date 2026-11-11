@@ -7,8 +7,9 @@
 - Build system: GNU Make 4.3
 - Language standard: C11
 - Full test-suite evidence: `logs/11_linux_full_test_run_20261111.txt`
-- Full coverage evidence: `logs/13_linux_full_coverage_run_20261111.txt`
+- Full coverage evidence: `logs/15_updated_full_coverage_20261111.txt`
 - Focused F2/F3 coverage evidence: `logs/12_f2_f3_focused_coverage_20261111.txt`
+- Static analysis evidence: `logs/14_cppcheck_full_analysis_20261111.txt`
 - Performance evidence: `logs/12_performance_20261110.txt`
 - Three-run prompt latency: `logs/13_prompt_latency_20261110.txt`
 - Security evidence: `logs/08_sec03_hardened_validation_20261110.txt`
@@ -56,9 +57,9 @@ The final automated Linux test run also passed all nine test groups:
 
 Aggregate production-source coverage:
 
-- Line coverage: 67.7% (444/656)
+- Line coverage: 68.6% (450/656)
 - Function coverage: 93.1% (27/29)
-- Branch coverage: 62.4% (318/510)
+- Branch coverage: 62.7% (320/510)
 
 Module-specific line coverage:
 
@@ -91,7 +92,7 @@ These gaps are explicitly recorded rather than reported as completed.
 ## 6. Evidence References
 
 - `logs/11_linux_full_test_run_20261111.txt`
-- `logs/13_linux_full_coverage_run_20261111.txt`
+- `logs/15_updated_full_coverage_20261111.txt`
 - `logs/12_f2_f3_focused_coverage_20261111.txt`
 - `logs/08_sec03_hardened_validation_20261110.txt`
 - `logs/09_sec03_hardened_asan_20261110.txt`

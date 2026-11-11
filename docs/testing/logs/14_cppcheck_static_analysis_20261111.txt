@@ -1,0 +1,34 @@
+Checking src/env_manager.c ...
+1/7 files checked 2% done
+Checking src/executor.c ...
+2/7 files checked 12% done
+Checking src/history.c ...
+3/7 files checked 16% done
+Checking src/main.c ...
+4/7 files checked 50% done
+Checking src/parser.c ...
+src/parser.c:89:19: style: Variable 'start' can be declared as pointer to const [constVariablePointer]
+            char *start = p;
+                  ^
+5/7 files checked 61% done
+Checking src/pipeline.c ...
+6/7 files checked 82% done
+Checking src/test_executor.c ...
+7/7 files checked 100% done
+src/env_manager.c:46:0: style: The function 'env_list' is never used. [unusedFunction]
+char **env_list(void)
+^
+src/history.c:50:0: style: The function 'history_count' is never used. [unusedFunction]
+int history_count(void)
+^
+src/history.c:55:0: style: The function 'history_get' is never used. [unusedFunction]
+const char *history_get(int position)
+^
+src/history.c:63:0: style: The function 'history_get_number' is never used. [unusedFunction]
+unsigned long history_get_number(int position)
+^
+src/history.c:71:0: style: The function 'history_clear' is never used. [unusedFunction]
+void history_clear(void)
+^
+nofile:0:0: information: Active checkers: 113/592 (use --checkers-report=<filename> to see details) [checkersReport]
+

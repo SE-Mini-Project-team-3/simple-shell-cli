@@ -45,7 +45,7 @@ static void init_command(ParsedCommand *cmd, char *args[])
 
     int i = 0;
 
-    while (args[i] != NULL && i < SHELL_MAX_ARGS) {
+    while (i < SHELL_MAX_ARGS && args[i] != NULL) {
         cmd->argv[i] = args[i];
         i++;
     }

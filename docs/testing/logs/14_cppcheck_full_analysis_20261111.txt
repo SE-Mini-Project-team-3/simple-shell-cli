@@ -1,0 +1,92 @@
+Checking src/env_manager.c ...
+1/15 files checked 0% done
+Checking src/executor.c ...
+2/15 files checked 5% done
+Checking src/history.c ...
+3/15 files checked 6% done
+Checking src/main.c ...
+4/15 files checked 20% done
+Checking src/parser.c ...
+src/parser.c:89:19: style: Variable 'start' can be declared as pointer to const [constVariablePointer]
+            char *start = p;
+                  ^
+5/15 files checked 24% done
+Checking src/pipeline.c ...
+6/15 files checked 33% done
+Checking src/test_executor.c ...
+7/15 files checked 40% done
+Checking tests/test_env_integration.c ...
+8/15 files checked 45% done
+Checking tests/test_env_manager.c ...
+9/15 files checked 48% done
+Checking tests/test_history.c ...
+10/15 files checked 51% done
+Checking tests/test_integration.c ...
+11/15 files checked 65% done
+Checking tests/test_parser.c ...
+12/15 files checked 70% done
+Checking tests/test_parser_spec.c ...
+13/15 files checked 76% done
+Checking tests/test_pipeline.c ...
+tests/test_pipeline.c:336:26: style: Variable 'stages[0].input_file' is reassigned a value before the old one has been used. [redundantAssignment]
+    stages[0].input_file = NULL;
+                         ^
+tests/test_pipeline.c:316:26: note: stages[0].input_file is assigned
+    stages[0].input_file = INPUT_TEST_FILE;
+                         ^
+tests/test_pipeline.c:336:26: note: stages[0].input_file is overwritten
+    stages[0].input_file = NULL;
+                         ^
+tests/test_pipeline.c:337:27: style: Variable 'stages[0].output_file' is reassigned a value before the old one has been used. [redundantAssignment]
+    stages[0].output_file = NULL;
+                          ^
+tests/test_pipeline.c:317:27: note: stages[0].output_file is assigned
+    stages[0].output_file = TEST_FILE;
+                          ^
+tests/test_pipeline.c:337:27: note: stages[0].output_file is overwritten
+    stages[0].output_file = NULL;
+                          ^
+tests/test_pipeline.c:376:27: style: Variable 'stages[0].output_file' is reassigned a value before the old one has been used. [redundantAssignment]
+    stages[0].output_file = NULL;
+                          ^
+tests/test_pipeline.c:358:27: note: stages[0].output_file is assigned
+    stages[0].output_file = TEST_FILE;
+                          ^
+tests/test_pipeline.c:376:27: note: stages[0].output_file is overwritten
+    stages[0].output_file = NULL;
+                          ^
+tests/test_pipeline.c:377:27: style: Variable 'stages[0].append_mode' is reassigned a value before the old one has been used. [redundantAssignment]
+    stages[0].append_mode = 0;
+                          ^
+tests/test_pipeline.c:359:27: note: stages[0].append_mode is assigned
+    stages[0].append_mode = 1;
+                          ^
+tests/test_pipeline.c:377:27: note: stages[0].append_mode is overwritten
+    stages[0].append_mode = 0;
+                          ^
+tests/test_pipeline.c:427:26: style: Variable 'stages[0].input_file' is reassigned a value before the old one has been used. [redundantAssignment]
+    stages[0].input_file = NULL;
+                         ^
+tests/test_pipeline.c:414:26: note: stages[0].input_file is assigned
+    stages[0].input_file =
+                         ^
+tests/test_pipeline.c:427:26: note: stages[0].input_file is overwritten
+    stages[0].input_file = NULL;
+                         ^
+tests/test_pipeline.c:444:27: style: Variable 'stages[0].output_file' is reassigned a value before the old one has been used. [redundantAssignment]
+    stages[0].output_file = NULL;
+                          ^
+tests/test_pipeline.c:431:27: note: stages[0].output_file is assigned
+    stages[0].output_file =
+                          ^
+tests/test_pipeline.c:444:27: note: stages[0].output_file is overwritten
+    stages[0].output_file = NULL;
+                          ^
+tests/test_pipeline.c:29:20: style: Variable 'entry' can be declared as pointer to const [constVariablePointer]
+    struct dirent *entry;
+                   ^
+14/15 files checked 93% done
+Checking tests/test_sec03_env_exposure.c ...
+15/15 files checked 100% done
+nofile:0:0: information: Active checkers: 113/592 (use --checkers-report=<filename> to see details) [checkersReport]
+

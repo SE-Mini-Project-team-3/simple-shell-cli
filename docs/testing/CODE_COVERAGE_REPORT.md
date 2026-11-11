@@ -12,7 +12,7 @@
 The complete test suite was rebuilt with coverage instrumentation and executed.
 All nine test groups passed.
 
-Detailed output: `logs/13_linux_full_coverage_run_20261111.txt`
+Detailed output: `logs/15_updated_full_coverage_20261111.txt`
 
 ## 3. Latest full-suite results
 
@@ -24,10 +24,10 @@ Detailed output: `logs/13_linux_full_coverage_run_20261111.txt`
 | src/main.c | 282 | 212 | 75.2% |
 | src/parser.c | 113 | 103 | 91.2% |
 | src/pipeline.c | 134 | 48 | 35.8% |
-| **Total** | **656** | **444** | **67.7%** |
+| **Total** | **656** | **450** | **68.6%** |
 
 - Function coverage: 27/29 (93.1%)
-- Branch coverage: 318/510 (62.4%)
+- Branch coverage: 320/510 (62.7%)
 
 Percentages above are calculated from the executed and total counts; gcovr's text table may display rounded whole percentages.
 
@@ -70,7 +70,7 @@ The previous full-suite report recorded:
 - Branch coverage: 61.4% (313/510)
 
 The fresh 11 November full-suite run records:
-- Line coverage: 67.7% (444/656)
+- Line coverage: 68.6% (450/656)
 - Function coverage: 93.1% (27/29)
 - Branch coverage: 62.4% (318/510)
 
@@ -78,7 +78,7 @@ The aggregate line and branch coverage increased. The November 10 report
 is retained as historical evidence and is not overwritten.
 
 ## 7. Evidence
-- `logs/13_linux_full_coverage_run_20261111.txt` — latest full-suite coverage.
+- `logs/15_updated_full_coverage_20261111.txt` — latest full-suite coverage.
 - `logs/12_f2_f3_focused_coverage_20261111.txt` — focused F2/F3 measurements.
 - `logs/11_linux_full_test_run_20261111.txt` — latest full-suite test execution.
 - `coverage/code_coverage_20261110.txt` — historical detailed coverage.
