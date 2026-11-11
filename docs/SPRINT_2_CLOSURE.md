@@ -1,9 +1,8 @@
 # Sprint 2 Closure Report
 
-**Project:** Team 3 – Simple Shell CLI  
-**Sprint:** Sprint 2  
-**Baseline commit:** `b2c4270`  
-**Baseline branch:** `main`
+**Project:** Team 3 – Simple Shell CLI
+**Sprint:** Sprint 2
+**Final implementation and validation branch:** `main`
 
 ## 1. Sprint 2 Implementation Summary
 
@@ -30,40 +29,79 @@ Sprint 2 extended the shell implementation with process management and integrate
 - Integrated the process executor, pipeline implementation, parser, history and environment modules into the main shell.
 - Updated the main command loop to support background process polling and reaping.
 
-## 2. Verification Results
+## 2. Final Verification Results
 
-The following commands were executed on the latest `main` branch:
+The following commands were executed on the final integrated implementation:
 
 - `make clean`
 - `make`
 - `make test`
 
-The build completed successfully.
+The build completed successfully, and all nine test groups passed:
 
-All test groups passed:
-- Parser tests
-- History tests
-- Environment manager tests
-- Executor tests
-- Environment integration tests
-- Pipeline tests (9/9)
-- Parser specification tests
+1. Parser unit tests
+2. History unit tests
+3. Environment manager tests
+4. Executor tests
+5. Environment integration tests
+6. Pipeline tests
+7. Parser specification tests
+8. Cross-module integration tests
+9. SEC-03 environment exposure tests
 
-The GitHub Actions workflow was also checked on the latest main-branch baseline.
+The latest main-branch GitHub Actions workflow completed successfully.
 
-## 3. Known Limitations and Pending Validation
+### Security and Memory-Safety Validation
+- Shell-metacharacter injection validation passed.
+- Explicit redirection behavior was tested.
+- The complete AddressSanitizer suite completed without sanitizer or LeakSanitizer errors.
+- Valgrind was not run; this is not claimed as completed validation.
+
+### Coverage Results
+
+Final aggregate production-source coverage:
+
+- Line coverage: 67.7% (444/656)
+- Function coverage: 93.1% (27/29)
+- Branch coverage: 62.4% (318/510)
+
+Final module-specific line coverage:
+
+| Module | Line Coverage |
+|---|---:|
+| F1 | 79.7% |
+| F2 | 73.7% |
+| F3 (pipeline) | 64.9% |
+| F4 | 100% |
+
+F3 remains below the 70% target. The uncovered process-management and operating-system-dependent error paths, along with the limitations of deterministic child-process coverage measurement, are documented in the testing reports. The team attempted additional failure-path tests, but discarded the experimental changes when they did not produce reliable coverage improvement.
+
+### Performance Validation
+
+Three-run measurements recorded:
+
+- Average shell startup time: 1.773 ms
+- Average foreground `pwd` completion-to-next-prompt time: 0.332 ms
+
+Both measurements are below the 1-second limits.
+
+Ten-run pipeline throughput and first-time-user built-in discoverability checks remain partially unverified.
+
+## 3. Known Limitations
 
 - Full POSIX interactive job control (`jobs`, `fg`, `bg`) is not implemented.
 - Terminal foreground process-group handoff is not implemented.
 - History is maintained in memory and is not persisted across sessions.
-- The 70% line-coverage target requires separate measurement.
-- Complete security and memory-safety validation evidence remains pending.
-- Startup and command-response performance measurements remain pending.
+- Aggregate line coverage is below the 70% target, with F3 at 64.9%.
+- Valgrind validation was not performed.
+- Ten-run pipeline throughput and first-time-user usability evidence are incomplete.
+
+These limitations are documented rather than represented as completed work.
 
 ## 4. Sprint Outcome
 
-Sprint 2 implementation has been integrated into the `main` branch.
+Sprint 2 implementation and integration are complete on `main`.
 
-Completed implementation work is recorded in the GitHub Project board. Remaining usability, coverage, security and performance validation tasks are tracked separately.
+The build, all nine automated test groups, the latest CI workflow, documented security checks, and AddressSanitizer validation completed successfully.
 
-The `main` branch at commit `b2c4270` is the Sprint 2 implementation baseline.
+Coverage and performance results, including the remaining exceptions, are recorded in the testing documentation. The GitHub Project board has all 14 tracked issues in Done, with Todo and In Progress empty.
