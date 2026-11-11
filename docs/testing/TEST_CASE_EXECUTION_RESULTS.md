@@ -1,11 +1,14 @@
-# Test Case Execution Results — Linux (10 November 2026)
+# Test Case Execution Results — Linux (11 November 2026)
 
 ## 1. Environment and Evidence
+
 - Environment: Ubuntu 24.04 (WSL)
 - Compiler: GCC 13.3.0
-- Test execution: GCC coverage-instrumented build
-- Main execution log: `logs/10_linux_coverage_run_20261110.txt`
-- Final test-suite log: `logs/11_final_validation_20261110.txt`
+- Build system: GNU Make
+- Coverage instrumentation: GCC gcov
+- Main test execution log: `logs/11_linux_full_test_run_20261111.txt`
+- Full coverage execution log: `logs/13_linux_full_coverage_run_20261111.txt`
+- Focused F2/F3 coverage log: `logs/12_f2_f3_focused_coverage_20261111.txt`
 - Performance benchmark: `logs/12_performance_20261110.txt`
 - Three-run prompt latency: `logs/13_prompt_latency_20261110.txt`
 - Security validation: `logs/08_sec03_hardened_validation_20261110.txt`
@@ -25,8 +28,8 @@
 | TC-HE-02 | FR-HE-04, FR-HE-05, FR-HE-06, FR-HE-07 | Export, env, unset and environment visibility in child processes verified. | Pass |
 | TC-SEC-01 | SEC-01, SEC-05 | A quoted semicolon injection attempt was printed literally; no secondary command or marker file was created. A write to a non-writable directory was denied. Existing tests verify explicit output redirection. | Pass |
 | TC-SEC-02 | SEC-02, SEC-06 | Input-boundary tests passed. Full AddressSanitizer suite completed without sanitizer or LeakSanitizer errors. Valgrind was not run. | Pass |
-| TC-NFR-01 | NFR-01, NFR-02 | Three-run average startup was 1.773 ms; average foreground `pwd` completion to next prompt was 0.332 ms. Both are below the 1-second limits. | Pass |
-| TC-NFR-02 | NFR-03, NFR-04 | Maximum five-stage pipeline test passed. Ten-run throughput and first-time-user built-in discoverability checks are not evidenced. | Partial |
+| TC-NFR-01 | NFR-01, NFR-02 | Three-run average startup was 1.773 ms; average foreground `pwd` completion-to-next-prompt time was 0.332 ms. Both are below the 1-second limits. | Pass |
+| TC-NFR-02 | NFR-03, NFR-04 | Maximum five-stage pipeline test passed. Ten-run pipeline throughput and first-time-user built-in discoverability checks are not evidenced. | Partial |
 
 ## 3. Execution Summary
 
@@ -37,26 +40,79 @@
 
 A partially verified test case has supporting evidence for some, but not all, of its specified steps. It is not counted as fully passed.
 
+The automated validation also includes nine test groups, all of which passed in the final Linux test run:
+
+1. Parser unit tests
+2. History unit tests
+3. Environment manager tests
+4. Executor tests
+5. Environment integration tests
+6. Pipeline tests
+7. Parser specification tests
+8. Cross-module integration tests
+9. SEC-03 environment exposure tests
+
 ## 4. Important Observations
 
 ### History boundary
+
 The history integration test executes 55 distinct echo commands and then invokes `history`. Since the `history` invocation is itself recorded, the resulting 50 entries contain 49 echo commands and the history command. Therefore, six earlier echo commands are evicted. This behavior is documented in `TEST_REPORT.md` and is consistent with the implementation's 50-entry limit.
 
 ### Coverage
-Aggregate production-source line coverage is 67.1% (440/656), with 61.4% branch coverage (313/510). These aggregate figures are distinct from the earlier module-specific coverage measurements in `TEST_REPORT.md`.
 
-### Outstanding validation
-- Explicit prompt display and redisplay check.
-- Explicit zombie-process verification.
-- SEC-01 shell-metacharacter injection test.
-- SEC-05 explicit-redirection-only file-operation test.
-- Startup and prompt-response latency measurements.
-- Ten-run pipeline throughput and first-time-user usability check.
+Final aggregate production-source coverage:
+
+- Line coverage: 67.7% (444/656)
+- Function coverage: 93.1% (27/29)
+- Branch coverage: 62.4% (318/510)
+
+Final module-specific line coverage:
+
+| Module | Line Coverage |
+|---|---:|
+| F1 | 79.7% |
+| F2 | 73.7% |
+| F3 (pipeline) | 64.9% |
+| F4 | 100% |
+
+F3 remains below the 70% line-coverage target. The pipeline module contains process-management and operating-system-dependent error paths that were not fully exercised by the available deterministic tests. Additional experimental failure-path tests were attempted but discarded because they did not produce reliable coverage improvement. The remaining gap is documented in the coverage reports.
+
+The aggregate and focused module-specific measurements use different measurement scopes and should not be treated as interchangeable.
+
+### Performance
+
+Three-run measurements recorded:
+
+- Average shell startup time: 1.773 ms
+- Average foreground `pwd` completion-to-next-prompt time: 0.332 ms
+
+Both are below the 1-second limits.
+
+Ten-run pipeline throughput and first-time-user built-in discoverability checks remain partially unverified.
+
+### Security and memory safety
+
+- Shell-metacharacter injection validation passed.
+- Explicit redirection behavior was tested.
+- The full AddressSanitizer suite completed without sanitizer or LeakSanitizer errors.
+- Valgrind was not run.
+
+### Remaining validation
+
+The remaining evidence gap is limited to the following TC-NFR-02 checks:
+
+- Ten-run pipeline throughput measurement.
+- First-time-user built-in discoverability/usability check.
+
+These are recorded as partially verified rather than completed.
 
 ## 5. Evidence References
-- `logs/10_linux_coverage_run_20261110.txt`
+
+- `logs/11_linux_full_test_run_20261111.txt`
+- `logs/13_linux_full_coverage_run_20261111.txt`
+- `logs/12_f2_f3_focused_coverage_20261111.txt`
 - `logs/08_sec03_hardened_validation_20261110.txt`
 - `logs/09_sec03_hardened_asan_20261110.txt`
-- `coverage/code_coverage_20261110.txt`
-- `coverage/branch_coverage_20261110.txt`
+- `logs/12_performance_20261110.txt`
+- `logs/13_prompt_latency_20261110.txt`
 - `TEST_REPORT.md`
