@@ -296,6 +296,8 @@ The project implementation, documented deliverables, and tracked GitHub issues h
 - All nine automated test groups passed in the latest recorded full Linux test run.
 - Known coverage and validation limitations are documented in the repository.
 
+For example commands demonstrating all major shell features, see
+[Demo Commands](docs/DEMO_COMMANDS.md).
 ---
 
 **Developed by Team 3**
